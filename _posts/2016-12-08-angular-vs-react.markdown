@@ -108,6 +108,6 @@ So here's what I deduced from this back-and-forth. First, I took everything said
 
 I boiled each side's core argument down into a little analogy: React is the capable teenager, exploring the unknown, always seeking the next cool thing. Angular is the wizened elder, striving for unity and direction in a chaotic world.
 
-React is flexible, dynamic, and embraces crafting unique solutions to unique problems. It truly embodies the Wild West of JavaScript, allowing people to mix and match libraries, build and customize their own modules, and basically get as creative as they want. Angular is sturdy, comprehensive, and powerful -- a one-stop shop. It reflects a movement towards more standardized, reliable web technology which is a breath of fresh air for the many experiencing JavaScript "tool fatigue."
+React is flexible, dynamic, and embraces crafting unique solutions to unique problems. It truly embodies the Wild West of JavaScript, allowing people to mix and match libraries, build and customize their own modules, and basically get as creative as they want. Angular is sturdy, comprehensive, and powerful -- a highly opinionated one-stop shop. It reflects a movement towards more standardized, reliable web technology which is a breath of fresh air for the many experiencing JavaScript "tool fatigue."
 
 All in all, it was a great time and I'm looking forward to the next #TechDebate!
