@@ -74,18 +74,22 @@ A. Angular CLI is great for debugging.
 
 ### Judge's Questions
 Q. How does the developer experience compare? Why is your framework better for the developer?
+
 * React Answer: JavaScript is ubiquitous. When you are using React, you're just writing JavaScript. For Angular, you have to learn Angular, TypeScript, etc.
 * Angular Answer: Yes, Angular does require you to learn new stuff, but it is very intuitive and easy to pick up. Once you get it, it's very useful. Additionally, TypeScript is quite pleasant to code in and helps with debugging by preventing mistakes up front.
 
 Q. How is corporate backing good/bad for your respective frameworks?
+
 * React Answer: Facebook is just backing JavaScript, because React is just JavaScript. Frameworks come and go, but it is the language that remains. React just handles view and does it well.
 * Angular Answer: A major challenge with JavaScript is wading through the countless variations, modules, packages, plugins, and frameworks. What we need is a standard. Angular is progress toward that standard. It is backed by a great company (Google) and they want to push web standards in order to make the web more accessible and easier to develop for.
 
 Q. Maintainability/testability?
+
 * React Answer: React gives you the flexibility to do whatever testing you want. Mocha, Karma, etc.
 * Angular Answer: Angular basically has built in unit testing. You can do end-to-end testing and UI testing (both described in tutorials). TypeScript helps a lot with maintainability. Dependency injection allows you to test your parts individually.
 
 Q. What are you most happy your community ripped from the other one? What do you hope is stolen next?
+
 * React Answer: We can't think of what React would want from Angular. React is looking to the future.
 * Angular Answer: Angular moved entirely towards components, which is nice.
 
