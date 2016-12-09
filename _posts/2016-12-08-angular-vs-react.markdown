@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "Angular vs. React"
-date:   2016-12-08
+date:   2016-12-08 00:10:00
 categories: jekyll update
 ---
 Last night, I attended a Google Developer Group DC ([@gdevdc](https://twitter.com/gdevdc)) sponsored "TechDebate" hosted at the Washington D.C. campus of [1776](http://www.1776.vc/).
