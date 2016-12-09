@@ -5,11 +5,26 @@ date:   2016-12-08 00:10:00
 categories: jekyll update
 ---
 Last night, I attended a Google Developer Group DC ([@gdevdc](https://twitter.com/gdevdc)) sponsored "TechDebate" hosted at the Washington D.C. campus of [1776](http://www.1776.vc/).
-The debate, called "Battle of the Application Frameworks: Angular vs. React," was way more organized and civilized than I expected. I was imagining (hoping for?) a panel of nerds heatedly arguing about JavaScript frameworks: spit flying, glasses fogging, Star Wars-related name-calling. Alas, this event was formatted and moderated as a real debate. It was a very informative hour.
+The debate, called "Battle of the Application Frameworks: Angular vs. React," was way more organized and civilized than I expected. I was imagining (hoping for?) a panel of nerds heatedly arguing about JavaScript frameworks. Alas, this event was formatted and moderated as a real debate. It was a very informative hour.
 
 {% include image.html name="techdebate.jpg" caption="The crowd eagerly awaits the showdown." %}
 
-Here's a summary of the debate and the main points of each team (key points bolded):
+Before the summary, I want to give a quick shoutout to the debaters. They did an amazing job. Each one brought a lot of passion and knowledge to their speeches, which kept things entertaining *and* informative. Well done, guys.
+
+---
+#### Team Angular
+[John Niedzwiecki](https://www.linkedin.com/in/johnniedzwiecki2) - {%include icon-twitter.html%}[@RHGeek](https://twitter.com/RHGeek)
+
+[Sam Douglas](https://www.linkedin.com/in/samdouglas) - {% include icon-twitter.html %}[@acmegeek](https://twitter.com/acmegeek)
+
+#### Team React
+[Patrick Woo](https://www.linkedin.com/in/patrickwoo)
+
+Stan Bershadskiy - {% include icon-twitter.html %} [@stan229](https://twitter.com/stan229)
+
+---
+
+Okay, so here's a summary of the debate and the main points of each team (key points bolded):
 
 ### Initial Speeches
 
@@ -104,7 +119,7 @@ What are you most excited about for the future?
 React won the debate by a hair. The judges tied 2-2 (a lesson in choosing the number of judges for the next debate) and the deciding factor was the team who had the "Most Valuable Debater" as decided by the audience.
 
 ## My Take On The Whole Thing
-So here's what I deduced from this back-and-forth. First, I took everything said with a grain of salt. There are lots of other frameworks and libraries out there. React and Angular are hands-down two of the best options. While each side tried to make the other sound terrible for the sake of the debate, there is no doubt that both frameworks are effective for developing efficient, high-quality, scalable applications. Both frameworks are viable options.
+Now this is what I deduced from this back-and-forth. First off, I took everything said with a grain of salt. There are lots of other frameworks and libraries out there. React and Angular are hands-down two of the best options. While each side tried to make the other sound terrible for the sake of the debate, there is no doubt that both frameworks are effective for developing efficient, high-quality, scalable applications. Both frameworks are viable options.
 
 I boiled each side's core argument down into a little analogy: React is the capable teenager, exploring the unknown, always seeking the next cool thing. Angular is the wizened elder, striving for unity and direction in a chaotic world.
 
