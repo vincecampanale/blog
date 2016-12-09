@@ -12,6 +12,7 @@ The debate, called "Battle of the Application Frameworks: Angular vs. React," wa
 Before the summary, I want to give a quick shoutout to the debaters. They did an amazing job. Each one brought a lot of passion and knowledge to their speeches, which kept things entertaining *and* informative. Well done, guys.
 
 ---
+
 #### Team Angular
 
 [John Niedzwiecki](https://www.linkedin.com/in/johnniedzwiecki2) - {%include icon-twitter.html%}[@RHGeek](https://twitter.com/RHGeek)
