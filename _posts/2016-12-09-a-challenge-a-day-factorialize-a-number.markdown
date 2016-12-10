@@ -5,8 +5,8 @@ date:   2016-12-09
 categories: jekyll update
 ---
 
-While, "Factorialize" is far from being a real word, this is a real challenge.
-Our task is simple: given an integer, return the factorial of that integer.
+While "factorialize" is far from being a real word, this is a real challenge.
+Our task is this: given an integer, return the factorial of that integer.
 For example, `factorialize(5)` should return `5 * 4 * 3 * 2 * 1` which equals `120`.
 
 This challenge (also from the Free Code Camp "Basic Algorithm Scripting" tasks) can be done in numerous ways. I'll provide two solutions for you here.
