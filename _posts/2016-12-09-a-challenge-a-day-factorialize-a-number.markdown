@@ -47,6 +47,6 @@ function factorialize(num){
 ```
 {: .language-javascript}
 
-Much better. Let's review: base case is handled implicitly (`product` is initially set to 1 and the code in the for loop will be skipped since `i = 1` already satisfies the break condition `i <= num`), the handy `*=` operator appears once again. This operator is very cool: it multiplies two numbers (left side and right side of the operator), and assigns the result to the left side (`product`) in this case. Finally, we just return product and we're done!
+Much better. Let's review: base case is handled implicitly (`product` is initially set to 1 and the code in the for loop will be skipped since `i = 1` already satisfies the break condition `i <= num`), the handy `*=` operator appears once again. This operator is very cool: it multiplies two numbers (left side and right side of the operator), and assigns the result to the left side (`product` in this case). Finally, we return product and we're done!
 
 I keep accidentally ending sentences with semicolons instead of periods. What's happening to me...
