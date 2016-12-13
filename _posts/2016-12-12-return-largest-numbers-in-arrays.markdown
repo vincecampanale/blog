@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "A Challenge A Day: Return Largest Numbers in Arrays"
+title:  "Step By Step: Return Largest Numbers in Arrays"
 date:   2016-12-12
 ---
 

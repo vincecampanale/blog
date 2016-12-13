@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "A Challenge A Day: Factorialize a Number"
+title:  "Step By Step: Factorialize a Number"
 date:   2016-12-09
 ---
 
@@ -12,7 +12,7 @@ This challenge (also from the Free Code Camp "Basic Algorithm Scripting" tasks) 
 
 The first solution I'll provide was created by yours truly a couple of months ago when I was first learning to code.
 
-#### Solution 1 (Total Noob)
+#### Solution 1
 ```
 function factorialize(num) {
   var product = num;
