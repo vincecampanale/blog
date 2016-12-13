@@ -2,7 +2,6 @@
 layout: post
 title:  "A Challenge A Day: Check for Palindromes"
 date:   2016-12-10
-categories: jekyll update
 ---
 Another day, another challenge. This one comes from the Free Code Camp "Basic Algorithm Scripting" section. I highly recommend checking out Free Code Camp's program if you are getting started on learning to code. It has served me very well.
 

@@ -2,7 +2,6 @@
 layout: post
 title:  "A Challenge A Day: Reverse a String"
 date:   2016-12-08 00:30:00
-categories: jekyll update
 ---
 The challenge of the day today comes from Free Code Camp. Their very first "Basic Algorithm Scripting" challenge is this: given a string, reverse it. I believe Missy Elliot once said something along the lines of, "I put a string down, flip it and reverse it." I dedicate this challenge to her.
 

@@ -2,7 +2,6 @@
 layout: post
 title:  "A Challenge A Day: Return Largest Numbers in Arrays"
 date:   2016-12-12
-categories: jekyll update
 ---
 
 Today's challenge hails from [Free Code Camp](https://www.freecodecamp.com/)'s "Basic Algorithm Scripting" section. The task is this: given an input array containing several arrays of numbers, return an array containing only the largest number from each input array. For example, `largestNumbers([[4, 5, 1, 3], [13, 27, 18, 26], [32, 35, 37, 39], [1000, 1001, 857, 1]])` should return `[5, 27, 39, 1001]`.

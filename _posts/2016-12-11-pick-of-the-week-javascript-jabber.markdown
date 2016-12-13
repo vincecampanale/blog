@@ -2,7 +2,6 @@
 layout: post
 title:  "Pick of the Week: Javascript Jabber"
 date:   2016-12-11
-categories: jekyll update
 ---
 My first ever "Pick of the Week" has to be [Javascript Jabber](https://devchat.tv/js-jabber), an awesome podcast hosted by Charles Max Wood. Charles hosts several podcasts and has contributed so much to the developer community.  His depth and breadth of knowledge is impressive and his ability to facilitate a conversation is one-of-a-kind. To me, he's an inspiration.
 

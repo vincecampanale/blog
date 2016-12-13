@@ -2,7 +2,6 @@
 layout: post
 title:  "A Challenge A Day: Factorialize a Number"
 date:   2016-12-09
-categories: jekyll update
 ---
 
 While "factorialize" is far from being a real word, this is a real challenge.

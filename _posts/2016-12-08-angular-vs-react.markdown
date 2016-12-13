@@ -2,7 +2,6 @@
 layout: post
 title:  "Angular vs. React"
 date:   2016-12-08 00:10:00
-categories: jekyll update
 ---
 Last night, I attended a Google Developer Group DC ([@gdevdc](https://twitter.com/gdevdc)) sponsored "TechDebate" hosted at the Washington D.C. campus of [1776](http://www.1776.vc/).
 The debate, called "Battle of the Application Frameworks: Angular vs. React," was way more organized and civilized than I expected. I was imagining (hoping for?) a panel of nerds heatedly arguing about JavaScript frameworks. Alas, this event was formatted and moderated as a real debate. It was a very informative hour.
