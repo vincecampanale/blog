@@ -5,8 +5,8 @@ permalink: /about/
 ---
 
 Me Vince. This blog.
-<!-- Fun fact: my real name is Vincenzo.  -->
-<!-- Make the fun fact clickable and have it change to something entertaining  -->
+<!-- Fun fact: my full name is Vincenzo.  -->
+<!-- TODO: make the fun fact clickable and have it change to something entertaining  -->
 
 Currently using Jekyll, a nifty (free) static site generator.
 Learn how to make your own nifty statically generated site at [jekyllrb.com](http://jekyllrb.com/).
