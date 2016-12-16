@@ -11,7 +11,6 @@ Fizzbuzz is simple: take in a number and return every number from 1 to that inpu
 1
 2
 fizz
-3
 4
 buzz
 fizz
@@ -30,6 +29,7 @@ fizz
 19
 buzz
 ```
+{: .language-javascript}
 
 A solid solution just handles each situation with an `if` statement.
 
