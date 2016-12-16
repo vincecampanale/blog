@@ -69,7 +69,7 @@ const coolFizzBuzz = (num) => {
 
 <iframe src="//giphy.com/embed/6FymBmqKeBrl6" width="480" height="421" frameBorder="0" class="giphy-embed" allowFullScreen></iframe><p><a href="http://giphy.com/gifs/jaw-drop-oooooh-6FymBmqKeBrl6">via GIPHY</a></p>
 
-#### Cool ES6 things used:
+#### Sweet ES6 things used:
 
 1) const.
   `const` stands for "constant". In Javascript, constants are block-scoped, similar to variables that are defined with `let` (another new ES6 feature). A "block-scoped" variable is only available inside of the curly braces in which it is confined. Additionally, and more importantly, declaring a `const` variable means that the variable cannot be re-assigned to a different value later on. However, it's important to note declaring something with `const` does not necessarily make that thing "immutable". Check out [this](https://jack.ofspades.com/es6-const-not-immutable/) blog post for more information on that. Also, [MDN docs](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/const) always keep it real.
@@ -78,7 +78,7 @@ const coolFizzBuzz = (num) => {
   Arrow functions! Arrow functions are a shorthand way of declaring anonymous functions. You put the arguments on the left side and then what you want to do with the arguments on the right side. Super handy and concise. In this case, we take advantage of Javascript's functional programming capabilities (using functions as values) to un-anonymize our arrow function. We give the arrow function a name by storing it in a `const` called "coolFizzBuzz". More good stuff about the arrow function [here](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/Arrow_functions).
 
 #### Ternary operator usage:
-  Ternary operators are cool because they let you condense simple conditional logic flows into one-liners.
+  I like ternary operators because they let me condense simple conditional logic flows into one-liners.
   In this example, the ternary operator line translates to this logic flow:
   <a href="http://tinypic.com?ref=9la3hx" target="_blank"><img src="http://i63.tinypic.com/9la3hx.jpg" border="0" alt="Image and video hosting by TinyPic"></a>
 
