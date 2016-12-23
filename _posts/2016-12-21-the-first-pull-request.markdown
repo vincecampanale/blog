@@ -70,3 +70,6 @@ If you're like me and are new to software development, but want to jump into the
 If I hadn't sought help from fellow contributors, there's no way I could have successfully pulled this off. You may feel like your question is stupid, but unless there's an easy answer provided by the Googs, it's worth asking.
 
 Looking forward to many future pull requests to Habitica and lots of other projects! It's a whole new world.
+
+
+Executive Producer: Dick Wolf
