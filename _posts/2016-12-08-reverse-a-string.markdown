@@ -1,9 +1,9 @@
 ---
 layout: post
-title:  "Step By Step: Reverse a String"
+title:  "Solved: Reverse a String"
 date:   2016-12-08 00:30:00
 ---
-The challenge of the day today comes from Free Code Camp. Their very first "Basic Algorithm Scripting" challenge is this: given a string, reverse it. I believe Missy Elliot once said something along the lines of, "I put a string down, flip it and reverse it." I dedicate this challenge to her.
+The challenge we're going to solve today comes from Free Code Camp's "Basic Algorithm Scripting". Our task is this: given a string, reverse it. I believe Missy Elliot once said something along the lines of, "I put a string down, flip it and reverse it." I dedicate this challenge to her.
 
 I solved this challenge when I first started learning to code and the solution is saved there in Free Code Camp for me to cringe at. I'll share it with you, so you may partake in the cringe-fest.
 
@@ -23,9 +23,9 @@ function reverseString(str){
 ```
 {: .language-javascript}
 
-So here's how it works. First, it creates a dummy array. Then, it steps through each character of the input string and loads the character into the array. Example: `"hello"` becomes `["h", "e", "l", "l", "o"]`. Next, it calls the [.reverse()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/reverse) method on that array.  Finally, it calls the [.join()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/join) method on the array with no spaces between the characters (that's what the empty string argument does), stores the resulting string in a variable aptly named strReversed, and spits out strReversed. Another neat thing to note with this solution is that I'm taking advantage of something very cool about JavaScript: Arrays are dynamic. This means that an array will expand as you add elements to it (and shrink as you remove them). This is a very useful feature that not every language has.
+So here's how it works. First, I create a dummy array. Then, I step through each character of the input string and loads the character into the array. Example: `"hello"` becomes `["h", "e", "l", "l", "o"]`. Next, it calls the [.reverse()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/reverse) method on that array.  Finally, it calls the [.join()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/join) method on the array with no spaces between the characters (that's what the empty string argument does), stores the resulting string in a variable aptly named strReversed, and spits out strReversed. Another neat thing to note with this solution is that I'm taking advantage of something very cool about JavaScript: Arrays are dynamic. This means that an array will expand as you add elements to it (and shrink as you remove them). This is a very useful feature that not every language has.
 
-Okay, back to the challenge at hand. While Solution 1 works, it could be better. Here's what I would do now, with a couple more months of coding practice and a few projects under my belt.
+While Solution 1 works, it could be better. Here's what I would do now, with a couple more months of coding practice and a few projects under my belt.
 
 #### Solution 2 (Less Noob)
 ```

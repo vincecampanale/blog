@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Step By Step: Return Largest Numbers in Arrays"
+title:  "Solved: Return Largest Numbers in Arrays"
 date:   2016-12-12
 ---
 

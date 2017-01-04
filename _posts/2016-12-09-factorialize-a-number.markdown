@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Step By Step: Factorialize a Number"
+title:  "Solved: Factorialize a Number"
 date:   2016-12-09
 ---
 

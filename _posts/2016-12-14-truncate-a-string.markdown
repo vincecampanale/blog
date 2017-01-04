@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Step By Step: Truncate a String"
+title:  "Solved: Truncate a String"
 date:   2016-12-14
 ---
 
