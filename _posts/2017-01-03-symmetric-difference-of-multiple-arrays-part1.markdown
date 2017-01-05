@@ -11,7 +11,7 @@ In the first part, I'm going to give a little background information and talk ab
 
 The symmetric difference between two sets is best defined as the collection of elements which are members of either set, but not both. For example, the symmetric difference of `A = {1, 2, 3, 4}` and `B = {3, 4, 5, 6}` is `A ∆ B = {1, 2, 5, 6}`.
 
-Things get a little harrier when we add in a third set (and a fourth and a fifth and ...) because the symmetric difference of all of the arrays includes the elements that are present in *all* of the sets in addition to the elements present in only one set. To illustrate, let's add the set `C = {2, 4, 6, 8}` to the above example. To find the symmetric difference of `A = {1, 2, 3, 4}`, `B = {3, 4, 5, 6}`, and `C = {2, 4, 6, 8}`, we will first get the symmetric difference of `A` and `B`, which is `A ∆ B = {1, 2, 5, 6}`. Then, we take the symmetric difference of `A ∆ B` and `C` like so,
+Things get a little harrier when we add in a third set (and a fourth and a fifth and ...) because the symmetric difference of all of the sets includes the unique elements *and* the elements that are present in *all* of the sets. To illustrate, let's add the set `C = {2, 4, 6, 8}` to the above example. To find the symmetric difference of `A = {1, 2, 3, 4}`, `B = {3, 4, 5, 6}`, and `C = {2, 4, 6, 8}`, we will first get the symmetric difference of `A` and `B`, which is `A ∆ B = {1, 2, 5, 6}`. Then, we take the symmetric difference of `A ∆ B` and `C` like so,
 `(A ∆ B) ∆ C = {1, 4, 5, 8}`. Notice that the number 4 is in all three sets, so it is present in the symmetric difference.
 
 #### Strategy
@@ -20,10 +20,12 @@ The general strategy for solving this problem relies on the `reduce()` method fo
 
 1) Store all the arguments (which will be arrays) to the function in an array so we can use `.reduce()`.
 
-2) Write a function that finds the symmetric difference between two arrays. We will call this function recursively using `.reduce()` to get the symmetric difference of all the arrays.
+2) Write a function that finds the symmetric difference between two arrays. We will use this function as the callback function for `.reduce()` to get the symmetric difference of all the arrays.
 
 3) Write a function that removes duplicates from an array.
 
 4) Sort and remove duplicates from the result of the symmetric difference function.
+
+5) Put it all together and test.
 
 Now that you have an idea of how this solution works, it might be a good time to give this problem another shot on your own. Continue to Part 2 to see steps 1 and 2 implemented.
