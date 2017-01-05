@@ -29,3 +29,5 @@ This is a much cleaner way to get an array from an array-like object. We'll use 
 
 #### Step 2: Finding the symmetric difference of two arrays.
 This step is definitely the hardest part of the solution. We *could* use a boat load of for loops here (which I spent a long time doing the first time I solved this), but I've recently discovered the beauty of higher-order functions. So, I'm going to just skip straight to those because it's much cleaner, more concise code, and, most importantly, it's much easier to read.
+
+(Rest coming soon)
