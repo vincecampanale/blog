@@ -4,10 +4,10 @@ title:  "Solved: Return Largest Numbers in Arrays"
 date:   2016-12-12
 ---
 
-Today's challenge hails from [Free Code Camp](https://www.freecodecamp.com/)'s "Basic Algorithm Scripting" section. The task is this: given an input array containing several arrays of numbers, return an array containing only the largest number from each input array. For example, `largestNumbers([[4, 5, 1, 3], [13, 27, 18, 26], [32, 35, 37, 39], [1000, 1001, 857, 1]])` should return `[5, 27, 39, 1001]`.
+Today's challenge hails from [Free Code Camp](https://www.freecodecamp.com/)'s "Basic Algorithm Scripting" section. The task: given an input array containing several arrays of numbers, return an array containing only the largest number from each input array. For example, `largestNumbers([[4, 5, 1, 3], [13, 27, 18, 26], [32, 35, 37, 39], [1000, 1001, 857, 1]])` should return `[5, 27, 39, 1001]`.
 
 #### Step 1: Glare at problem. Do not break eye contact.
-Go on, I'll wait.
+It's okay to growl a little bit, I won't judge you.
 
 #### Step 2: Determine approach. Write pseudocode.
 ```
@@ -27,14 +27,14 @@ First, let's handle the first two pieces of our pseudocode. We want to instantia
 function getLargestNumbers(arr){
   var largestNumbers = [];
   for (var i = 0; i < arr.length; i++){
-
+    //stuff
   }
 }
 ```
 {: .language-javascript}
 
 Okay, now let's figure out the code we want to execute on each array.
-There are many ways to find the maximum number in an array, but today we are just going to use [Math.max](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/max)[.apply()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/apply). The .apply() method takes two parameters. The first parameter is the context on which the code will execute. To learn more about context, check out [this great article by Ryan Morr](http://ryanmorr.com/understanding-scope-and-context-in-javascript/). The context of `Math.max()` is Math, so passing Math in as the first parameter to `.apply()` just makes sure this remains consistent. However, since `.max()` does not require context, this is *technically* unnecessary. The second parameter of `.apply()` is an array-like object on which the method will be applied. In our case, this is the inner array accessed in our for loop. So, let's put this to use and write the code to get the largest number in each inner array and save that number in a variable for later use.
+I'm sure there are many ways to find the maximum number in an array, but the best way I can think of is to use [Math.max](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/max)[.apply()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/apply). The `.apply()` method takes two parameters. The first parameter is the context on which the code will execute. To learn more about context, check out [this great article by Ryan Morr](http://ryanmorr.com/understanding-scope-and-context-in-javascript/). The context of `Math.max()` is Math, so passing Math in as the first parameter to `.apply()` just makes sure this remains consistent. However, since `.max()` does not require context, this is *technically* unnecessary. The second parameter of `.apply()` is an array-like object on which the method will be applied. In our case, this is the inner array accessed in our for loop. So, let's put this to use and write the code to get the largest number in each inner array and save that number in a variable for later use.
 ```
 var maximum = Math.max.apply(Math, arr[i]);
 ```

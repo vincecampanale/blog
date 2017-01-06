@@ -5,10 +5,10 @@ date:   2016-12-09
 ---
 
 While "factorialize" is far from being a real word, this is a real challenge.
-Our task is this: given an integer, return the factorial of that integer.
+The task is this: given an integer, return the factorial of that integer.
 For example, `factorialize(5)` should return `5 * 4 * 3 * 2 * 1` which equals `120`.
 
-This challenge (also from the Free Code Camp "Basic Algorithm Scripting" tasks) can be done in numerous ways. I'll provide two solutions for you here.
+This challenge (from the Free Code Camp "Basic Algorithm Scripting" tasks) can be done in numerous ways, and I'm sure there's a better way to do it, but I'll provide two solutions I thought of for you here.
 
 The first solution I'll provide was created by yours truly a couple of months ago when I was first learning to code.
 
@@ -32,7 +32,7 @@ function factorialize(num) {
 ```
 {: .language-javascript}
 
-Let's make this better. First of all, nobody said that I had to arrive at the factorial by counting down (`5 * 4 * 3 * 2 * 1`). I can just as easily get the correct answer by counting up. Second of all, there's no need to update *two* variables, `product` and `num`.  One good thing about this solution, however, is that it establishes a base case (if num is 0, return 1). The base case is very important. Okay, onwards.
+Let's make this better. First of all, there's no reason to arrive at the factorial by counting down (`5 * 4 * 3 * 2 * 1`). I can more easily get the correct answer by counting up. Second of all, there's no need to update *two* variables, `product` and `num`.  One good thing about this solution, however, is that it establishes a base case (if `num` is 0, return 1). The base case is very important. Okay, onwards.
 
 #### Solution 2 (Going up!)
 ```

@@ -4,16 +4,12 @@ title:  "Solved: Truncate a String"
 date:   2016-12-14
 ---
 
-Nothing like some good ol' Javascript string manipulation! Today, we're tackling a fun little challenge from the Free Code Camp (FCC) "Basic Algorithm Scripting" called "Truncate a string." For this challenge, we will be building a function that takes two arguments: 1) "str" - the string to be truncated and 2) "num" - the length of the resulting truncation ([it's a word](http://www.dictionary.com/browse/truncation)). However (!!), FCC has added a couple of hoops we have to jump through to make things more interesting. Hoop #1) The truncated string we return must end with `...` and note: *these dots add to the length of the string*. Hoop #2) If `num` is less than or equal to 3, then the dots *do not* add to the length of the string.
+Nothing like some good ol' Javascript string manipulation! Today, I'm tackling a fun little challenge from the Free Code Camp (FCC) "Basic Algorithm Scripting" called "Truncate a string." For this challenge, we will be building a function that takes two arguments: 1) "str" - the string to be truncated and 2) "num" - the length of the resulting truncation ([it's a word](http://www.dictionary.com/browse/truncation)). However (!!), FCC has added a couple of hoops we have to jump through to make things more interesting. Hoop #1) The truncated string we return must end with `...` and note: *these dots add to the length of the string*. Hoop #2) If `num` is less than or equal to 3, then the dots *do not* add to the length of the string. (Something I struggled with.)
 
-If you're thinking this is a good time to break out some conditionals, then I like the way you think, Reader (capital R).
-
-#### Step 1: We're gonna write some psuedocode up in here, up in here
-
-Quick shoutout to a true icon, [DMX](https://www.youtube.com/watch?v=thIVtEOtlWM). Feel free to listen to that song while you work through the rest of this post. Try not to nod your head. Try it. It's impossible. The man's a genius. I digress.
+#### Step 1: Psuedocode
 
 This problem is a bit tricky because we have several conditions to keep in mind. We treat strings differently based on whether or not their `length` property is greater than `num`. We also want to keep in mind whether `num` is less than or equal to 3.
-Let's prioritize our conditions. There are many ways to handle this, but I'm going to go with a straightforward, easy-to-understand approach. First, we want to see whether or not `string.length` is less than or equal to `num` because that condition will change what we return. Next, let's check for the value of `num` because that also affects our return value. If neither of those conditions are met, then we can just solve the original problem.
+Let's prioritize our conditions. I'm sure there are many ways to handle this, but I'm going to go with the best way I could think of. First, we want to see whether or not `string.length` is less than or equal to `num` because that condition will change what we return. Next, let's check for the value of `num` because that also affects our return value. If neither of those conditions are met, then we can just solve the original problem.
 
 ```
 // 1) If str.length is less than or equal to num

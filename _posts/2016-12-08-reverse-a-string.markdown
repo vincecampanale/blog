@@ -3,9 +3,9 @@ layout: post
 title:  "Solved: Reverse a String"
 date:   2016-12-08 00:30:00
 ---
-The challenge we're going to solve today comes from Free Code Camp's "Basic Algorithm Scripting". Our task is this: given a string, reverse it. I believe Missy Elliot once said something along the lines of, "I put a string down, flip it and reverse it." I dedicate this challenge to her.
+The challenge I'm going to solve today comes from Free Code Camp's "Basic Algorithm Scripting". My task is this: given a string, reverse it. I believe Missy Elliot once said something along the lines of, "I put a string down, flip it and reverse it." I dedicate this challenge to her.
 
-I solved this challenge when I first started learning to code and the solution is saved there in Free Code Camp for me to cringe at. I'll share it with you, so you may partake in the cringe-fest.
+I solved this challenge a few months ago when I first started learning to code and the solution is saved there in Free Code Camp for me to cringe at. I'll share it with you, so you may partake in the cringe-fest.
 
 #### Solution 1 (Total Noob)
 ```
