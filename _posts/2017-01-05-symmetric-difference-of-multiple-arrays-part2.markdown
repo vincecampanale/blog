@@ -103,7 +103,7 @@ function symDiffTwoArrays(arr1, arr2) {
 Almost done!
 Let's concatenate these arrays using [`Array.prototype.concat()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/concat){: target="_blank"} to get the symmetric difference and return that symmetric difference.
 
-~~~ javascript
+{% highlight javascript %}
 function symDiffTwoArrays(arr1, arr2) {
   //filter a by checking for elements in b
   function filterArray(a, b){
@@ -124,8 +124,8 @@ function symDiffTwoArrays(arr1, arr2) {
   //return concatenated array
   return symDiff;
 }
-~~~
+{% endhighlight %}
 
-Alright! We're most of the heavy lifting for this algorithm. We have processed the arguments passed to the function and written an inner, private function to calculate the symmetric difference of two arrays.
+Alright! We're done with most of the heavy lifting for this algorithm. We have processed the arguments passed to the function and written an inner, private function to calculate the symmetric difference of two arrays.
 
 On to [Part 3]() to learn about `.reduce()` and how it works it's magic to help us bring this solution home!
