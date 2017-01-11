@@ -32,6 +32,6 @@ The general strategy for solving this problem relies on the `reduce()` method fo
 
 4) Sort and remove duplicates from the result of the symmetric difference function.
 
-5) Put it all together and test.
+5) Put it all together.
 
 Now that you have an idea of how this solution works, it might be a good time to give this problem another shot on your own. Continue to [Part 2]() to see steps 1 and 2 implemented.
