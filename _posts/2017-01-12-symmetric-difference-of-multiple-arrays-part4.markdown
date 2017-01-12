@@ -5,8 +5,8 @@ date:   2017-01-12
 ---
 This post is Part 4 of a four part series:  
 [Symmetric Difference of Multiple Arrays (Part 1)]()  
-[Symmetric Difference of Multiple Arrays (Part 2)]()
-[Symmetric Difference of Multiple Arrays (Part 3)]()
+[Symmetric Difference of Multiple Arrays (Part 2)]()  
+[Symmetric Difference of Multiple Arrays (Part 3)]()  
 Symmetric Difference of Multiple Arrays (Part 4) <-- You are here
 
 The final post! The one where we get to put it all together and see the function in all it's glory.
@@ -52,13 +52,15 @@ function removeDuplicates(arr) {
 }
 ~~~
 
+Okay, now it's time to bring `.reduce()` in and finish this function once and for all.
+
 #### Applying [`.reduce()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/Reduce)
 
-The MDN docs say "The reduce() method applies a function against an accumulator and each value of the array (from left-to-right) to reduce it to a single value," but I don't get that either.
+The MDN docs say "The reduce() method applies a function against an accumulator and each value of the array (from left-to-right) to reduce it to a single value." Don't worry, I don't understand that either.
 
-I'll try my own quick definition, and if this doesn't make sense, try googling "javascript .reduce" and you will find lots of useful tutorials and resources.
+I'll try my own explanation, and if this doesn't make sense, try googling "javascript .reduce" and you will find lots of useful tutorials and resources.
 
-Here it goes: `.reduce()` implements a callback function which takes two *primary* argument (there are other options but there are two really important ones). These two argument are two elements from the array on which you are calling the `.reduce()` method. The first argument is the first element in the array, and the second argument is the second element in the array. The callback function acts on both of these arguments, and returns a single *thing*, this can be an object, number, array, or whatever. It calls this *thing* the "accumulator." The accumulator is then used as the first argument for the next implementation of the callback function. The second argument for the callback function comes from the next element in the array (which was not part of the first callback round). This process repeats until the entire array has been processed and the accumulator is returned.
+Here it goes: `.reduce()` implements a callback function which takes two *primary* arguments (there are other options but there are two really important ones). These two arguments are two elements from the array on which you are calling the `.reduce()` method. The first argument is the first element in the array, and the second argument is the second element in the array. The callback function acts on both of these arguments, and returns a single *thing*, (the return value of your callback function) this can be an object, number, array, or whatever. This *thing* is referred to as the "accumulator." The accumulator is then used as the first argument for the next round of the callback function. The second argument for the callback function comes from the next element in the array (which was not part of the first callback round). This process repeats until the entire array has been processed and the finaly value of the accumulator is returned.
 
 So, in our example, the callback function is going to be our symmetric difference of two arrays function, so aptly named `symDiffTwoArrays(arr1, arr2)`. Calling `.reduce()` on the `argArray` array will apply the symmetric difference algorithm to the first two elements, then the result of that gets stored in the "accumulator". Then, symmetric difference algorithm gets applied to the accumulator and the next element, and so on. Here's a pretty picture hand-drawn by moi:
 
