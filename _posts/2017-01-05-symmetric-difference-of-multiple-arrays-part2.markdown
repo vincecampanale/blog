@@ -4,10 +4,10 @@ title:  "Solved: Symmetric Difference of Multiple Arrays (Part 2)"
 date:   2017-01-05
 ---
 This post is Part 2 of a four part series:  
-[Symmetric Difference of Multiple Arrays (Part 1)]()  
+[Symmetric Difference of Multiple Arrays (Part 1)](http://www.vincecampanale.com/2017/01/03/symmetric-difference-of-multiple-arrays-part1/)  
 Symmetric Difference of Multiple Arrays (Part 2) <- You are here  
-[Symmetric Difference of Multiple Arrays (Part 3)]()  
-[Symmetric Difference of Multiple Arrays (Part 4)]()  
+[Symmetric Difference of Multiple Arrays (Part 3)](http://www.vincecampanale.com/2017/01/05/symmetric-difference-of-multiple-arrays-part3/)  
+[Symmetric Difference of Multiple Arrays (Part 4)](http://www.vincecampanale.com/2017/01/12/symmetric-difference-of-multiple-arrays-part4/)  
 
 In this section, I'm going to go over steps one and two of the strategy outlined in the previous post.  
 For a brief recap, in step 1, we want to separate each argument array and create a new array in our function to store them. In step 2, we will write a function that returns the symmetric difference of two arrays.
