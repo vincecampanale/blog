@@ -13,7 +13,7 @@ In this post, I focus on the third step of the solution: write a function that r
 
 The function we want will take an array as an argument and filter out duplicates. Seems like a good time to use `.filter()`, eh?
 
-There are other solutions for this which involves for loops, but in my opinion, a solution that makes use of a higher order function like `.filter()` is generally more concise, readable, an elegant.
+There are other solutions for this which involves for loops, but in my opinion, a solution that makes use of a higher order function like `.filter()` is generally more concise, readable, and elegant.
 
 Without further ado:
 ~~~ javascript
@@ -28,4 +28,4 @@ Our function will step through every element in the array and filter out any ele
 
 That's it for Part 3!
 
-In [Part 4](), I'll walk you through my approach for applying `.reduce()` to the arguments array, sorting and filtering the results (removing duplicates), and outputting the final result.
+In [Part 4](), I'll walk you through applying `.reduce()` to the arguments array using our symmetric difference helper function, then sorting and filtering the results (removing duplicates).
