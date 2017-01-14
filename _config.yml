@@ -16,13 +16,14 @@
 title: A Blog Has No Name
 author: Vince Campanale
 email: vcampanale0294@gmail.com
-description: Thoughts on code 'n' stuff.
-# baseurl: "" # the subpath of your site, e.g. /blog
+description: Software blog, front-end development, HTML, CSS, Javascript.
+baseurl: "/blog" # the subpath of your site, e.g. /blog
 url: "http://vincecampanale.com" # the base hostname & protocol for your site, e.g. http://example.com
-twitter_username: vnce_cmpnle
+twitter_username: _vincecampanale
 github_username:  vincecampanale
 
 # Build settings
+port: 8000
 future: true
 markdown: kramdown
 permalink: /:year/:month/:day/:title/
