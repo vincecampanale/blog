@@ -12,7 +12,7 @@ His main argument revolves around poo-pooing the notion that in order to be "suc
 
 >The web is the greatest entrepreneurial platform ever invented. Lowest barriers of entry, greatest human reach ever. I love the web. Permission-less, grand reach, diversity of implementation. Don’t believe this imaginary wall of access of money. It isn’t there.
 
-As a young person working hard, dreaming to make a dent in the universe through the web, these are encouraging words. As someone who didn't go to Stanford to study computer science, isn't willing to relocate to San Francisco, isn't part of Y Combinator, and has never met an "Angel," the prospect of building a business on the web is intimidating. It's like there's this recipe for success and if you don't have the aforementioned ingredients, you should just get out of the kitchen. But the reality is this: there *is* no recipe. The real ingredients are accessible and few:  
+As a young person working hard, dreaming to make a dent in the universe through the web, these are encouraging words. As someone who didn't study CS at Stanford, isn't willing to relocate to San Francisco, isn't part of Y Combinator, and has never met an "Angel," the prospect of building a business on the web is intimidating. It's like there's this recipe for success and if you don't have the aforementioned ingredients, you should just get out of the kitchen. But the reality is this: there *is* no recipe. The real ingredients are accessible and few:  
 1) A simple solution to a common problem.  
 2) A computer and the ability to tell that computer what to do.  
 3) Blood, sweat, and tears.  
