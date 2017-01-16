@@ -13,7 +13,7 @@
 # you will see them accessed via {{ site.title }}, {{ site.email }}, and so on.
 # You can create any custom variable you would like, and they will be accessible
 # in the templates via {{ site.myvariable }}.
-title: A Blog Has No Name
+title: Vince Campanale/Blog/
 author: Vince Campanale
 email: vcampanale0294@gmail.com
 description: Software blog, front-end development, HTML, CSS, Javascript.
