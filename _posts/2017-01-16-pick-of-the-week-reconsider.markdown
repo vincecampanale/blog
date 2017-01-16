@@ -4,7 +4,7 @@ title:  "Pick of the Week: RECONSIDER"
 date:   2017-01-16
 ---
 
-A few days ago, an article called [RECONSIDER](https://m.signalvnoise.com/reconsider-41adf356857f#.2uqxrn3br){target = "_blank"} popped up on my twitter feed. It was written by David Heinemeier Hansson, the guy who created Ruby on Rails. He's also the Founder and CTO of a company called Basecamp (formerly 37signals) that has a sweet blog on Medium called [Signal v. Noise](https://m.signalvnoise.com/){target="_blank"}. In short, he's cool and worth listening to (everybody is worth listening to, but this guy especially is).
+A few days ago, an article called [RECONSIDER](https://m.signalvnoise.com/reconsider-41adf356857f#.2uqxrn3br){:target = "_blank"} popped up on my twitter feed. It was written by David Heinemeier Hansson, the guy who created Ruby on Rails. He's also the Founder and CTO of a company called Basecamp (formerly 37signals) that has a sweet blog on Medium called [Signal v. Noise](https://m.signalvnoise.com/){:target="_blank"}. In short, he's cool and worth listening to (everybody is worth listening to, but this guy especially is).
 
 His main argument revolves around poo-pooing the notion that in order to be "successful" in tech, you have to be a disrupto-unicorn. I appreciate his hard-hitting candidness and admire the clarity with which he communicates. Some memorable quotes that really stuck with me:
 
