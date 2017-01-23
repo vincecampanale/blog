@@ -16,18 +16,18 @@ For a brief recap, in step 1, we want to separate each argument array and create
 I'm going to show two ways to do this. The first is an older, hackier way. The second uses `.from()` which was introduced in ES2015.
 
 First way:  
-~~~ javascript
+{% highlight javascript %}
 var argArray = Array.prototype.slice.call(arguments);
-~~~
+{% endhighlight %}
 
 This [Stackoverflow post](http://stackoverflow.com/questions/7056925/how-does-array-prototype-slice-call-work){:target="_blank"} explains this line of code very well.
 Here's the most important information from that post:
 >The `.call()` and `.apply()` methods let you manually set the value of this in a function. So if we set the value of this in `.slice()` to an array-like object, `.slice()` will just assume it's working with an Array, and will do its thing.
 
 Second way:  
-~~~ javascript
+{% highlight javascript %}
 var argArray = Array.from(arguments);
-~~~
+{% endhighlight %}
 
 This is a much cleaner way to get an array from an array-like object. We'll use the `.from()` approach in our final solution.
 
@@ -36,18 +36,18 @@ This step is definitely the hardest part of the solution. We *could* use a boat 
 
 Let's outline our function.
 
-~~~ javascript
+{% highlight javascript %}
 function symDiffTwoArrays(arr1, arr2) {
   //remove elements from array 1 that are in array 2
   //remove elements from array 2 that are in array 1
   //concatenate filtered arrays
   //return concatenated array
 }
-~~~
+{% endhighlight %}
 
 Okay, now we can use the [`Array.prototype.filter()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/filter){: target="_blank"} method to process each element in `arr1` and check if it is in `arr2`:
 
-~~~ javascript
+{% highlight javascript %}
 function symDiffTwoArrays(arr1, arr2) {
   //remove elements from arr2 that are in arr1
   var filteredArray1 = arr1.filter(function isInOtherArray(element){
@@ -57,13 +57,13 @@ function symDiffTwoArrays(arr1, arr2) {
   //concatenate filtered arrays
   //return concatenated array
 }
-~~~
+{% endhighlight %}
 
 The method `.filter()` implements the callback function `isInOtherArray` on each element of `arr1` and only keeps elements for which the callback function returns true. *(Side note: You can use an anonymous function for the callback, as is most common, but I threw a name on there for the sake of clarity. (Side side note: Sometimes it's a good idea to give names to callback functions because it helps with understanding the call stack and debugging)).* In this callback, only elements that are not in `arr2` (i.e. their index strictly equals -1) will return true and thus remain in the `filteredArray1` array.
 
 Then we give `arr2` the same treatment:
 
-~~~ javascript
+{% highlight javascript %}
 function symDiffTwoArrays(arr1, arr2) {
   //remove elements from arr2 that are in arr1
   var filteredArray1 = arr1.filter(function isInOtherArray(element){
@@ -76,11 +76,11 @@ function symDiffTwoArrays(arr1, arr2) {
   //concatenate filtered arrays
   //return concatenated array
 }
-~~~
+{% endhighlight %}
 
 To keep our code [D.R.Y.](https://en.wikipedia.org/wiki/Don't_repeat_yourself){: target="_blank"}, we should separate the logic of the callback function out:
 
-~~~ javascript
+{% highlight javascript %}
 function symDiffTwoArrays(arr1, arr2) {
   //filter a by checking for elements in b
   function filterArray(a, b){
@@ -98,7 +98,7 @@ function symDiffTwoArrays(arr1, arr2) {
   //concatenate filtered arrays
   //return concatenated array
 }
-~~~
+{% endhighlight %}
 
 Almost done!
 Let's concatenate these arrays using [`Array.prototype.concat()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/concat){: target="_blank"} to get the symmetric difference and return that symmetric difference.

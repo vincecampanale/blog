@@ -16,13 +16,13 @@ The function we want will take an array as an argument and filter out duplicates
 There are other solutions for this which involves for loops, but in my opinion, a solution that makes use of a higher order function like `.filter()` is generally more concise, readable, and elegant.
 
 Without further ado:
-~~~ javascript
+{% highlight javascript %}
 function removeDuplicates(arr) {
   return arr.filter(function(item, pos) {
     return arr.indexOf(item) == pos;
   });
 }
-~~~
+{% endhighlight %}
 
 Our function will step through every element in the array and filter out any element that has an index which does not match it's `.indexOf(element)` value. Since the `.indexOf(element)` method always returns the index of the *first appearance* of that element in the array, any element that appears more than once in the array will be removed.
 

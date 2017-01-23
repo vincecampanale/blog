@@ -15,9 +15,9 @@ Let's recap what we have:
 
 #### Helper Function 1: Symmetric Difference of Two Arrays
 This function takes in two arrays and returns their symmetric difference as an array.
-See more detail on how this was constructed in [Part 2]().
+See more detail on how this was constructed in [Part 2](http://www.vincecampanale.com/blog/2017/01/05/symmetric-difference-of-multiple-arrays-part2/).
 
-~~~ javascript
+{% highlight javascript %}
 function symDiffTwoArrays(arr1, arr2) {
   //filter a by checking for elements in b
   function filterArray(a, b){
@@ -38,19 +38,19 @@ function symDiffTwoArrays(arr1, arr2) {
   //return concatenated array
   return symDiff;
 }
-~~~
+{% endhighlight %}
 
 #### Helper Function 2: Remove Duplicates from an Array
 This function takes in an array and returns that same array with no duplicates.
 See more detail on how this was constructed in [Part 3]().
 
-~~~ javascript
+{% highlight javascript %}
 function removeDuplicates(arr) {
   return arr.filter(function(item, pos) {
     return arr.indexOf(item) == pos;
   });
 }
-~~~
+{% endhighlight %}
 
 Okay, now it's time to bring `.reduce()` in and finish this function once and for all.
 
@@ -71,7 +71,7 @@ Hopefully this shed some light on the seemingly-magical `.reduce()` for you.
 #### Put It All Together
 Now that we have covered each part in detail, the whole should make sense.
 
-~~~ javascript
+{% highlight javascript %}
 function sym(args) {
 
   //get symmetric difference of two arrays
@@ -108,7 +108,7 @@ function sym(args) {
 
   return symDiffNoDups;
 }
-~~~
+{% endhighlight %}
 
 Thanks for reading!
 Peace.

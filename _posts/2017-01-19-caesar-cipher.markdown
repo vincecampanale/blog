@@ -11,7 +11,7 @@ In this solution, I step through my approach to constructing a Javascript functi
 
 #### Outlining & Pseudocode
 To start, let's construct the shell of the function and get a sense for how it should work in the end.
-~~~ javascript
+{% highlight javascript %}
 function caesarCipher(str, shiftNum) {
   //split the input string into an array to operate on each element
   const strAsArray = str.split("");
@@ -29,13 +29,13 @@ function caesarCipher(str, shiftNum) {
 
   return shifted.join(""); //return shifted array as a string
 }
-~~~
+{% endhighlight %}
 
 #### Shifting a Letter
 We're going to use the ASCII code to shift the letters. We'll use the [`.charCodeAt()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/charCodeAt) method in order to get the ASCII code of each letter. Since all the letters of the alphabet are in order of ascending ASCII codes, all we have to do is add `shiftNum` to the character code of the current letter to get the new letter's code. Then, we can use [`.fromCharCode()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/fromCharCode) to convert back to the letter version.
 
 In code,
-~~~ javascript
+{% highlight javascript %}
 function caesarCipher(str, shiftNum) {
   //split the input string into an array to operate on each element
   const strAsArray = str.split("");
@@ -53,7 +53,7 @@ function caesarCipher(str, shiftNum) {
 
   return shifted.join(""); //return shifted array as a string
 }
-~~~
+{% endhighlight %}
 
 Note that the callback function `shift` operates on one letter at a time, so we want the character code of the only letter in a one-letter string, which is at index 0, hence `letter.charCodeAt(0)`.
 
@@ -62,7 +62,7 @@ What if we want to shift `"zebra"` by 3 characters? The way our function is set 
 
 Let's do some math. If the resulting shifted code is greater than 122, we want to take the difference between our sum and 122, and add that to 97. Likewise, if the resulting shifted code is less than 97, we want to take the difference between our sum and 97, and subtract that number from 122. Translation:
 
-~~~ javascript
+{% highlight javascript %}
 const sum = letter.charCodeAt(0) + shiftNum;
 if (sum > 122) {
   letter = String.fromCharCode(97 + (sum - 122) - 1); //the -1 is to adjust for inclusion
@@ -71,11 +71,11 @@ if (sum > 122) {
 } else {
   letter = String.fromCharCode(sum);
 }
-~~~
+{% endhighlight %}
 
 Let's drop that into our function.
 
-~~~ javascript
+{% highlight javascript %}
 function caesarCipher(str, shiftNum) {
   //split the input string into an array to operate on each element
   const strAsArray = str.split("");
@@ -100,14 +100,14 @@ function caesarCipher(str, shiftNum) {
 
   return shifted.join(""); //return shifted array as a string
 }
-~~~
+{% endhighlight %}
 
 #### Refactor & Get Creative
 I think it makes more sense syntactically to append this method to the String prototype, so it can be used like "`"hello".encryptWithCaesars(3)` where `"hello"` is the string to be encrypted and the argument passed to the method is the shift constant.
 
 I made a couple of other changes to save memory, and flex my ternary operator, arrow function, ES6, and syntax muscles. Check it out:
 
-~~~ javascript
+{% highlight javascript %}
 //This adds a new method to the String prototype which implements the function "encryptWithCaesars" on that string.
 //The method takes one parameter, "shiftNum", for which the default value is 2 (if no shiftNum is provided).
 //Saves memory by replacing the letters in place, rather than creating a new array and pushing the letters to that array.
@@ -123,7 +123,7 @@ String.prototype.encryptWithCaesars = function encryptWithCaesars(shiftNum = 2) 
   return strAsArray.join("");
 }
 //Note: this solution only works with lowercase letters.
-~~~
+{% endhighlight %}
 
 Let me know what you think! Contact info in the footer - tweet at me with suggestions/comments.
 Hope I was able to pass on a little knowledge and help you out with this problem!
