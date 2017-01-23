@@ -14,15 +14,15 @@ Before the summary, I want to give a quick shoutout to the debaters. They did an
 
 #### Team Angular
 
-[John Niedzwiecki](https://www.linkedin.com/in/johnniedzwiecki2) - {%include icon-twitter.html%}[@RHGeek](https://twitter.com/RHGeek)
+[John Niedzwiecki](https://www.linkedin.com/in/johnniedzwiecki2) - [@RHGeek](https://twitter.com/RHGeek)
 
-[Sam Douglas](https://www.linkedin.com/in/samdouglas) - {% include icon-twitter.html %}[@acmegeek](https://twitter.com/acmegeek)
+[Sam Douglas](https://www.linkedin.com/in/samdouglas) - [@acmegeek](https://twitter.com/acmegeek)
 
 #### Team React
 
 [Patrick Woo](https://www.linkedin.com/in/patrickwoo)
 
-Stan Bershadskiy - {% include icon-twitter.html %} [@stan229](https://twitter.com/stan229)
+Stan Bershadskiy - [@stan229](https://twitter.com/stan229)
 
 ---
 
