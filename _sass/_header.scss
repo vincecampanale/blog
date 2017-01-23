@@ -68,7 +68,7 @@
       }
     }
   }
-  @include media-query(440px) {
+  @include media-query(400px) {
     .site-title {
       order: 1;
     }
