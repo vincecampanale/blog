@@ -23,7 +23,7 @@ twitter_username: _vincecampanale
 github_username:  vincecampanale
 
 # Build settings
-port: 3000
+port: 4000
 future: true
 markdown: kramdown
 permalink: /:year/:month/:day/:title/
