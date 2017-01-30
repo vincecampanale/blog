@@ -10,20 +10,21 @@ In the next couple of posts, I'm going to walk through my solution to implementi
 
 ### How it Works  
 The process goes like this:  
-Step 1) Get the message you want to encrypt (no spaces, all lower case), for example "thisisamessage."  
+
+**Step 1** Get the message you want to encrypt (no spaces, all lower case), for example "thisisamessage."  
 ```
 message: thisisamessage
 ```
-Step 2) Choose a keyword to encrypt the message with, i.e. "lemon", and repeat it over and over until you get a string that is the same length as your message.
+**Step 2** Choose a keyword to encrypt the message with, i.e. "lemon", and repeat it over and over until you get a string that is the same length as your message.
 ```
 keyword: lemonlemonlemo
 ```
-Step 3) Add each letter of the original message to the letter of the repeated keyword string in the same position as the original letter to produce a new letter. For example, `t` is index 19, `l` is index 11. So if you combine them, and wrap back around to the beginning of the alphabet, you end up with the letter `e` at index 4. After you do that for every letter, you'll get the cipher text. In this example,
+**Step 3** This step is very similar to the Caesar Cipher. Add each letter of the original message to the letter of the keyword string to produce a new letter. For example, `t` is index 19, and `l` is index 11. If you combine them, and wrap back around to the beginning of the alphabet, you end up with the letter `e` at index 4. After you do that for every letter, you'll get the cipher text. In this example,
 ```
 ciphertext: elugvdeysfdess
 ```
 
-Alternative Step 3) Instead of combining the indices of the letters in the message string and the keyword string, you can actually use a Vign&egrave;re table to look up the new letter. This is a bit harder to implement in code, but it's a fun exercise for sure.
+**Alternative Step 3** Instead of combining the indices of the letters in the message string and the keyword string, you can actually use a Vign&egrave;re table to look up the new letter. This is a bit harder to implement in code, but it's a fun exercise for sure.
 
 I'll go through both solutions in this series. I'll cover the Caesar Cipher solution first since it's a bit easier in my opinion.
 
