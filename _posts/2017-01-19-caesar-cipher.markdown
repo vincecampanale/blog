@@ -105,8 +105,6 @@ function caesarCipher(str, shiftNum) {
 #### Refactor & Get Creative
 I think it makes more sense syntactically to append this method to the String prototype, so it can be used like "`"hello".encryptWithCaesars(3)` where `"hello"` is the string to be encrypted and the argument passed to the method is the shift constant.
 
-I made a couple of other changes to save memory, and flex my ternary operator, arrow function, ES6, and syntax muscles. Check it out:
-
 {% highlight javascript %}
 //This adds a new method to the String prototype which implements the function "encryptWithCaesars" on that string.
 //The method takes one parameter, "shiftNum", for which the default value is 2 (if no shiftNum is provided).
