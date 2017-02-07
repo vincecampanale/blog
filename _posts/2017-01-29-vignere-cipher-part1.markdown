@@ -4,7 +4,13 @@ title:  "Using the Vignere Cipher to Encrypt a Message (Part 1)"
 date:   2017-01-20
 ---
 
-The Vign&egrave;re Cipher is a "method of encrypting alphabetic text by using a series of different Caesar ciphers based on the letters of the keyword." Read more about it [here](https://en.wikipedia.org/wiki/Vigen%C3%A8re_cipher), it actually has a really cool history. It's called a "polyalphabetic cipher" because it uses two or more cipher alphabets to encrypt the original message.
+This post is Part 1 of a three part series:
+Using the Vignere Cipher to Encrypt a Message (Part 1) <-- You are here
+[Using the Vignere Cipher to Encrypt a Message (Part 2)](http://www.vincecampanale.com/blog/2017/02/01/vigenere-cipher-part2/)
+[Using the Vignere Cipher to Encrypt a Message (Part 3)](http://www.vincecampanale.com/blog/2017/02/06/vignere-cipher-part3/)
+
+
+The Vign&egrave;re Cipher is a "method of encrypting alphabetic text by using a series of different Caesar ciphers based on the letters of the keyword." Read more about it [here](https://en.wikipedia.org/wiki/Vigen%C3%A8re_cipher), it has a really cool history. It's called a "polyalphabetic cipher" because it uses two or more cipher alphabets to encrypt the original message.
 
 In the next couple of posts, I'm going to walk through my solution to implementing a Vign&egrave;re Cipher in Javascript. I'm sure there are plenty of ways to do it, and I'll probably find this solution pretty basic when I look at it again in a year, but for now, I'm satisfied. I thought this problem was a lot of fun to solve and was a great extension of the Caesar Cipher, which I covered in my [last post](http://www.vincecampanale.com/blog/2017/01/20/caesar-cipher/).
 
@@ -28,4 +34,4 @@ ciphertext: elugvdeysfdess
 
 I'll go through both solutions in this series. I'll cover the Caesar Cipher solution first since it's a bit easier in my opinion.
 
-Continue to [Part 2]() to see the solution without the table or skip to [Part 3]() to see the solution with the table.
+Continue to [Part 2](http://www.vincecampanale.com/blog/2017/02/01/vigenere-cipher-part2/) to see the solution without the table or skip to [Part 3]() to see the solution with the table.
