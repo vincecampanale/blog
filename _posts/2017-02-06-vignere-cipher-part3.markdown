@@ -70,3 +70,43 @@ function generateVignereTable() {
   return table; //return the table
 }
 ```
+
+### Step 3: Encode each character using a Vignere table
+
+This is the most important step in the solution - the piece where we put our Vignere table to use. See the comments for a line-by-line explanation.
+
+```js
+function encodeWithTable( message, keywordStr ) {
+  let messageArray = message.split(''); //split the message into an array
+  let keywordArray = keywordStr.split(''); //split the keyword string into an array
+  messageArray.forEach((letter, index) => { //for each letter and index in the message array
+    let messageChar = letter; //make a temp variable to hold the letter
+    let keywordChar = keywordArray[index]; //get the corresponding letter from the keyword string using the index
+
+    let keywordCharIndex = keywordChar.charCodeAt(0) - 97; //get the index of the keyword by subtracting 97 from the charcode
+    let vignereTable = generateVignereTable(); //create a vignere table
+
+    let cipherChar = vignereTable[messageChar][keywordCharIndex]; //look up the corresponding letter in the table
+
+    messageArray[index] = cipherChar; //replace the letter in the message with the cipher letter
+  });
+  return messageArray.join(''); //convert the messageArray back to a string and return it
+}
+```
+
+### Step 4: The Actual Function
+
+Since we've taken the time to break down our problem and write thorough helper functions, the cipher function itself is nothing special. In fact, it's identical to the function in Part 2, except now we are encoding with the Vignere table, rather than with the boring old Caesar cipher.
+
+```js
+function vignereCipherWithTable(message, keyword = "lemon") {
+  for ( let i = 0; i < message.length; i++ ) {
+    keyword += keyword; // repeat the keyword a bunch of times
+  }
+  let keywordStr = keyword.substr( 0, message.length ); // cut the keyword string so it's the same length as the message
+  let ciphertext = encodeWithTable( message, keywordStr ); // encode the string using the vignere table
+  return ciphertext //return the cipher text!
+}
+```
+
+And there you have it! Have fun passing secret messages back and forth with your friends...good luck decoding them though...  ;)
