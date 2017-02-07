@@ -3,10 +3,10 @@ layout: post
 title:  "Using the Vignere Cipher to Encrypt a Message (Part 3)"
 date:   2017-02-06
 ---
-This post is Part 3 of a three part series:
-[Using the Vignere Cipher to Encrypt a Message (Part 1)]()
-[Using the Vignere Cipher to Encrypt a Message (Part 2)]()
-Using the Vignere Cipher to Encrypt a Message (Part 3) <-- You are here
+This post is Part 3 of a three part series:  
+[Using the Vignere Cipher to Encrypt a Message (Part 1)]()  
+[Using the Vignere Cipher to Encrypt a Message (Part 2)]()  
+Using the Vignere Cipher to Encrypt a Message (Part 3) <-- You are here  
 
 In [Part 1](), I gave a brief overview of the Vignere cipher and discussed the two approaches to solving it (the two approaches that I could come up with - there are definitely others). In [Part 2](), I covered the first approach, which is essentially a Caesar cipher with a dynamic shift number. In this part, I'm going to step through the more interesting solution - the way it's really intended to be done - using the magical Vignere table.
 
@@ -31,7 +31,27 @@ In high-level pseudocode, we want to:
   - The keys consist of the standard alphabet (a-z)
   - Each key's value is an alphabet starting with that key and wrapping back   around to a (each value is 26 letters)
 3) Encode the message by looking up each letter of the original message in the   keys of the Vignere table, then traversing the table to get the value from the   character code of the keyword letter  
-4) Finally, put it all together in the final function  
+4) Put it all together in the final function  
 ```
 
 ### Step 1: Build the `generateAlphabet` function
+
+In this function, the parameter will be a starting index. We are going to iterate over twenty-six char codes, starting at the provided start index. Presumably, the first char code will be 97, and they will go up from there. In order to account for char codes over 122, we add some if/else logic into the `String.fromCharCode` method. Ternary operators allow us to keep this code succinct.
+
+```js
+function generateAlphabet(start) {
+  let alphabet = [];
+  //from start index to 26 chars later
+  for (let i = start; i < start + 26; i++) {
+    //convert the char code into a letter and push it to the alphabet array
+    alphabet.push(String.fromCharCode(
+      i > 122 ? i - 26 : //if char code > 122, return code - 26, else
+      i < 97  ? i + 26 : //if char code < 97, return code + 26, else
+      i                  //just return the code
+    ));
+  }
+  return alphabet; //return the alphabet array
+}
+```
+
+### Step 2: Build the `generateVignereTable` function
