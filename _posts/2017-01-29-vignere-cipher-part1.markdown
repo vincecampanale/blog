@@ -20,11 +20,13 @@ The process goes like this:
 **Step 1** Get the message you want to encrypt (no spaces, all lower case), for example "thisisamessage."  
 ```
 message: thisisamessage
-```
+```  
+
 **Step 2** Choose a keyword to encrypt the message with, i.e. "lemon", and repeat it over and over until you get a string that is the same length as your message.
 ```
 keyword: lemonlemonlemo
-```
+```  
+
 **Step 3** This step is very similar to the Caesar Cipher. Add each letter of the original message to the letter of the keyword string to produce a new letter. For example, `t` is index 19, and `l` is index 11. If you combine them, and wrap back around to the beginning of the alphabet, you end up with the letter `e` at index 4. After you do that for every letter, you'll get the cipher text. In this example,
 ```
 ciphertext: elugvdeysfdess
