@@ -55,3 +55,18 @@ function generateAlphabet(start) {
 ```
 
 ### Step 2: Build the `generateVignereTable` function
+
+Dedicating a function to generating alphabets with different starting character codes allows us to keep the Vignere table function surprisingly simple.
+
+All we need to do is instantiate an empty object, `table`. Load the keys of that object up with the standard alphabet, starting with the letter 'a' (char code 97). Then for each key in the table, we generate an alphabet that starts at the key's index. So the second key ('b') has an alphabet starting with b and wrapping back around to end with a. The third key ('c') has an alphabet starting with c and wrapping back around to end with b. And so on.
+
+In code:
+```js
+//generate an object, where each key is a letter and each value is another alphabet
+function generateVignereTable() {
+  let table = {}; //instantiate a temporary object to hold the table
+  table.keys = generateAlphabet(97); //set the keys of the object equal to the standard alphabet (starting at 97)
+  table.keys.forEach((key, index) => { table[key] = generateAlphabet(97 + index) });  //set the value of each key as the alphabet
+  return table; //return the table
+}
+```
