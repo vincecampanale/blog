@@ -110,3 +110,5 @@ function vignereCipherWithTable(message, keyword = "lemon") {
 ```
 
 And there you have it! Have fun passing secret messages back and forth with your friends...good luck decoding them though...  ;)
+
+Hope this was enjoyable and helpful. Shoot me an email or tweet at me with comments, questions, complaints, and suggestions. Comments section coming soon! Contact info in footer. 
