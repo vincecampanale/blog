@@ -7,9 +7,9 @@ I just finished reading "So Good They Can't Ignore You" by Cal Newport. The book
 
 The four rules of finding work you love are as follows:  
 1) Don't Follow Your Passion.  
-2) Be So Good They Can't Ignore You (Or, *The Importance of Skill*)
-3) Turn Down a Promotion (Or, *The Importance of Control*)
-4) Think Small, Act Big (Or, *The Importance of Mission*)
+2) Be So Good They Can't Ignore You (Or, *The Importance of Skill*)  
+3) Turn Down a Promotion (Or, *The Importance of Control*)  
+4) Think Small, Act Big (Or, *The Importance of Mission*)  
 
 In introducing the second rule, Cal introduces what he calls "the craftsman mindset." In his words, the craftsman mindset represents a "focus on what value you're producing in your job" and is juxtaposed with "the passion mindset" which is "a focus on what value your job offers you." Cal reasons that the Craftsman Mindset (capital C, M) is crucial to being so good that "they" can't ignore you which is, in turn, crucial to finding work you love.
 
