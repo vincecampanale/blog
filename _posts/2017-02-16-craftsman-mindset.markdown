@@ -21,4 +21,4 @@ As software developers, we have countless tools at our disposal. And there is a 
 
 There is a certain satisfaction in eliminating that unnecessary variable declaration, or converting that for loop to a higher order function. Finding joy in those small victories and looking for them in every line of code you write is a surefire way to happiness in life as a software developer. Those tiny battles add up over time. They add up to hand-wavy, feel-good things like "loving your work," "living your dream," and "finding your passion."
 
-I don't know about you, but those hand-wavy, feel-good things sound pretty damn good to me.
+I don't know about you, but that sounds pretty damn good to me.
