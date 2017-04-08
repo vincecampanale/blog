@@ -185,7 +185,7 @@ var favoriteIds = newReleases.
   map( movie => { return movie.id });
 {% endhighlight %}
 
-#### `const`, Implicit Return & Abbreviated Variables [DANGER: Experts only.]
+#### Abbreviated Variables, `const`, & Implicit Return [DANGER: Experts only.]
 Proceed with caution. Someone call the fire department. 🚒
 
 {% highlight javascript %}
@@ -198,7 +198,7 @@ const favIds = newReleases.filter( m => m.rating === 5 ).map( m => m.id );
 
     3) ✔️ No more "for"!
 
-That's all folks.
+Aren't `.map()` & `.filter()` the best?
 
 To Learn More:  
 &nbsp;&nbsp;&nbsp;&nbsp; 1) Here's the link to the tutorial I got this problem from: [http://reactivex.io/learnrx/](http://reactivex.io/learnrx/).  
