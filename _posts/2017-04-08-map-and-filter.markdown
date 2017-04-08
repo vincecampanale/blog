@@ -4,11 +4,11 @@ title:  "The Beauty of Javascript's .map & .filter"
 description: "Learning by example how to use two of Javascript's most powerful functions: .map and .filter."
 date:   2017-04-08
 ---
-Functional programming has been a hot topic as of late. I'm not going to cover much about FP in this article, but if you want to learn more (and you should), just type 'Eric Elliot functional programming' into The Almighty Google and start reading.
+Functional programming has been a hot topic as of late.
 
 Map & filter are two crucial functions in functional programming. You don't have to know anything about functional programming to know how to use them and I guarantee you that these two little functions _will_ improve your code.
 
-Let's learn by example. This exercise is taken straight from a tutorial I'm currently working through called "Functional Programming in Javascript," which is intended to serve as an introduction to RxJs (Reactive Extensions). Check it out when you're done reading this article: [http://reactivex.io/learnrx/](http://reactivex.io/learnrx/). I'm going to solve the same problem in a couple different ways to show the true beauty of `.map()` and `.filter()`.
+Let's learn by example. This exercise is taken straight from a tutorial I'm currently working through called "Functional Programming in Javascript," which is intended to serve as an introduction to RxJs (Reactive Extensions). [Check it out](http://reactivex.io/learnrx/) when you're done reading this article. I'm going to solve the same problem in a couple different ways to show the true beauty of `.map()` and `.filter()`.
 
 Here we have some data containing a list of newly released movies in JSON format:
 
@@ -50,7 +50,9 @@ Here we have some data containing a list of newly released movies in JSON format
    ];
 {% endhighlight %}
 
-Each movie has several properties: `id`, `title`, `boxart`, `uri`, `rating`, and `bookmark` (an array of JSON objects). In this tutorial, I'm going to solve a simple problem: _use map and filter to collect the ids of movies with 5.0 ratings_.
+Each movie has several properties: `id`, `title`, `boxart`, `uri`, `rating`, and `bookmark` (an array of JSON objects).
+
+In this tutorial, I'm going to solve a simple problem: **Collect the IDs of movies with 5.0 ratings**.
 
 #### 💓 For the Love of Loops 💓
 The first way I will solve this problem makes use of our oldest friend, the humble `for` loop.
@@ -197,3 +199,7 @@ const favIds = newReleases.filter( m => m.rating === 5 ).map( m => m.id );
     3) ✔️ No more "for"!
 
 That's all folks.
+
+To Learn More:
+  1) Here's the link to the tutorial I got this problem from: [http://reactivex.io/learnrx/](http://reactivex.io/learnrx/).
+  2) Type 'Eric Elliot functional programming' into The Almighty Google and start reading.
