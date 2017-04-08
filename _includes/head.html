@@ -14,5 +14,25 @@
   {% include google-analytics.html %}
   {% endif %}
 
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:site" content="@_vincecampanale">
+  <meta name="twitter:creator" content="@_vincecampanale">
+  {% if page.title %}
+    <meta name="twitter:title" content="{{ page.title }}">
+  {% else %}
+    <meta name="twitter:title" content="{{ site.title }}">
+  {% endif %}
+  {% if page.url %}
+    <meta name="twitter:url" content="{{ site.url }}{{ page.url }}">
+  {% endif %}
+  {% if page.description %}
+    <meta name="twitter:description" content="{{ page.description }}">
+  {% else %}
+    <meta name="twitter:description" content="{{ site.description }}">
+  {% endif %}
+  {% if page.image %}
+    <meta name="twitter:image:src" content="https://img.gs/ggdknhnmbr/360x225/vincecampanale.com/assets/images/map-img.jpg">
+  {% endif %}
+
   <link rel="icon" href="assets/favicon.ico"/>
 </head>
