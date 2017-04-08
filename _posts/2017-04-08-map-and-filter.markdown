@@ -85,7 +85,7 @@ Lovely. This gets the job done, but I have three problems with this code:
   Ask yourself number three and really sit and contemplate that for a moment. When we use the `for` loop to tell an iterator to traverse an array, we have to spell out in code the _order_ in which the array is traversed. This is useful sometimes, but most of the time we're just going from beginning to end -- smells like abstraction time.
 
 #### For Each or Not For Each 📖
-`.forEach()` abstracts the explicit logic of the `for` loop away. We just call `.forEach()` on our `newReleases` array and trust that the computer will traverse the array. The computer can traverse the array beginning to end, end to beginning, middle out, upside-down, it really doesn't matter. The point is: _we don't have to tell the computer about how the array is traversed -- we just know we're going to do something on each element of the array_. That's where the **reducer function** comes in. The reducer function is our instruction to the computer about _what_ should happen when the iterator encounters each element in the array. For example, let's say we want to check if a movie has a rating of 5 starts and push it to an array if it does. Our function would look like this:
+`.forEach()` abstracts the explicit logic of the `for` loop away. We call `.forEach()` on our `newReleases` array and trust that the computer will traverse the array. The computer can traverse the array beginning to end, end to beginning, middle out, upside-down, it really doesn't matter. The point is: _we don't have to tell the computer about how the array is traversed -- we just know we're going to do something on each element of the array_. That's where the **reducer function** comes in. The reducer function is our instruction to the computer about _what_ should happen when the iterator encounters each element in the array. For example, let's say we want to check if a movie has a rating of 5 stars and push it to a new array called `favorites` if it does. Our function would look like this:
 
 {% highlight javascript %}
 function (movie) {
@@ -113,7 +113,7 @@ favorites.forEach(function(movie) {
 });
 {% endhighlight %}
 
-Unfortunately, a lot of the original problems I had with the first solution have not gone away.  
+Unfortunately, the problems I had with the `for` loop solution remain with the `.forEach()` solution.  
 
     1) Still a lot of code for such a simple task.
 
