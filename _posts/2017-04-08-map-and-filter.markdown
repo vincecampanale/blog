@@ -125,8 +125,8 @@ Unfortunately, the problems I had with the `for` loop solution remain with the `
 #### Introducing the 🌟Stars🌟 of the Show
 Time to use `.map()` and `.filter()` to get the job done. Now that we understand exactly what needs to be done to solve this problem, it should be easy to reverse understand what `.map()` and `.filter()` do for us.
 
-`.map()` and `.filter()` are just unique variations on the classic `.forEach()`. The nice thing about them is that they handle a specific case for us so we don't have to bother telling the computer anything about "for this element, do this". It just goes without saying that we want each element of the collection to be processed. `.filter()` is used when we want to \*_ahem_\* filter each element in the collection based on a certain condition, which we provide in our reducer function.
-`.map()` is used when we want to change each element in the array in some way. We're "mapping" each element from one value to another (via a process defined in our reducer function).
+`.map()` and `.filter()` are just unique variations on the classic `.forEach()`. The nice thing about them is that they handle a specific case for us so we don't have to bother telling the computer "for this element, do this". It just goes without saying that we want each element of the collection to be processed by the reducer. `.filter()` is used when we want to \*_ahem_\* filter each element in the collection based on a certain condition.
+`.map()` is used when we want to change each element in the array in some way. We're "mapping" each element from one value to another.
 
 The moment we've all been waiting for:
 
@@ -142,7 +142,7 @@ var favoriteIds = favorites.map(function(movie) {
 
 Hmmm... better...  
 
-Still not best, though. Let's look at our original pain points and compare:
+Let's look at our original pain points and compare:
 
     1) I still think we could do this with less code.
 
@@ -174,7 +174,7 @@ That takes care of number 2.
 
     3) ✔️ No more "for"!
 
-\*_Note: Despite what some may believe, arrow functions in Javascript are much more than mere syntactic sugar. Article about this coming soon. Just wanted to use the 'sweeten' joke._
+\*_Note: Despite what some may believe, arrow functions in Javascript are much more than mere syntactic sugar. Just wanted to use the 'sweeten' joke._
 
 #### ARROWS ↗️ ⬅️ ⬆️ ➡️ ↘️
 Let's shorten this with some ES6 arrows.
@@ -200,6 +200,6 @@ const favIds = newReleases.filter( m => m.rating === 5 ).map( m => m.id );
 
 That's all folks.
 
-To Learn More:
-  1) Here's the link to the tutorial I got this problem from: [http://reactivex.io/learnrx/](http://reactivex.io/learnrx/).
-  2) Type 'Eric Elliot functional programming' into The Almighty Google and start reading.
+To Learn More:  
+&nbsp;&nbsp;&nbsp;&nbsp; 1) Here's the link to the tutorial I got this problem from: [http://reactivex.io/learnrx/](http://reactivex.io/learnrx/).  
+&nbsp;&nbsp;&nbsp;&nbsp; 2) Type 'Eric Elliot functional programming' into The Almighty Google and start reading.
