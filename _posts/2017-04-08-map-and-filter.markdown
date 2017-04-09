@@ -95,7 +95,7 @@ function (movie) {
 }
 {% endhighlight %}
 
-By passing this function as a reducer to `.forEach()`, we run it on every element in the array.
+By passing this function as an iterator to `.forEach()`, we run it on every element in the array.
 
 {% highlight javascript %}
 
