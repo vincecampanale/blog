@@ -85,7 +85,7 @@ Lovely. This gets the job done, but I have three problems with this code:
   Ask yourself number three and really sit and contemplate that for a moment. When we use the `for` loop to tell an iterator to traverse an array, we have to spell out in code the _order_ in which the array is traversed. This is useful sometimes, but most of the time we're just going from beginning to end -- smells like abstraction time.
 
 #### For Each or Not For Each 📖
-`.forEach()` abstracts the explicit logic of the `for` loop away. We call `.forEach()` on our `newReleases` array and trust that the computer will traverse the array. The computer can traverse the array beginning to end, end to beginning, middle out, upside-down, it really doesn't matter. The point is: _we don't have to tell the computer about how the array is traversed -- we just know we're going to do something on each element of the array_. That's where the **reducer function** comes in. The reducer function is our instruction to the computer about _what_ should happen when the iterator encounters each element in the array. For example, let's say we want to check if a movie has a rating of 5 stars and push it to a new array called `favorites` if it does. Our function would look like this:
+`.forEach()` abstracts the explicit logic of the `for` loop away. We call `.forEach()` on our `newReleases` array and trust that the computer will traverse the array. The computer can traverse the array beginning to end, end to beginning, middle out, upside-down, it really doesn't matter. The point is: _we don't have to tell the computer about how the array is traversed -- we just know we're going to do something on each element of the array_. That's where the **iterator function** comes in. The iterator function is our instruction to the computer about _what_ should happen when the iterating mechanism (the hidden / implied `for` loop) encounters each element in the array. For example, let's say we want to check if a movie has a rating of 5 stars and push it to a new array called `favorites` if it does. Our function would look like this:
 
 {% highlight javascript %}
 function (movie) {
@@ -125,8 +125,9 @@ Unfortunately, the problems I had with the `for` loop solution remain with the `
 #### Introducing the 🌟Stars🌟 of the Show
 Time to use `.map()` and `.filter()` to get the job done. Now that we understand exactly what needs to be done to solve this problem, it should be easy to reverse understand what `.map()` and `.filter()` do for us.
 
-`.map()` and `.filter()` are just unique variations on the classic `.forEach()`. The nice thing about them is that they handle a specific case for us so we don't have to bother telling the computer "for this element, do this". It just goes without saying that we want each element of the collection to be processed by the reducer. `.filter()` is used when we want to \*_ahem_\* filter each element in the collection based on a certain condition.
-`.map()` is used when we want to change each element in the array in some way. We're "mapping" each element from one value to another.
+`.map()` and `.filter()` are just unique variations on the classic `.forEach()`. The nice thing about them is that they handle a specific case for us so we don't have to bother telling the computer "for this element, do this". It just goes without saying that we want each element of the collection to be processed by the **reducer function** (the same thing as the iterator function in `.forEach()`).  
+ `.filter()` is used when we want to \*_ahem_\* filter each element in the collection based on a certain condition.  
+`.map()` is used when we want to change each element in the array in some way. We're "mapping" each element from one value to another.  
 
 The moment we've all been waiting for:
 
@@ -181,7 +182,7 @@ Let's shorten this with some ES6 arrows.
 
 {% highlight javascript %}
 var favoriteIds = newReleases.
-  filter( movie => { return movie. rating === 5.0 }).
+  filter( movie => { return movie.rating === 5.0 }).
   map( movie => { return movie.id });
 {% endhighlight %}
 
@@ -189,7 +190,7 @@ var favoriteIds = newReleases.
 Proceed with caution. Someone call the fire department. 🚒
 
 {% highlight javascript %}
-const favIds = newReleases.filter( m => m.rating === 5 ).map( m => m.id );
+const favIds = newReleases.filter( m => m.rating === 5.0 ).map( m => m.id );
 {% endhighlight %}
 
     1) ✔️ Short & sweet.
