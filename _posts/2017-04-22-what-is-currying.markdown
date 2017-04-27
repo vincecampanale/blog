@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "What is Currying?"
-description: "A concise, need-to-know explanation of how to apply functional programming technique, 'currying', in Javascript."
+description: "A concise, need-to-know explanation of 'currying' in Javascript."
 date: 2017-04-22
 ---
 
