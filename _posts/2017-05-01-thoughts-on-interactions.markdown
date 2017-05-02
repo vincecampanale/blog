@@ -12,7 +12,7 @@ Gestures are another simple, yet powerful way to convey meaning. For some, gestu
 
 We have been familiar with language for so long that we take it for granted. Nearly all of us have been familiar with most gestures since the day we were born. Due to this familiarity, a lack of respect has settled in.  
 
-Unfortunately, the these forms of communication can be abused and frequently are -- especially words.  
+Unfortunately, these forms of communication can be abused and frequently are -- especially words.  
 
 No, some words are not “just words.” Some words inspire hatred, fear, disgust, and sadness. Some words are truly better left *unsaid*. It is important to be aware of these words and comprehend their meaning because depending on context and intention, a single slip-up can change someone’s life. The agreements with these words are typically strong within a culture at large and understood by a fairly young age. You know what these words are in your culture. To purposefully ignore the direness of these words is to purposefully ignore experiences and sentiments that have deep impacts. Much like computers, humans receiving the wrong word at the wrong time can lead to errors of misunderstanding that have major consequences.  
 
