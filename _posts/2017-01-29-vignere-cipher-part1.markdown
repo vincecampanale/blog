@@ -4,7 +4,7 @@ title:  "Using the Vignere Cipher to Encrypt a Message (Part 1)"
 date:   2017-01-20
 ---
 
-This post is Part 1 of a three part series:
+This post is Part 1 of a three part series:  
 Using the Vignere Cipher to Encrypt a Message (Part 1) <-- You are here  
 [Using the Vignere Cipher to Encrypt a Message (Part 2)](http://www.vincecampanale.com/blog/2017/02/01/vigenere-cipher-part2/)  
 [Using the Vignere Cipher to Encrypt a Message (Part 3)](http://www.vincecampanale.com/blog/2017/02/06/vignere-cipher-part3/)  
