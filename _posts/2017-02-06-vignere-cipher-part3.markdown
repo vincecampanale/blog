@@ -1,6 +1,7 @@
 ---
 layout: post
 title:  "Using the Vignere Cipher to Encrypt a Message (Part 3)"
+description: "Third part of a series about ways to encrypt a message with the Vignere Cipher using Javascript."
 date:   2017-02-06
 ---
 This post is Part 3 of a three part series:  
