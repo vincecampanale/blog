@@ -8,7 +8,7 @@ This post is Part 3 of a three part series:
 [Using the Vignere Cipher to Encrypt a Message (Part 2)](http://www.vincecampanale.com/blog/2017/02/01/vigenere-cipher-part2/)  
 Using the Vignere Cipher to Encrypt a Message (Part 3) <-- You are here  
 
-In [Part 1](http://www.vincecampanale.com/blog/2017/01/20/vignere-cipher-part1/), I gave a brief overview of the Vignere cipher and discussed the two approaches to solving it (the two approaches that I could come up with - there are definitely others). In [Part 2](http://www.vincecampanale.com/blog/2017/02/01/vigenere-cipher-part2/), I covered the first approach, which is essentially a Caesar cipher with a dynamic shift number. In this part, I'm going to step through the more interesting solution - the way it's really intended to be done - using the magical Vignere table.
+In [Part 1](http://www.vincecampanale.com/blog/2017/01/20/vignere-cipher-part1/), I gave a brief overview of the Vignere cipher and discussed the two approaches to solving it (the two approaches that I could come up with - there are definitely others). In [Part 2](http://www.vincecampanale.com/blog/2017/02/01/vigenere-cipher-part2/), I covered the first approach, which is essentially a Caesar cipher with a dynamic shift number. In this part, I'm going to step through the more interesting solution - the way it's really intended to be done - using the magical Vignere table.  
 
 A Vignere table looks like this:  
 
@@ -111,4 +111,4 @@ function vignereCipherWithTable(message, keyword = "lemon") {
 
 And there you have it! Have fun passing secret messages back and forth with your friends...good luck decoding them though...  ;)
 
-Hope this was enjoyable and helpful. Shoot me an email or tweet at me with comments, questions, complaints, and suggestions. Comments section coming soon! Contact info in footer. 
+Hope this was enjoyable and helpful. Shoot me an email or tweet at me with comments, questions, complaints, and suggestions. Comments section coming soon! Contact info in footer.

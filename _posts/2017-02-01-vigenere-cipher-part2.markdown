@@ -3,10 +3,10 @@ layout: post
 title:  "Using the Vignere Cipher to Encrypt a Message (Part 2)"
 date:   2017-02-01
 ---
-This post is Part 2 of a three part series:
-[Using the Vignere Cipher to Encrypt a Message (Part 1)](http://www.vincecampanale.com/blog/2017/01/20/vignere-cipher-part1/)
-Using the Vignere Cipher to Encrypt a Message (Part 2) <-- You are here
-[Using the Vignere Cipher to Encrypt a Message (Part 3)](http://www.vincecampanale.com/blog/2017/02/06/vignere-cipher-part3/)
+This post is Part 2 of a three part series:  
+[Using the Vignere Cipher to Encrypt a Message (Part 1)](http://www.vincecampanale.com/blog/2017/01/20/vignere-cipher-part1/)  
+Using the Vignere Cipher to Encrypt a Message (Part 2) <-- You are here  
+[Using the Vignere Cipher to Encrypt a Message (Part 3)](http://www.vincecampanale.com/blog/2017/02/06/vignere-cipher-part3/)  
 
 In [Part 1](http://www.vincecampanale.com/blog/2017/01/20/vignere-cipher-part1/), I gave a brief introduction to the Vignere cipher and how it works. I mentioned that there are two ways to go about emulating the Vignere cipher with a program. One of them involves essentially replicating the Caesar cipher, which I covered in [this post](http://www.vincecampanale.com/blog/2017/01/20/caesar-cipher/), except with a dynamic shift number based on the keyword. The other method involves a Vignere table. In this post, I'm going to cover the first approach: the pseudo-Caesar cipher method.
 

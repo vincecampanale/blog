@@ -5,9 +5,9 @@ date:   2017-01-20
 ---
 
 This post is Part 1 of a three part series:
-Using the Vignere Cipher to Encrypt a Message (Part 1) <-- You are here
-[Using the Vignere Cipher to Encrypt a Message (Part 2)](http://www.vincecampanale.com/blog/2017/02/01/vigenere-cipher-part2/)
-[Using the Vignere Cipher to Encrypt a Message (Part 3)](http://www.vincecampanale.com/blog/2017/02/06/vignere-cipher-part3/)
+Using the Vignere Cipher to Encrypt a Message (Part 1) <-- You are here  
+[Using the Vignere Cipher to Encrypt a Message (Part 2)](http://www.vincecampanale.com/blog/2017/02/01/vigenere-cipher-part2/)  
+[Using the Vignere Cipher to Encrypt a Message (Part 3)](http://www.vincecampanale.com/blog/2017/02/06/vignere-cipher-part3/)  
 
 
 The Vign&egrave;re Cipher is a "method of encrypting alphabetic text by using a series of different Caesar ciphers based on the letters of the keyword." Read more about it [here](https://en.wikipedia.org/wiki/Vigen%C3%A8re_cipher), it has a really cool history. It's called a "polyalphabetic cipher" because it uses two or more cipher alphabets to encrypt the original message.
