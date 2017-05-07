@@ -24,8 +24,6 @@ Much like computers, humans receiving the wrong word at the wrong time can lead 
 <!-- The same goes for some gestures.   -->
 
 Encountering another person with whom you share a large set of agreements (language, culture) is remarkable on the scale of human life. Your thread is sufficiently intertwined with their thread that an interaction has surfaced. Your actions (words, gestures) are merging with their actions. It is important to recognize the weight of these interactions and act with wisdom, no matter the interaction. When you take a moment to recognize the importance of a word before you say it, you give appreciation to the billions of years of evolution that went into that word. You sense its importance and feel the power of expression it provides you. This may feel unnatural at first. We use so many words so frequently. They *all* can't possibly mean *that* much, can they?  
-<!--
-
-Well, yes and no.
+<!-- Well, yes and no.
 
 Even the filler words came from somewhere. For example, the word "like" is *everywhere* for a segment of humans on this planet. -->
