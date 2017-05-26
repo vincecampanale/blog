@@ -4,6 +4,7 @@ title:  "Learn RxJS with a Button"
 description: "Several core concepts of RxJS delivered via a simple button."
 date: 2017-05-24
 ---
+[ POST UNDER CONSTRUCTION -- READ ON, BUT BEWARE OF CLIFFHANGERS! ]
 
 Welcome. The goal of this post is to teach you the fundamentals of Reactive Extensions for Javascript (RxJS). I will only scrape the surface of this very cool library to give you a sense for what you can do with it, but there is so much more to learn. 
 
@@ -99,6 +100,8 @@ If you go up to the top of the `app.component.ts` file, you'll see several `impo
 These are all the operators we will use in this example. 
 
 
+
+Post in progress... stay tuned...
 <!--
     let clickStream = Observable.fromEvent(this.getNativeElement(this.btn), 'click');
 
