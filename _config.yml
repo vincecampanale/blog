@@ -25,6 +25,7 @@ github_username:  vincecampanale
 # Build settings
 port: 4000
 future: true
+livereload: true
 markdown: kramdown
 permalink: /:year/:month/:day/:title/
 gems:
