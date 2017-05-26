@@ -6,7 +6,7 @@ date: 2017-05-24
 ---
 [ POST UNDER CONSTRUCTION -- READ ON, BUT BEWARE OF CLIFFHANGERS! ]
 
-Welcome. The goal of this post is to teach you the fundamentals of Reactive Extensions for Javascript (RxJS). I will only scrape the surface of this very cool library to give you a sense for what you can do with it, but there is so much more to learn. 
+Welcome. The goal of this post is to teach you the fundamentals of Reactive Extensions for Javascript (RxJS). I will only scrape the surface of this very cool library to give you a sense of what you can do with it, but there is so much more to learn. 
 
 I'm still getting a grasp on using RxJS in production myself, so if you are reading this with experience and have feedback, please hit me up on Twitter (handle in footer) or email me -- don't hold back! If you're completely new to RxJS, don't worry, I have made no assumptions about prior knowledge in this post. 
 
@@ -38,7 +38,7 @@ We are going to listen for click events on this button and update the message wh
 
 ### Creating a Click Stream 🐟
 
-Just as a stream of water runs downhill, time flows in one direction, continuous and uninterrupted. Now, imagine a rock dropping into a flowing stream. There would be a splash. RxJS allows you to respond to UI events just as the stream responds to the falling rock. 
+Just as a stream of water runs downhill, time flows in one direction, continuous and uninterrupted. Now, imagine a rock dropping into a flowing stream. There would be a splash. RxJS allows you to respond to UI events just as a stream responds to a falling rock. 
 
 As an example, let's model click events on a particular button as a stream. 
 
@@ -50,10 +50,12 @@ The arrow here represents time, you could think of each `-` as a discrete moment
 
 Here's how you make that arrow diagram with RxJS:
 
-    const rxBtn = this.getNativeElement(this.btn);
-    const clickStream = Observable.fromEvent(rxBtn, 'click');
+    const rxBtn = this.getNativeElement(this.btn);       // get the button element
+    const click$ = Observable.fromEvent(rxBtn, 'click'); // listen for clicks
 
 This code reads pretty smoothly. We're creating a click stream, which is an `Observable` (don't worry too much about that for now, but do take a second to think about what an `Observable` is just based on it's name).
+
+**Note:** A common convention when working with Observable streams is to end your stream variables with `$`. It's basically an abbreviation for "stream" -- e.g. `clickStream` becomes `click$`.
 
 ### RxJS Operators
 
@@ -61,7 +63,7 @@ Operators are the methods that we have access to when working with Observables. 
 
 ##### [Begin Tangent]
 
-A brief example of using *declarative* programming to multiply numbers in an array by 2: 
+A brief example of using *declarative* programming to double the numbers in an array: 
 
     // not declarative :( 
 
@@ -91,17 +93,21 @@ Okay, back to the task at hand.
 If you go up to the top of the `app.component.ts` file, you'll see several `import` statements that look like this: 
 
     import 'rxjs/add/observable/fromEvent';
+    import 'rxjs/add/observable/timer';
+
     import 'rxjs/add/operator/filter';
     import 'rxjs/add/operator/map';
     import 'rxjs/add/operator/debounceTime';
     import 'rxjs/add/operator/buffer';
-    import 'rxjs/add/observable/timer';
 
 These are all the operators we will use in this example. 
 
 
 
 Post in progress... stay tuned...
+
+
+
 <!--
     let clickStream = Observable.fromEvent(this.getNativeElement(this.btn), 'click');
 
@@ -127,6 +133,9 @@ Post in progress... stay tuned...
     shiftKey.subscribe( message => this.message = message );
 -->
 
-To Learn More:  
-    * This post was inspired by my meanderings through Lukas Reubellke's course Hello RxJS.  
-    * Andre Staltz wrote an excellent, in-depth article on Reactive Programming.
+
+
+#### To Learn More
+* This post was inspired by my meanderings through Lukas Reubellke's course [Hello RxJS](https://courses.ultimateangular.com/p/hello-rxjs).
+* Lukas also gave a great [talk](https://www.youtube.com/watch?v=5CTL7aqSvJU) on RxJS, mentioned at the top of this post.  
+* Andre Staltz wrote an excellent, in-depth gist on Reactive Programming entitled [The introduction to Reactive Programming you've been missing](https://gist.github.com/staltz/868e7e9bc2a7b8c1f754).
