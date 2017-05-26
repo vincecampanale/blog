@@ -22,7 +22,7 @@ Okay, here goes.
 
 Wonderful.
 
-### Curry (no steph 🏀)
+### Curry 🏀
 
 {% highlight javascript %}
   const goForthAndCurry = a => b => a * b;
