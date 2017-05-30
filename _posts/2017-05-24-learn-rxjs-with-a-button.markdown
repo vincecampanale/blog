@@ -78,11 +78,13 @@ A brief example of using *declarative* programming to double the numbers in an a
 
 <br />
 
-    // declarative :) 
 
-    const a = [1, 2, 3];
-    const double = arr => arr.map( x => x * 2 );
-    double(a) // [2, 4, 6]
+```javascript
+// declarative :) 
+const a = [1, 2, 3];
+const double = arr => arr.map( x => x * 2 );
+double(a) // [2, 4, 6]
+```
 
 Side note: There's another difference between these two blocks -- the latter returns a new array, the former just mutates the original array. Always prefer the approach *without* mutation. 
 
@@ -92,19 +94,21 @@ Okay, back to the task at hand.
 
 If you go up to the top of the `app.component.ts` file, you'll see several `import` statements that look like this: 
 
-    import 'rxjs/add/observable/fromEvent';
-    import 'rxjs/add/observable/timer';
+```javascript
+import 'rxjs/add/observable/fromEvent';
+import 'rxjs/add/observable/timer';
 
-    import 'rxjs/add/operator/filter';
-    import 'rxjs/add/operator/map';
-    import 'rxjs/add/operator/debounceTime';
-    import 'rxjs/add/operator/buffer';
+import 'rxjs/add/operator/filter';
+import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/debounceTime';
+import 'rxjs/add/operator/buffer';
+```
 
 These are all the operators we will use in this example. 
 
 Let's start by taking our click stream and splitting it up into segments of 250 milliseconds. This gives our user plenty of time to double click, but not too much, so they won't get impatient. In order to do this, we're going to compose two useful operators: `debounceTime()` and `buffer()`. 
 
-#### `debounceTime()`
+#### **debounceTime()**
 
 The first step to segmenting our clickStream (`click$`) is to debounce based on time between inputs. In other words, when the user clicks, we start a timer that goes for 250 milliseconds. If the user clicks again while that timer is running, the original click will get discarded and the timer will begin again. The debounce will not *emit* a new Observable until that timer runs to completion. 
 
@@ -114,7 +118,7 @@ const debouncedClicks$ = click$.debounceTime(250);
 ```
 This is nice because we give our user time to get their double click in, however we're only emitting one event! So, how do we collect these clicks!?
 
-### `buffer()`
+#### **buffer()**
 
 
 
