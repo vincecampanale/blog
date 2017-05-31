@@ -198,14 +198,32 @@ Just like any Javascript array, this array has a `.length` property, which we ar
 Let's create a function that takes an array and returns its length:
 
 ```javascript 
-const getLength = a => a.length;
+const toLength = a => a.length;
 ```
 
-And now we can apply this to our buffered click stream to get the number of clicks in each bucket:
+We can apply this to our buffered click stream to get the number of clicks in each bucket:
 
 ```javascript
-const clickCount = buffered$.map(getLength);
+const clickCount$ = buffered$.map(toLength);
 ```
+
+Great. We have converted our buckets of clicks into counts. But, we still have not isolated *double* clicks. 
+
+#### **filter()**
+
+Imagine we have an array of numbers `a  = [1, 2, 3, 2, 2, 1]` and we want to only keep the `2`s and move them to a new array. Our `filter()` call would look like `a.filter(x => x === 2)`. 
+
+Well, observables have a `filter()` too!
+
+```javascript
+const doubleClick$ = clickCount$.filter(x => x === 2);
+``` 
+
+The resulting observable (`doublceClick$`) will now only emit when the user double clicks on the button!
+
+Now we can respond to this event and update the message!
+
+### **subscribe()**
 
 
 
