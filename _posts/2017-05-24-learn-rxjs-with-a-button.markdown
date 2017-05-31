@@ -14,7 +14,7 @@ I'm going to build on the first example introduced in [this talk](https://www.yo
 
 Clone [this repo](https://github.com/vincecampanale/learn-rxjs-with-a-button) to get the seed locally. You can also `checkout` the `completed` branch to see the end result (along with a bonus feature not covered in this guide 🕵️). 
 
-You don't need to know Angular to follow along, just open `src/app/app.component.ts` and you're good to go. There will be a comment in the `ngOnInit()` method in the `AppComponent` class -- replace that comment with the code as I cover it line-by-line. I encourage you to experiment and see what other cool streams you can make as we progress. 
+You don't need to know Angular to follow along, just follow the instructions in the README, open `src/app/app.component.ts` and you're good to go. There will be a comment in the `ngOnInit()` method in the `AppComponent` class -- replace that comment with the code as I cover it line-by-line. I encourage you to experiment and see what other cool streams you can make as we progress. 
 
 
 <h2>The Button</h2> 
@@ -23,14 +23,15 @@ The part of the code we will be interacting with is in the `template` property o
 
 I've also provided it here in case you don't feel like cloning the project and installing / serving it: 
 
-    <button #btn md-raised-button color="accent">
-        Button
-    </button>
-    
-    <div class="container">
-        <h1>{ { messages } }</h1>
-    </div>
+```html
+<button #btn md-raised-button color="accent">
+    Button
+</button>
 
+<div class="container">
+    <h1>{{ messages }}</h1>
+</div>
+```
 
 As you can see, we have a button and a message.  
 
@@ -48,35 +49,34 @@ Here's a handy diagram:
 ```
 The arrow here represents time, you could think of each `-` as a discrete moment. Let's pretend that this stream represents a button sitting on the screen. As time passes, a user may or may not click on said button. Each `x` indicates that the user has clicked on the button, thus firing a 'click' event. 
 
-Here's how you make that arrow diagram with RxJS:
+```javascript
+const rxBtn = this.getNativeElement(this.btn);       // get the button element
+const click$ = Observable.fromEvent(rxBtn, 'click'); // listen for clicks
+```
 
-    const rxBtn = this.getNativeElement(this.btn);       // get the button element
-    const click$ = Observable.fromEvent(rxBtn, 'click'); // listen for clicks
-
-This code reads pretty smoothly. We're creating a click stream, which is an `Observable` (don't worry too much about that for now, but do take a second to think about what an `Observable` is just based on it's name).
+That's not so bad. We're creating a click stream, which is an `Observable` (don't worry too much about that for now, but do take a second to think about what an `Observable` is just based on it's name).
 
 **Note:** A common convention when working with Observable streams is to end your stream variables with `$`. It's basically an abbreviation for "stream" -- e.g. `clickStream` becomes `click$`.
 
 ### RxJS Operators
 
-Operators are the methods that we have access to when working with Observables. RxJS operators encourage *declarative programming*, meaning that instead of telling the computer *how* to do what you want, you just tell it *what* you want.
+Operators are the methods that we have access to when working with Observables. RxJS operators encourage *declarative programming*, meaning that instead of telling the computer *how* to do what you want (i.e. `for` loops), you just tell it *what* you want (i.,e. `map( from this => to that )`).
 
 ##### [Begin Tangent]
 
 A brief example of using *declarative* programming to double the numbers in an array: 
 
-    // not declarative :( 
-
-    const a = [1, 2, 3];
-    const double = arr => {
-        for ( let i = 0; i < arr.length; i++ ) {
-            arr[i] = arr[i] * 2;
-        }
-        return arr; 
+```javascript
+// not declarative :( 
+const a = [1, 2, 3];
+const double = arr => {
+    for ( let i = 0; i < arr.length; i++ ) {
+        arr[i] = arr[i] * 2;
     }
-    double(a) // [2, 4, 6]
-
-<br />
+    return arr; 
+}
+double(a) // [2, 4, 6]
+```
 
 
 ```javascript
@@ -114,14 +114,78 @@ The first step to segmenting our clickStream (`click$`) is to debounce based on 
 
 In code, it will look something like this: 
 ```javascript
-const debouncedClicks$ = click$.debounceTime(250);
+const debounced$ = click$.debounceTime(250);
 ```
-This is nice because we give our user time to get their double click in, however we're only emitting one event! So, how do we collect these clicks!?
+
+If you `console.log` the `debouncedClicks$` like so: 
+
+```javascript
+debounced$.subscribe(x => console.log(x));
+```
+
+...you should see...
+
+```javscript
+```
+
+...in the console.
+
+As you can see, we give the user time to get their double click in, however we're only emitting one event! So, how do we collect these clicks?
 
 #### **buffer()**
 
+Buffer works like this:
+
+Let's say this is our `click$` event stream (the arrow is time, `x`s are clicks). 
+
+```
+-----x---x-------x----x---x-x----x->
+```
+
+Buffer will collect output values until the *provided observable* "emits." So we need to give `buffer()` an *observable* as our first argument. Buffer will then collect output values into a bucket until that provided observable "emits," at which point it will set that bucket aside and begin collecting a new bucket. It just so happens that we have a `debounceTime()` event emitting 250 milliseconds after a click event. Let's collect all the click events that happen during that 250 mililisecond window into a bucket. 
+
+```
+   *   = `debounced$` observable emits
+
+--x--> = `click$` observable
+
+|____| = `buffer` bucket
 
 
+          *           *      *       *
+-----x--x--------x------x---x---x----->
+     |____|      |____| |____|  |____|
+
+
+```
+
+Note that the buckets end when `debouncedClicks$` emits. 
+
+Now, the code should be easy to understand. If it's not, tweet at me (not a joke, save me some embarassment).
+
+```javascript
+const buffered$ = clicks$.buffer(debounced$);
+```
+
+Reviewing what we have so far in code:
+
+```javascript
+// get the button DOM element
+const rxBtn = this.getNativeElement(this.btn);
+// create an observable stream from click events on the button
+const click$ = Observable.fromEvent(rxBtn, 'click');
+
+// debounce the click stream
+const debounced$ = click$.debounceTime(250);
+// buffer the debounced stream
+const buffered$ = click$.buffer(debounced$);
+```
+
+The next step is to find a way to count the number of clicks in each bucket so we can pinpoint bucket with two clicks.
+
+#### **map()** 🗺
+
+Not to be confused with [`Array.prototype.map()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/map?v=example), this is [`Observable.map()`](http://reactivex.io/documentation/operators/map.html) it does the same thing as `Array.prototype.map()`, but with ~observables~. 
 
 Post in progress... stay tuned...
 
