@@ -29,11 +29,11 @@ I've also provided it here in case you don't feel like cloning the project and i
 </button>
 
 <div class="container">
-    <h1>{{ messages }}</h1>
+    <h1>{ { messages } }</h1>
 </div>
 ```
 
-As you can see, we have a button and a message.  
+Here we have a button and a message.  
 
 We are going to listen for click events on this button and update the message when the button is clicked. 
 
@@ -47,7 +47,7 @@ Here's a handy diagram:
 ```
 ------x-----x-----x--->
 ```
-The arrow here represents time, you could think of each `-` as a discrete moment. Let's pretend that this stream represents a button sitting on the screen. As time passes, a user may or may not click on said button. Each `x` indicates that the user has clicked on the button, thus firing a 'click' event. 
+The arrow here represents time, you could think of each `-` as a discrete moment. Let's pretend that this stream represents a button sitting on the screen. As time passes, a user may or may not click on the aforementioned button. Each `x` indicates that the user has clicked on the button, thus firing a 'click' event. 
 
 ```javascript
 const rxBtn = this.getNativeElement(this.btn);       // get the button element
@@ -64,7 +64,7 @@ Operators are the methods that we have access to when working with Observables. 
 
 ##### [Begin Tangent]
 
-A brief example of using *declarative* programming to double the numbers in an array: 
+A brief example of using *declarative* programming to double numbers in an array: 
 
 ```javascript
 // not declarative :( 
@@ -75,7 +75,7 @@ const double = arr => {
     }
     return arr; 
 }
-double(a) // [2, 4, 6]
+double(a); // [2, 4, 6]
 ```
 
 
@@ -83,7 +83,7 @@ double(a) // [2, 4, 6]
 // declarative :) 
 const a = [1, 2, 3];
 const double = arr => arr.map( x => x * 2 );
-double(a) // [2, 4, 6]
+double(a); // [2, 4, 6]
 ```
 
 Side note: There's another difference between these two blocks -- the latter returns a new array, the former just mutates the original array. Always prefer the approach *without* mutation. 
@@ -110,7 +110,7 @@ Let's start by taking our click stream and splitting it up into segments of 250 
 
 #### **debounceTime()**
 
-The first step to segmenting our clickStream (`click$`) is to debounce based on time between inputs. In other words, when the user clicks, we start a timer that goes for 250 milliseconds. If the user clicks again while that timer is running, the original click will get discarded and the timer will begin again. The debounce will not *emit* a new Observable until that timer runs to completion. 
+The first step to segmenting our clickStream (`click$`) is to debounce based on time between inputs. In other words, when the user clicks, we start a timer that goes for 250 milliseconds. If the user clicks again while that timer is running, the timer will begin again. The debounced stream will not *emit* until that timer runs to completion (250 milliseconds pass without clicks from the user). 
 
 In code, it will look something like this: 
 ```javascript
@@ -120,17 +120,18 @@ const debounced$ = click$.debounceTime(250);
 If you `console.log` the `debouncedClicks$` like so: 
 
 ```javascript
-debounced$.subscribe(x => console.log(x));
+debounced$.subscribe(console.log);
 ```
 
 ...you should see...
 
-```javscript
+```console
+MouseEvent {isTrusted: true, screenX: 3046, screenY: 239, clientX: 161, clientY: 132…}
 ```
 
 ...in the console.
 
-As you can see, we give the user time to get their double click in, however we're only emitting one event! So, how do we collect these clicks?
+As you can see, we give the user time to get their double click in, but only one event is emitted! So, how do we collect the clicks that got debounced?
 
 #### **buffer()**
 
@@ -142,19 +143,21 @@ Let's say this is our `click$` event stream (the arrow is time, `x`s are clicks)
 -----x---x-------x----x---x-x----x->
 ```
 
-Buffer will collect output values until the *provided observable* "emits." So we need to give `buffer()` an *observable* as our first argument. Buffer will then collect output values into a bucket until that provided observable "emits," at which point it will set that bucket aside and begin collecting a new bucket. It just so happens that we have a `debounceTime()` event emitting 250 milliseconds after a click event. Let's collect all the click events that happen during that 250 mililisecond window into a bucket. 
+Buffer will collect output values until the *provided observable* "emits." So we need to give `buffer()` an *observable* as our first argument. Buffer will then collect output values into a bucket until that provided observable "emits," at which point it will set that bucket aside and begin collecting a new bucket. It just so happens that we have a `debounceTime()` event emitting after 250 milliseconds of silence post-click event. Let's collect all the click events that happen during that 250 mililisecond window into a bucket. 
 
 ```
    *   = `debounced$` observable emits
+
+   ==  = 250 milliseconds
 
 --x--> = `click$` observable
 
 |____| = `buffer` bucket
 
 
-          *           *      *       *
------x--x--------x------x---x---x----->
-     |____|      |____| |____|  |____|
+        ==*      ==*         ==* ==*
+-----x--x--------x------x---x----x----->
+     |____|      |_|    |______| |_|
 
 
 ```
@@ -170,22 +173,42 @@ const buffered$ = clicks$.buffer(debounced$);
 Reviewing what we have so far in code:
 
 ```javascript
-// get the button DOM element
-const rxBtn = this.getNativeElement(this.btn);
-// create an observable stream from click events on the button
-const click$ = Observable.fromEvent(rxBtn, 'click');
+const rxBtn = this.getNativeElement(this.btn);       // get the button element
+const click$ = Observable.fromEvent(rxBtn, 'click'); // listen for clicks
 
-// debounce the click stream
-const debounced$ = click$.debounceTime(250);
-// buffer the debounced stream
-const buffered$ = click$.buffer(debounced$);
+const debounced$ = click$.debounceTime(250); // debounce the click stream
+const buffered$ = click$.buffer(debounced$); // buffer the debounced stream
 ```
 
 The next step is to find a way to count the number of clicks in each bucket so we can pinpoint bucket with two clicks.
 
 #### **map()** 🗺
 
-Not to be confused with [`Array.prototype.map()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/map?v=example), this is [`Observable.map()`](http://reactivex.io/documentation/operators/map.html) it does the same thing as `Array.prototype.map()`, but with ~observables~. 
+Not to be confused with [`Array.prototype.map()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/map?v=example), this is [`Observable.map()`](http://reactivex.io/documentation/operators/map.html). It does the same thing as `Array.prototype.map()`, but with ~observables~. 
+
+In this step, we're going to do something simple, yet powerful. 
+
+Each buffered bucket is an array of `MouseEvents` (clicks in this case). If I quickly click the button three times in a row, it looks like this:
+
+```javascript
+buffered$.subscribe(console.log); // [MouseEvent, MouseEvent, MouseEvent]
+```
+Just like any Javascript array, this array has a `.length` property, which we are going to use to count the number of clicks in this bucket. 
+
+Let's create a function that takes an array and returns its length:
+
+```javascript 
+const getLength = a => a.length;
+```
+
+And now we can apply this to our buffered click stream to get the number of clicks in each bucket:
+
+```javascript
+const clickCount = buffered$.map(getLength);
+```
+
+
+
 
 Post in progress... stay tuned...
 
