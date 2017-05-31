@@ -219,7 +219,7 @@ Well, observables have a `filter()` too!
 const doubleClick$ = clickCount$.filter(x => x === 2);
 ``` 
 
-The resulting observable (`doublceClick$`) will now only emit when the user double clicks on the button!
+The resulting observable (`doubleClick$`) will now only emit when the user double clicks on the button!
 
 Now we can respond to this event and update the message!
 
@@ -262,4 +262,4 @@ Post in progress... stay tuned...
 #### To Learn More
 * This post was inspired by my meanderings through Lukas Reubellke's course [Hello RxJS](https://courses.ultimateangular.com/p/hello-rxjs).
 * Lukas also gave a great [talk](https://www.youtube.com/watch?v=5CTL7aqSvJU) on RxJS, mentioned at the top of this post.  
-* Andre Staltz wrote an excellent, in-depth gist on Reactive Programming entitled [The introduction to Reactive Programming you've been missing](https://gist.github.com/staltz/868e7e9bc2a7b8c1f754).
+* Andre Staltz wrote an excellent, in-depth gist on Reactive Programming: [The introduction to Reactive Programming you've been missing](https://gist.github.com/staltz/868e7e9bc2a7b8c1f754).
