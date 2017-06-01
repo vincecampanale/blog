@@ -229,7 +229,7 @@ I've already shown `.subscribe()` in action earlier in this post -- back in the 
 We want to subscribe to our `doubleClick$` observable and respond to it's events by updating the message to say `"Double click!"`.  
 
 ```javascript
-doubleClick$.subscribe(event => this.message = "Double click!");
+doubleClick$.subscribe(event => this.message = 'Double click!');
 ```
 
 That's it! It's really that easy. No, this is not a trap. 
@@ -250,7 +250,7 @@ const buffered$ = click$.buffer(debounced$); // buffer the debounced stream
 const clickCount$ = buffered$.map(tolength);            // get buffer lengths
 const doubleClick$ = clickCount$.filter(x => x === 2);  // filter for length 2
 
-doubleClick$.subscribe(event => this.message = "Double click!");
+doubleClick$.subscribe(event => this.message = 'Double click!');
 ```
 
 Note: observable methods can be chained and composed just like any other Javascript methods.
@@ -266,14 +266,14 @@ click$
     .buffer(click$.debounceTime(250))
     .map(a => a.length)
     .filter(x => x === 2)
-    .subscribe(e => this.message = "Double click!");
+    .subscribe(e => this.message = 'Double click!');
 ```
 
 
 #### Bonus Challenges:
 1) Make a clear button to clear the message (using observables!).   
 
-2) Update the message to say "~Shift Click~" when the user shift-clicks on the button.  
+2) Update the message to say *~Shift Click~* when the user shift-clicks on the button.  
 
 3) Build a function that takes a number and a click stream and returns a new stream containing clicks of that number (i.e. `filterClickCount$(click$)(3)`) returns a stream of triple clicks. Note that I ended the function name with `$` because it returns a stream. *[Currying](http://www.vincecampanale.com/blog/2017/04/22/what-is-currying/) is optional but encouraged!*  
 
