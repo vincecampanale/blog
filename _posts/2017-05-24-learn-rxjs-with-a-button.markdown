@@ -223,8 +223,58 @@ The resulting observable (`doubleClick$`) will now only emit when the user doubl
 
 Now we can respond to this event and update the message!
 
-### **subscribe()**
+### **subscribe()** 
 
+I've already shown `.subscribe()` in action earlier in this post -- back in the `debounceTime()` and `buffer()` sections I used it to log the contents of a the `debounced$` and `buffer$` observable streams to the console. Similar to a magazine, you won't receive any content from an observable stream unless you *subscribe* to it.
+
+We want to subscribe to our `doubleClick$` observable and respond to it's events by updating the message to say `"Double click!"`.  
+
+```javascript
+doubleClick$.subscribe(event => this.message = "Double click!");
+```
+
+That's it! It's really that easy. No, this is not a trap. 
+
+Notice that we are mapping the double-click event to something completely unrelated. The event itself isn't useful to us, just knowing that it occured is what we need. What we do with that event when it occurs is completely up to us. While what we're doing here is technically a side-effect and there's a whole can o' worms there, I'm just going to ignore that and focus on the fact that we can do *whatever* we want with this observable stream once we get ahold of it.
+
+To wrap everything up, here's the entire block of code we have constructed throughout this guide: 
+
+```javascript 
+const toLength = a => a.length; // helper -- gets length of given array
+
+const rxBtn = this.getNativeElement(this.btn);       // get the button element
+const click$ = Observable.fromEvent(rxBtn, 'click'); // listen for clicks
+
+const debounced$ = click$.debounceTime(250); // debounce the click stream
+const buffered$ = click$.buffer(debounced$); // buffer the debounced stream
+
+const clickCount$ = buffered$.map(tolength);            // get buffer lengths
+const doubleClick$ = clickCount$.filter(x => x === 2);  // filter for length 2
+
+doubleClick$.subscribe(event => this.message = "Double click!");
+```
+
+Note: observable methods can be chained and composed just like any other Javascript methods.
+Sometimes it's nice to have your streams partitioned for reusability and cleanliness, but sometimes it's also nice to eliminate intermediate variables.
+
+Check it:
+
+```javascript
+const rxBtn = this.getNativeElement(this.btn);       // get the button element
+const click$ = Observable.fromEvent(rxBtn, 'click'); // listen for clicks
+
+click$
+    .buffer(click$.debounceTime(250))
+    .map(a => a.length)
+    .filter(x => x === 2)
+    .subscribe(e => this.message = "Double click!");
+```
+
+
+#### Bonus Challenges:
+1) Build a function that takes a number and a click stream and returns a new stream containing clicks of that number (i.e. `filterClicks(click$)(3)`) returns a stream of triple clicks. [[Currying](http://www.vincecampanale.com/blog/2017/04/22/what-is-currying/) is optional but encouraged!]  
+2) Respond to shift-click events.  
+3) Make a clear button to clear the message (using observables!). 
 
 
 
