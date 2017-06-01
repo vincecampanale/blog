@@ -1,10 +1,9 @@
 ---
 layout: post
 title:  "Learn RxJS with a Button"
-description: "Several core concepts of RxJS delivered via a simple button."
+description: "Step-by-step introduction to declarative code, observable streams, RxJS operators, and Reactive Programming in practice."
 date: 2017-05-24
 ---
-[ POST UNDER CONSTRUCTION -- READ ON, BUT BEWARE OF CLIFFHANGERS! ]
 
 Welcome. The goal of this post is to teach you the fundamentals of Reactive Extensions for Javascript (RxJS). I will only scrape the surface of this very cool library to give you a sense of what you can do with it, but there is so much more to learn. 
 
@@ -272,44 +271,16 @@ click$
 
 
 #### Bonus Challenges:
-1) Build a function that takes a number and a click stream and returns a new stream containing clicks of that number (i.e. `filterClicks(click$)(3)`) returns a stream of triple clicks. [[Currying](http://www.vincecampanale.com/blog/2017/04/22/what-is-currying/) is optional but encouraged!]  
-2) Respond to shift-click events.  
-3) Make a clear button to clear the message (using observables!). 
+1) Make a clear button to clear the message (using observables!).   
 
+2) Update the message to say "~Shift Click~" when the user shift-clicks on the button.  
 
+3) Build a function that takes a number and a click stream and returns a new stream containing clicks of that number (i.e. `filterClickCount$(click$)(3)`) returns a stream of triple clicks. Note that I ended the function name with `$` because it returns a stream. *[Currying](http://www.vincecampanale.com/blog/2017/04/22/what-is-currying/) is optional but encouraged!*  
 
-Post in progress... stay tuned...
+**Solutions to these challenges are in the `bonus` branch on the git repo.**
 
-
-
-<!--
-    let clickStream = Observable.fromEvent(this.getNativeElement(this.btn), 'click');
-
-    let streamLength = clickStream
-      .filter(event => !event.shiftKey)
-      .buffer( clickStream.debounceTime(250) )
-      .map( list => list.length );
-
-    let singleClicks = streamLength
-      .filter ( x => x === 1 );
-    singleClicks.subscribe(event => this.message = "Clicked!");
-    let doubleClicks = streamLength.filter ( x => x === 2 );
-    doubleClicks.subscribe(event => this.message = "Double Clicked!!");
-    let tripleClicks = streamLength.filter( x => x === 3 );
-    tripleClicks.subscribe(event => this.message = "TRIPLE Clicked!!!");
-
-
-
-    const shiftKey = clickStream
-      .filter( event => event.shiftKey )
-      .map( event => '~ Shift Clicked ~' );
-
-    shiftKey.subscribe( message => this.message = message );
--->
-
-
-
-#### To Learn More
+<br /> 
+#### Extra Resources
 * This post was inspired by my meanderings through Lukas Reubellke's course [Hello RxJS](https://courses.ultimateangular.com/p/hello-rxjs).
-* Lukas also gave a great [talk](https://www.youtube.com/watch?v=5CTL7aqSvJU) on RxJS, mentioned at the top of this post.  
+* Lukas also gave a [talk](https://www.youtube.com/watch?v=5CTL7aqSvJU) on RxJS, mentioned at the top of this post.  
 * Andre Staltz wrote an excellent, in-depth gist on Reactive Programming: [The introduction to Reactive Programming you've been missing](https://gist.github.com/staltz/868e7e9bc2a7b8c1f754).
