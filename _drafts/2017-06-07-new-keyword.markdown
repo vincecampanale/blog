@@ -11,7 +11,7 @@ I'll start with some context and background about Constructor functions and the 
  I will show *how* it is doing what it does by implementing it in code. Finally, I will explain *why* it does these things and give a couple arguments for avoiding this approach altogether in most situations. The information presented here comes from [these](https://www.youtube.com/watch?v=Y3zzCY62NYc) [resources](https://medium.com/javascript-scene/javascript-factory-functions-vs-constructor-functions-vs-classes-2f22ceddf33e), processed by my brain. 
 
 ### Constructor functions
-A Constructor function is a function that builds returns a new instance of object. It looks like this: 
+A Constructor function is a function that builds and returns a new instance of object. It looks like this: 
 
 ```javascript
 /** Car: {
