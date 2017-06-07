@@ -63,6 +63,10 @@ I'll give you a hint:
 console.log(typeof Car) // Function 
 ```
 
+### Under the Hood
+
+In this section, I'm just going to explain the things that the `new` keyword is doing with human words. Then in the next section, I'll show it in computer words. 
+
 <!--
 OUTLINE 
 [x] Brief intro to Constructor functions
