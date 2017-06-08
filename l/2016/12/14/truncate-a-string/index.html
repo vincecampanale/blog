@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Solved: Truncate a String</title>
+  <meta name="description" content="Nothing like some good ol’ Javascript string manipulation! Today, I’m tackling a fun little challenge from the Free Code Camp (FCC) “Basic Algorithm Scriptin...">
+
+  <link rel="stylesheet" href="/blog/assets/main.css">
+  <link rel="canonical" href="http://localhost:4000/blog/2016/12/14/truncate-a-string/">
+  <link rel="alternate" type="application/rss+xml" title="Vince Campanale/Blog/" href="/blog/feed.xml">
+
+  
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:site" content="@_vincecampanale">
+  <meta name="twitter:creator" content="@_vincecampanale">
+  
+    <meta name="twitter:title" content="Solved: Truncate a String">
+  
+  
+    <meta name="twitter:url" content="http://localhost:4000/2016/12/14/truncate-a-string/">
+  
+  
+    <meta name="twitter:description" content="Software blog, front-end development, HTML, CSS, Javascript.">
+  
+  
+
+  <link rel="icon" href="assets/favicon.ico"/>
+<script src="http://127.0.0.1:35729/livereload.js"></script></head>
+
+
+  <body>
+
+    <header class="site-header" role="banner">
+  <div class="wrapper site-nav">
+    <a class="site-title" href="/blog/">Vince Campanale/Blog/</a>
+
+    <div class="link-wrapper">
+      <a class="page-link" href="http://vincecampanale.com/about/">About</a>
+      <a class="page-link" href="/blog/">Blog</a>
+      <a class="page-link" href="http://vincecampanale.com">Portfolio</a>
+    </div>
+  </div>
+</header>
+
+
+    <main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title" itemprop="name headline">Solved: Truncate a String</h1>
+    <p class="post-meta"><time datetime="2016-12-14T00:00:00-05:00" itemprop="datePublished">Dec 14, 2016</time></p>
+  </header>
+
+  <div class="post-content" itemprop="articleBody">
+    <p>Nothing like some good ol’ Javascript string manipulation! Today, I’m tackling a fun little challenge from the Free Code Camp (FCC) “Basic Algorithm Scripting” called “Truncate a string.” For this challenge, we will be building a function that takes two arguments: 1) “str” - the string to be truncated and 2) “num” - the length of the resulting truncation (<a href="http://www.dictionary.com/browse/truncation">it’s a word</a>). However (!!), FCC has added a couple of hoops we have to jump through to make things more interesting. Hoop #1) The truncated string we return must end with <code class="highlighter-rouge">...</code> and note: <em>these dots add to the length of the string</em>. Hoop #2) If <code class="highlighter-rouge">num</code> is less than or equal to 3, then the dots <em>do not</em> add to the length of the string. (Something I struggled with.)</p>
+
+<h4 id="step-1-psuedocode">Step 1: Psuedocode</h4>
+
+<p>This problem is a bit tricky because we have several conditions to keep in mind. We treat strings differently based on whether or not their <code class="highlighter-rouge">length</code> property is greater than <code class="highlighter-rouge">num</code>. We also want to keep in mind whether <code class="highlighter-rouge">num</code> is less than or equal to 3.
+Let’s prioritize our conditions. I’m sure there are many ways to handle this, but I’m going to go with the best way I could think of. First, we want to see whether or not <code class="highlighter-rouge">string.length</code> is less than or equal to <code class="highlighter-rouge">num</code> because that condition will change what we return. Next, let’s check for the value of <code class="highlighter-rouge">num</code> because that also affects our return value. If neither of those conditions are met, then we can just solve the original problem.</p>
+
+<div class="language-javascript highlighter-rouge"><pre class="highlight"><code><span class="c1">// 1) If str.length is less than or equal to num</span>
+<span class="c1">//      - just return str</span>
+<span class="c1">// 2) Else, if num is less than or equal to three</span>
+<span class="c1">//      - truncate the string to length `num`</span>
+<span class="c1">//      - concatenate truncated string with `...`</span>
+<span class="c1">// 3) Otherwise,</span>
+<span class="c1">//      - truncate the string to length `num - 3`</span>
+<span class="c1">//      - concatenate truncated string with `...`</span>
+</code></pre>
+</div>
+
+<h4 id="step-2-translation-station">Step 2: Translation station</h4>
+
+<p>Let’s start with instantiating the function and outlining the conditionals.</p>
+
+<div class="language-javascript highlighter-rouge"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">truncateString</span><span class="p">(</span><span class="nx">str</span><span class="p">,</span> <span class="nx">num</span><span class="p">){</span>
+  <span class="kd">var</span> <span class="nx">truncate</span><span class="p">;</span> <span class="c1">//create a variable to hold our truncated strings</span>
+
+  <span class="k">if</span> <span class="p">(</span><span class="nx">str</span><span class="p">.</span><span class="nx">length</span> <span class="o">&lt;=</span> <span class="nx">num</span><span class="p">){</span>
+    <span class="c1">//do something</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">num</span> <span class="o">&lt;=</span> <span class="mi">3</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// do something</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+    <span class="c1">// do something</span>
+  <span class="p">}</span>
+
+<span class="p">}</span>
+</code></pre>
+</div>
+
+<p>Alright, now we have our logic in place. Let’s mix in the rest of the code.
+To truncate the strings we’re going to use the <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/slice">String.prototype.slice()</a> method. <code class="highlighter-rouge">.slice()</code> returns a new string containing an extracted section of the string. The first parameter is the index at which we want to begin extracting; the second parameter is the index at which we want to stop extracting. For example <code class="highlighter-rouge">"hello".slice(0, 4)</code> will return … <code class="highlighter-rouge">"hell"</code> … yikes.</p>
+
+<p>Anyways, let’s see how <code class="highlighter-rouge">str.slice()</code> applies in this example.</p>
+
+<h5 id="note-we-can-also-achieve-this-with-substring-but-slice-sounds-cooler-try-rewriting-the-solution-with-substring-for-good-measure-heres-a-link-to-mdn-docs-to-get-you-started">Note: We can also achieve this with <code class="highlighter-rouge">.substring()</code> but <code class="highlighter-rouge">.slice()</code> sounds cooler. Try rewriting the solution with <code class="highlighter-rouge">.substring()</code> for good measure. Here’s a <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/substring">link</a> to MDN docs to get you started.</h5>
+
+<div class="language-javascript highlighter-rouge"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">truncateString</span><span class="p">(</span><span class="nx">str</span><span class="p">,</span> <span class="nx">num</span><span class="p">){</span>
+  <span class="kd">var</span> <span class="nx">truncate</span><span class="p">;</span> <span class="c1">//create a variable to hold our truncated strings</span>
+
+  <span class="k">if</span> <span class="p">(</span><span class="nx">str</span><span class="p">.</span><span class="nx">length</span> <span class="o">&lt;=</span> <span class="nx">num</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nx">str</span><span class="p">;</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">num</span> <span class="o">&lt;=</span> <span class="mi">3</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">truncate</span> <span class="o">=</span> <span class="nx">str</span><span class="p">.</span><span class="nx">slice</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nx">num</span><span class="p">)</span> <span class="o">+</span> <span class="s2">"..."</span><span class="p">;</span> <span class="c1">//slice string from index 0 to index num</span>
+    <span class="k">return</span> <span class="nx">truncate</span><span class="p">;</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+    <span class="c1">//slice string from index 0 to index num - 3 because "..." adds to the string length when num &gt; 3</span>
+    <span class="nx">truncate</span> <span class="o">=</span> <span class="nx">str</span><span class="p">.</span><span class="nx">slice</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nx">num</span> <span class="o">-</span> <span class="mi">3</span><span class="p">)</span> <span class="o">+</span> <span class="s2">"..."</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nx">truncate</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre>
+</div>
+
+<p>This code works, but it’s a bit redundant and repetitive (ha).
+Let’s fix it up.</p>
+
+<h4 id="step-3-improve-via-iteration">Step 3: Improve via iteration</h4>
+
+<p>When learning to code, get used to iteration. And I don’t just mean <code class="highlighter-rouge">for</code> loops. I mean get used to writing and rewriting and incrementally improving (or un-breaking) your code bit by bit (pun kind of intended). The only way to improve is to write code, and rewrite code, and rewrite the rewrites. Practice makes perfect, and practice is iteration. Now that “iteration” doesn’t look like a real word anymore, let’s improve our function. We’ll start by eliminating redundant variables (*cough* truncate *cough*).</p>
+
+<div class="language-javascript highlighter-rouge"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">truncateString</span><span class="p">(</span><span class="nx">str</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">str</span><span class="p">.</span><span class="nx">length</span> <span class="o">&lt;=</span> <span class="nx">num</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nx">str</span><span class="p">;</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">num</span> <span class="o">&lt;=</span> <span class="mi">3</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nx">str</span><span class="p">.</span><span class="nx">slice</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nx">num</span><span class="p">)</span> <span class="o">+</span> <span class="s2">"..."</span><span class="p">;</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nx">str</span><span class="p">.</span><span class="nx">slice</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nx">num</span> <span class="o">-</span> <span class="mi">3</span><span class="p">)</span> <span class="o">+</span> <span class="s2">"..."</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre>
+</div>
+
+<p>But wait, there’s more.
+We can really spruce up our function with the handy dandy ternary operator.</p>
+
+<div class="language-javascript highlighter-rouge"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">truncateString</span><span class="p">(</span><span class="nx">str</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">str</span><span class="p">.</span><span class="nx">length</span> <span class="o">&lt;=</span> <span class="nx">num</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nx">str</span><span class="p">;</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nx">str</span><span class="p">.</span><span class="nx">slice</span><span class="p">(</span><span class="mi">0</span> <span class="p">,</span> <span class="nx">num</span> <span class="o">&gt;</span> <span class="mi">3</span> <span class="p">?</span> <span class="nx">num</span> <span class="o">-</span> <span class="mi">3</span> <span class="p">:</span> <span class="nx">num</span><span class="p">)</span> <span class="o">+</span> <span class="s2">"..."</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre>
+</div>
+
+<p>Nice, right? In words, this function reads “If <code class="highlighter-rouge">str.length</code> is less than or equal to <code class="highlighter-rouge">num</code>, return <code class="highlighter-rouge">str</code>. Otherwise, return an extraction from <code class="highlighter-rouge">str</code> beginning at index 0 and either ending at index <code class="highlighter-rouge">num - 3</code> if <code class="highlighter-rouge">num</code> is greater than 3 or ending at index <code class="highlighter-rouge">num</code> if <code class="highlighter-rouge">num</code> is not greater than 3, then add “…” on the end of that extraction.” I really love ternary operators.</p>
+
+<p>That’s it for today. Feel free to email me with questions and/or suggestions.
+Until next time, keep iterating.</p>
+
+  </div>
+
+  
+</article>
+
+      </div>
+    </main>
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+
+        </ul>
+      </div>
+
+      <div class="footer-col footer-col-2">
+        <ul class="social-media-list">
+          
+          <li><a href="mailto:vcampanale0294@gmail.com">email</a></li>
+          
+
+          
+          <li><a href="https://github.com/vincecampanale" target="_blank">github</a></li>
+          
+
+          
+          <li><a href="https://twitter.com/_vincecampanale" target="_blank">twitter</a></li>
+          
+        </ul>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+
+
+  </body>
+
+</html>

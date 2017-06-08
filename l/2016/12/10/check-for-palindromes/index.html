@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Solved: Check for Palindromes</title>
+  <meta name="description" content="Another day, another challenge. This one comes from the Free Code Camp “Basic Algorithm Scripting” section. I highly recommend checking out Free Code Camp’s ...">
+
+  <link rel="stylesheet" href="/blog/assets/main.css">
+  <link rel="canonical" href="http://localhost:4000/blog/2016/12/10/check-for-palindromes/">
+  <link rel="alternate" type="application/rss+xml" title="Vince Campanale/Blog/" href="/blog/feed.xml">
+
+  
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:site" content="@_vincecampanale">
+  <meta name="twitter:creator" content="@_vincecampanale">
+  
+    <meta name="twitter:title" content="Solved: Check for Palindromes">
+  
+  
+    <meta name="twitter:url" content="http://localhost:4000/2016/12/10/check-for-palindromes/">
+  
+  
+    <meta name="twitter:description" content="Software blog, front-end development, HTML, CSS, Javascript.">
+  
+  
+
+  <link rel="icon" href="assets/favicon.ico"/>
+<script src="http://127.0.0.1:35729/livereload.js"></script></head>
+
+
+  <body>
+
+    <header class="site-header" role="banner">
+  <div class="wrapper site-nav">
+    <a class="site-title" href="/blog/">Vince Campanale/Blog/</a>
+
+    <div class="link-wrapper">
+      <a class="page-link" href="http://vincecampanale.com/about/">About</a>
+      <a class="page-link" href="/blog/">Blog</a>
+      <a class="page-link" href="http://vincecampanale.com">Portfolio</a>
+    </div>
+  </div>
+</header>
+
+
+    <main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title" itemprop="name headline">Solved: Check for Palindromes</h1>
+    <p class="post-meta"><time datetime="2016-12-10T00:00:00-05:00" itemprop="datePublished">Dec 10, 2016</time></p>
+  </header>
+
+  <div class="post-content" itemprop="articleBody">
+    <p>Another day, another challenge. This one comes from the Free Code Camp “Basic Algorithm Scripting” section. I highly recommend checking out Free Code Camp’s program if you are getting started on learning to code. It has served me very well.</p>
+
+<p>Today, as the name implies, we are checking for palindromes. A palindrome is a word, sentence, or phrase that reads the same when spelled backwards or forwards. For example, <code class="highlighter-rouge">race car</code> is a palindrome.
+Our function will be called <code class="highlighter-rouge">palindrome</code> and the input will be a string. If the input is a palindrome, our function will return true; otherwise, it will return false.</p>
+
+<h4 id="step-1-create-the-function">Step 1: Create the function.</h4>
+<div class="language-javascript highlighter-rouge"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">palindrome</span><span class="p">(</span><span class="nx">str</span><span class="p">){</span>
+
+<span class="p">}</span>
+</code></pre>
+</div>
+
+<p>Great. Now let’s put some meat on this sandwich.</p>
+
+<h4 id="step-2-stare-the-problem-down-let-it-know-whos-boss-then-psuedocode">Step 2: Stare the problem down. Let it know who’s boss. Then psuedocode.</h4>
+<p>This challenge is harder than it seems at face value. Let’s make sure it doesn’t know that, though.
+A handy hint that Free Code Camp gives us is “Note: You’ll need to remove all non-alphanumeric characters (punctuation, spaces, and symbols) and turn everything into lower case in order to check for palindromes.
+Let’s break this down into some pseudocode:</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>1. Remove all non-alphanumeric characters from the input string
+2. Make it lower case
+3. Make a backwards version of the cleaned up string
+4. Compare the cleaned up string to its backwards version
+  4a. If the two are the same, return true. End function.
+  4b. If the two are not the same, return false End function.
+</code></pre>
+</div>
+
+<h4 id="step-3-clean-up-the-input">Step 3: Clean up the input.</h4>
+<p>Time to implement the first two steps in the above pseudocode.
+First, step 1: remove the non-alphanumeric characters from the input string.
+JavaScript has a neat method called <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/replace">String.prototype.replace()</a>. This method will search the string it is called upon for the given substring or regular expression in the first argument, and replace it with whatever you put in the second argument.
+Instead of weeding out all non-alphanumeric characters by referencing them directly in a long, unwieldy regular expression, we are just going to say replace everything that is NOT an alphanumeric character by adding the <code class="highlighter-rouge">^</code> in front. It would be convenient if we could just say <code class="highlighter-rouge">^\w</code> or <code class="highlighter-rouge">\W</code>, but unfortunately we must also get rid of underscores. I’ve gotta say, Regular Expressions give me headaches.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>var replaced = str.replace(/[^a-zA-Z0-9]/g, '');
+</code></pre>
+</div>
+<p>So now we have a new string called <code class="highlighter-rouge">replaced</code> which contains only alphanumeric characters from the input string. Now let’s make that lowercase.</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>var lowercase = replaced.toLowerCase();
+</code></pre>
+</div>
+<p>Here’s what we have so far:</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>function palindrome(str){
+  var replaced = str.replace(/[^a-zA-Z0-9]/g, '');
+  var lowercase = replaced.toLowerCase();
+}
+</code></pre>
+</div>
+
+<h4 id="step-4-reverse-the-lowercase-string-and-compare">Step 4: Reverse the lowercase string and compare.</h4>
+<p>Check out <a href="http://www.vincecampanale.com/jekyll/update/2016/12/08/a-challenge-a-day-reverse-a-string/">this post</a> to see about reversing a string. I’m just going to reuse that code here.</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>//save the cleaned up string in a variable called "forwards"
+var forwards = lowercase;
+//reverse lowercase and save it in a variable called "backwards"
+var backwards = lowercase.split('').reverse().join('');
+</code></pre>
+</div>
+
+<p>Now for the comparing part. We’ll just use an if statement here.</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>if(forwards === backwards){
+  return true;
+}
+</code></pre>
+</div>
+
+<p>That’s it. Easy peasy.
+You might be thinking “Wait, Vince, dude, what about the ‘else return false’ part?”
+Astute observation, dear Reader. Bear with me, it will all make sense soon.</p>
+
+<h4 id="step-5-put-it-all-together">Step 5: Put it all together.</h4>
+<p>Our functional function:</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>function palindrome(str){
+  var replaced = str.replace(/[^a-zA-Z0-9]/g, '');
+  var lowercase = replaced.toLowerCase();
+  var forwards = lowercase;
+  var backwards = lowercase.split('').reverse().join('');
+  if (forwards === backwards){
+    return true;
+  }
+  return false;
+}
+</code></pre>
+</div>
+
+<p>The reason we don’t need an else statement here is because JavaScript will read the code within this function each line before the next. When it hits the if statement and evaluates the equality of forwards and backwards, and finds that they are in fact equal, the function returns true and then ends. When the return statement fires, it also <em>ends the function</em>. Nothing after the return statement happens. So, if <code class="highlighter-rouge">forwards</code> is exactly the same as <code class="highlighter-rouge">backwards</code>, the function returns true and ends. If <code class="highlighter-rouge">forwards</code> is <em>not</em> exactly the same as <code class="highlighter-rouge">backwards</code>, then it skips the code in the if statement, and returns false.</p>
+
+<h4 id="step-6-refactor">Step 6: Refactor.</h4>
+<p>The function functions, but it could be cleaner.</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>function palindrome(str) {
+  var forwards, backwards, result;
+  forwards = str.replace(/[^a-zA-Z0-9]/g, '').toLowerCase();
+  backwards = forwards.split('').reverse().join('');
+  result = forwards === backwards ? true : false;
+  return result;
+}
+</code></pre>
+</div>
+
+<p>This solution takes advantage of a ternary function which is basically syntactic sugar for the if statement. The line <code class="highlighter-rouge">result = forwards === backwards ? true : false</code> does this: evaluates <code class="highlighter-rouge">forwards === backwards</code>; if it evaluates to true, then true gets stored in the variable <code class="highlighter-rouge">result</code>; if it evaluates to false, then false gets stored in the variable <code class="highlighter-rouge">result</code>.</p>
+
+<p>Let me know if you can think of a better way to do this! Email link in the footer.</p>
+
+<p>Fin.</p>
+
+  </div>
+
+  
+</article>
+
+      </div>
+    </main>
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+
+        </ul>
+      </div>
+
+      <div class="footer-col footer-col-2">
+        <ul class="social-media-list">
+          
+          <li><a href="mailto:vcampanale0294@gmail.com">email</a></li>
+          
+
+          
+          <li><a href="https://github.com/vincecampanale" target="_blank">github</a></li>
+          
+
+          
+          <li><a href="https://twitter.com/_vincecampanale" target="_blank">twitter</a></li>
+          
+        </ul>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+
+
+  </body>
+
+</html>

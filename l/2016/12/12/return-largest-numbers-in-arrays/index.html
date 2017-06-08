@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Solved: Return Largest Numbers in Arrays</title>
+  <meta name="description" content="Today’s challenge hails from Free Code Camp’s “Basic Algorithm Scripting” section. The task: given an input array containing several arrays of numbers, retur...">
+
+  <link rel="stylesheet" href="/blog/assets/main.css">
+  <link rel="canonical" href="http://localhost:4000/blog/2016/12/12/return-largest-numbers-in-arrays/">
+  <link rel="alternate" type="application/rss+xml" title="Vince Campanale/Blog/" href="/blog/feed.xml">
+
+  
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:site" content="@_vincecampanale">
+  <meta name="twitter:creator" content="@_vincecampanale">
+  
+    <meta name="twitter:title" content="Solved: Return Largest Numbers in Arrays">
+  
+  
+    <meta name="twitter:url" content="http://localhost:4000/2016/12/12/return-largest-numbers-in-arrays/">
+  
+  
+    <meta name="twitter:description" content="Software blog, front-end development, HTML, CSS, Javascript.">
+  
+  
+
+  <link rel="icon" href="assets/favicon.ico"/>
+<script src="http://127.0.0.1:35729/livereload.js"></script></head>
+
+
+  <body>
+
+    <header class="site-header" role="banner">
+  <div class="wrapper site-nav">
+    <a class="site-title" href="/blog/">Vince Campanale/Blog/</a>
+
+    <div class="link-wrapper">
+      <a class="page-link" href="http://vincecampanale.com/about/">About</a>
+      <a class="page-link" href="/blog/">Blog</a>
+      <a class="page-link" href="http://vincecampanale.com">Portfolio</a>
+    </div>
+  </div>
+</header>
+
+
+    <main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title" itemprop="name headline">Solved: Return Largest Numbers in Arrays</h1>
+    <p class="post-meta"><time datetime="2016-12-12T00:00:00-05:00" itemprop="datePublished">Dec 12, 2016</time></p>
+  </header>
+
+  <div class="post-content" itemprop="articleBody">
+    <p>Today’s challenge hails from <a href="https://www.freecodecamp.com/">Free Code Camp</a>’s “Basic Algorithm Scripting” section. The task: given an input array containing several arrays of numbers, return an array containing only the largest number from each input array. For example, <code class="highlighter-rouge">largestNumbers([[4, 5, 1, 3], [13, 27, 18, 26], [32, 35, 37, 39], [1000, 1001, 857, 1]])</code> should return <code class="highlighter-rouge">[5, 27, 39, 1001]</code>.</p>
+
+<h4 id="step-1-glare-at-problem-do-not-break-eye-contact">Step 1: Glare at problem. Do not break eye contact.</h4>
+<p>It’s okay to growl a little bit, I won’t judge you.</p>
+
+<h4 id="step-2-determine-approach-write-pseudocode">Step 2: Determine approach. Write pseudocode.</h4>
+<div class="language-javascript highlighter-rouge"><pre class="highlight"><code><span class="c1">// 1) Initialize a new array to hold the largest numbers.</span>
+<span class="c1">//            (Called "largestNumbers" perhaps?)</span>
+<span class="c1">// 2) Iterate through the input array</span>
+<span class="c1">//  2a) Find the maximum number in each of the inner arrays</span>
+<span class="c1">//  2b) Push that number to our "largestNumbers" array</span>
+<span class="c1">// 3) Return "largestNumbers"</span>
+<span class="c1">// 4) Cha cha real smooth</span>
+</code></pre>
+</div>
+
+<h4 id="step-3-translate-pseudocode-into-real-code">Step 3: Translate pseudocode into real code.</h4>
+<p>First, let’s handle the first two pieces of our pseudocode. We want to instantiate a new array to contain the largest numbers, then create a for loop that will step through the input array and allow us to run code on each inner array.</p>
+<div class="language-javascript highlighter-rouge"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">getLargestNumbers</span><span class="p">(</span><span class="nx">arr</span><span class="p">){</span>
+  <span class="kd">var</span> <span class="nx">largestNumbers</span> <span class="o">=</span> <span class="p">[];</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">arr</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">){</span>
+    <span class="c1">//stuff</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre>
+</div>
+
+<p>Okay, now let’s figure out the code we want to execute on each array.
+I’m sure there are many ways to find the maximum number in an array, but the best way I can think of is to use <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/max">Math.max</a><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/apply">.apply()</a>. The <code class="highlighter-rouge">.apply()</code> method takes two parameters. The first parameter is the context on which the code will execute. To learn more about context, check out <a href="http://ryanmorr.com/understanding-scope-and-context-in-javascript/">this great article by Ryan Morr</a>. The context of <code class="highlighter-rouge">Math.max()</code> is Math, so passing Math in as the first parameter to <code class="highlighter-rouge">.apply()</code> just makes sure this remains consistent. However, since <code class="highlighter-rouge">.max()</code> does not require context, this is <em>technically</em> unnecessary. The second parameter of <code class="highlighter-rouge">.apply()</code> is an array-like object on which the method will be applied. In our case, this is the inner array accessed in our for loop. So, let’s put this to use and write the code to get the largest number in each inner array and save that number in a variable for later use.</p>
+<div class="language-javascript highlighter-rouge"><pre class="highlight"><code><span class="kd">var</span> <span class="nx">maximum</span> <span class="o">=</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">max</span><span class="p">.</span><span class="nx">apply</span><span class="p">(</span><span class="nb">Math</span><span class="p">,</span> <span class="nx">arr</span><span class="p">[</span><span class="nx">i</span><span class="p">]);</span>
+</code></pre>
+</div>
+<p>Then, we want to push that maximum to <code class="highlighter-rouge">largestNumbers</code>.</p>
+<div class="language-javascript highlighter-rouge"><pre class="highlight"><code><span class="nx">largestNumbers</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">maximum</span><span class="p">);</span>
+</code></pre>
+</div>
+
+<h4 id="step-4-put-it-all-together">Step 4: Put it all together.</h4>
+<p>Time to add the maximum-finding code inside the for loop and return <code class="highlighter-rouge">largestNumbers</code> at the end.</p>
+<div class="language-javascript highlighter-rouge"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">getLargestNumbers</span><span class="p">(</span><span class="nx">arr</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">largestNumbers</span> <span class="o">=</span> <span class="p">[];</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span><span class="o">&lt;</span><span class="nx">arr</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">){</span>
+    <span class="kd">var</span> <span class="nx">maximum</span> <span class="o">=</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">max</span><span class="p">.</span><span class="nx">apply</span><span class="p">(</span><span class="nb">Math</span><span class="p">,</span> <span class="nx">arr</span><span class="p">[</span><span class="nx">i</span><span class="p">]);</span>
+    <span class="nx">largestNumbers</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">maximum</span><span class="p">);</span>
+  <span class="p">}</span>
+  <span class="k">return</span> <span class="nx">largestNumbers</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre>
+</div>
+
+<p>We can make this a bit more concise and eliminate an extra variable like so:</p>
+<div class="language-javascript highlighter-rouge"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">getLargestNumbers</span><span class="p">(</span><span class="nx">arr</span><span class="p">){</span>
+  <span class="kd">var</span> <span class="nx">largestNumbers</span> <span class="o">=</span> <span class="p">[];</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span><span class="o">&lt;</span><span class="nx">arr</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">){</span>
+    <span class="nx">largestNumbers</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nb">Math</span><span class="p">.</span><span class="nx">max</span><span class="p">.</span><span class="nx">apply</span><span class="p">(</span><span class="nb">Math</span><span class="p">,</span> <span class="nx">arr</span><span class="p">[</span><span class="nx">i</span><span class="p">]));</span>
+  <span class="p">}</span>
+  <span class="k">return</span> <span class="nx">largestNumbers</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre>
+</div>
+
+<p>And we’re done!</p>
+
+  </div>
+
+  
+</article>
+
+      </div>
+    </main>
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+
+        </ul>
+      </div>
+
+      <div class="footer-col footer-col-2">
+        <ul class="social-media-list">
+          
+          <li><a href="mailto:vcampanale0294@gmail.com">email</a></li>
+          
+
+          
+          <li><a href="https://github.com/vincecampanale" target="_blank">github</a></li>
+          
+
+          
+          <li><a href="https://twitter.com/_vincecampanale" target="_blank">twitter</a></li>
+          
+        </ul>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+
+
+  </body>
+
+</html>

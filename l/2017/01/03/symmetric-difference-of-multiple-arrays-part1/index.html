@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Solved: Symmetric Difference of Multiple Arrays (Part 1)</title>
+  <meta name="description" content="This post is Part 1 of a four part series. Symmetric Difference of Multiple Arrays (Part 1) &amp;lt;- You are here Symmetric Difference of Multiple Arrays (Part ...">
+
+  <link rel="stylesheet" href="/blog/assets/main.css">
+  <link rel="canonical" href="http://localhost:4000/blog/2017/01/03/symmetric-difference-of-multiple-arrays-part1/">
+  <link rel="alternate" type="application/rss+xml" title="Vince Campanale/Blog/" href="/blog/feed.xml">
+
+  
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:site" content="@_vincecampanale">
+  <meta name="twitter:creator" content="@_vincecampanale">
+  
+    <meta name="twitter:title" content="Solved: Symmetric Difference of Multiple Arrays (Part 1)">
+  
+  
+    <meta name="twitter:url" content="http://localhost:4000/2017/01/03/symmetric-difference-of-multiple-arrays-part1/">
+  
+  
+    <meta name="twitter:description" content="Software blog, front-end development, HTML, CSS, Javascript.">
+  
+  
+
+  <link rel="icon" href="assets/favicon.ico"/>
+<script src="http://127.0.0.1:35729/livereload.js"></script></head>
+
+
+  <body>
+
+    <header class="site-header" role="banner">
+  <div class="wrapper site-nav">
+    <a class="site-title" href="/blog/">Vince Campanale/Blog/</a>
+
+    <div class="link-wrapper">
+      <a class="page-link" href="http://vincecampanale.com/about/">About</a>
+      <a class="page-link" href="/blog/">Blog</a>
+      <a class="page-link" href="http://vincecampanale.com">Portfolio</a>
+    </div>
+  </div>
+</header>
+
+
+    <main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title" itemprop="name headline">Solved: Symmetric Difference of Multiple Arrays (Part 1)</h1>
+    <p class="post-meta"><time datetime="2017-01-03T00:00:00-05:00" itemprop="datePublished">Jan 3, 2017</time></p>
+  </header>
+
+  <div class="post-content" itemprop="articleBody">
+    <p>This post is Part 1 of a four part series.<br />
+Symmetric Difference of Multiple Arrays (Part 1) &lt;- You are here<br />
+<a href="http://www.vincecampanale.com/blog/2017/01/05/symmetric-difference-of-multiple-arrays-part2/">Symmetric Difference of Multiple Arrays (Part 2)</a><br />
+<a href="http://www.vincecampanale.com/blog/2017/01/10/symmetric-difference-of-multiple-arrays-part3/">Symmetric Difference of Multiple Arrays (Part 3)</a><br />
+<a href="http://www.vincecampanale.com/blog/2017/01/12/symmetric-difference-of-multiple-arrays-part4/">Symmetric Difference of Multiple Arrays (Part 4)</a></p>
+
+<p>After countless failed attempts and lines of code deleted, I finally solved the problem of finding the symmetric difference of multiple arrays. If you’re struggling with this problem for homework, Free Code Camp, Codewars, or wherever you may have encountered it, rest assured that you are not alone – this one is a doozy. The solution has several distinct steps to it and in the interest of keeping these posts reasonably concise, I’ve decided to split the explanation of this problem into several parts.</p>
+
+<p>In the first part, I’m going to give a little background information and talk about the overall strategy to solving this problem.</p>
+
+<h4 id="background-info">Background Info</h4>
+
+<p>The symmetric difference between two sets is best defined as the collection of elements which are members of either set, but not both. For example, the symmetric difference of <code class="highlighter-rouge">A = {1, 2, 3, 4}</code> and <code class="highlighter-rouge">B = {3, 4, 5, 6}</code> is <code class="highlighter-rouge">A ∆ B = {1, 2, 5, 6}</code>.</p>
+
+<p>Things get a little harrier when we add in a third set (and a fourth and a fifth and …) because the symmetric difference of all of the sets includes the unique elements <em>and</em> the elements that are present in <em>all</em> of the sets. To illustrate, let’s add the set <code class="highlighter-rouge">C = {2, 4, 6, 8}</code> to the above example. To find the symmetric difference of <code class="highlighter-rouge">A = {1, 2, 3, 4}</code>, <code class="highlighter-rouge">B = {3, 4, 5, 6}</code>, and <code class="highlighter-rouge">C = {2, 4, 6, 8}</code>, we will first get the symmetric difference of <code class="highlighter-rouge">A</code> and <code class="highlighter-rouge">B</code>, which is <code class="highlighter-rouge">A ∆ B = {1, 2, 5, 6}</code>. Then, we take the symmetric difference of <code class="highlighter-rouge">A ∆ B</code> and <code class="highlighter-rouge">C</code> like so,
+<code class="highlighter-rouge">(A ∆ B) ∆ C = {1, 4, 5, 8}</code>. Notice that the number 4 is in all three sets, so it is present in the symmetric difference.</p>
+
+<h4 id="strategy">Strategy</h4>
+
+<p>The general strategy for solving this problem relies on the <code class="highlighter-rouge">reduce()</code> method for array-like objects in Javascript, which I will go into more detail about in Part 3. Here’s the outline:</p>
+
+<p>1) Store all the arguments (which will be arrays) to the function in an array so we can use <code class="highlighter-rouge">.reduce()</code>.</p>
+
+<p>2) Write a function that finds the symmetric difference between two arrays. We will use this function as the callback function for <code class="highlighter-rouge">.reduce()</code> to get the symmetric difference of all the arrays.</p>
+
+<p>3) Write a function that removes duplicates from an array.</p>
+
+<p>4) Sort and remove duplicates from the result of the symmetric difference function.</p>
+
+<p>5) Put it all together.</p>
+
+<p>Now that you have an idea of how this solution works, it might be a good time to give this problem another shot on your own. Continue to <a href="http://www.vincecampanale.com/blog/2017/01/05/symmetric-difference-of-multiple-arrays-part2/">Part 2</a> to see steps 1 and 2 implemented.</p>
+
+  </div>
+
+  
+</article>
+
+      </div>
+    </main>
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+
+        </ul>
+      </div>
+
+      <div class="footer-col footer-col-2">
+        <ul class="social-media-list">
+          
+          <li><a href="mailto:vcampanale0294@gmail.com">email</a></li>
+          
+
+          
+          <li><a href="https://github.com/vincecampanale" target="_blank">github</a></li>
+          
+
+          
+          <li><a href="https://twitter.com/_vincecampanale" target="_blank">twitter</a></li>
+          
+        </ul>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+
+
+  </body>
+
+</html>

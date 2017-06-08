@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>What is Currying?</title>
+  <meta name="description" content="For the record, this article is more for personal reference than anything. I am still in the midst of learning the basics of functional programming. This is ...">
+
+  <link rel="stylesheet" href="/blog/assets/main.css">
+  <link rel="canonical" href="http://localhost:4000/blog/2017/04/22/what-is-currying/">
+  <link rel="alternate" type="application/rss+xml" title="Vince Campanale/Blog/" href="/blog/feed.xml">
+
+  
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:site" content="@_vincecampanale">
+  <meta name="twitter:creator" content="@_vincecampanale">
+  
+    <meta name="twitter:title" content="What is Currying?">
+  
+  
+    <meta name="twitter:url" content="http://localhost:4000/2017/04/22/what-is-currying/">
+  
+  
+    <meta name="twitter:description" content="A concise, need-to-know explanation of 'currying' in Javascript.">
+  
+  
+
+  <link rel="icon" href="assets/favicon.ico"/>
+<script src="http://127.0.0.1:35729/livereload.js"></script></head>
+
+
+  <body>
+
+    <header class="site-header" role="banner">
+  <div class="wrapper site-nav">
+    <a class="site-title" href="/blog/">Vince Campanale/Blog/</a>
+
+    <div class="link-wrapper">
+      <a class="page-link" href="http://vincecampanale.com/about/">About</a>
+      <a class="page-link" href="/blog/">Blog</a>
+      <a class="page-link" href="http://vincecampanale.com">Portfolio</a>
+    </div>
+  </div>
+</header>
+
+
+    <main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title" itemprop="name headline">What is Currying?</h1>
+    <p class="post-meta"><time datetime="2017-04-22T00:00:00-04:00" itemprop="datePublished">Apr 22, 2017</time></p>
+  </header>
+
+  <div class="post-content" itemprop="articleBody">
+    <p>For the record, this article is more for personal reference than anything. I am still in the midst of learning the basics of functional programming. This is my attempt to pin down my understanding of <strong>currying</strong>. I’m going to break down my explanation into five parts:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>1) I'll start by creating a function that is NOT curried.  
+2) Then, I'll curry that function and analyze the difference.  
+3) Show how you can save pieces of a curried function in variables and reuse them later.  
+</code></pre>
+</div>
+
+<p>Okay, here goes.</p>
+
+<h3 id="a-function-that-is-not-curried-">A “Function” That Is Not “Curried” 👍</h3>
+
+<figure class="highlight"><pre><code class="language-javascript" data-lang="javascript">  <span class="kr">const</span> <span class="nx">goForthAndMultiply</span> <span class="o">=</span> <span class="p">(</span><span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="nx">a</span> <span class="o">*</span> <span class="nx">b</span><span class="p">;</span>
+  <span class="nx">goForthAndMultiply</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="p">);</span> <span class="c1">// 8</span></code></pre></figure>
+
+<p>Wonderful.</p>
+
+<h3 id="curry-">Curry 🏀</h3>
+
+<figure class="highlight"><pre><code class="language-javascript" data-lang="javascript">  <span class="kr">const</span> <span class="nx">goForthAndCurry</span> <span class="o">=</span> <span class="nx">a</span> <span class="o">=&gt;</span> <span class="nx">b</span> <span class="o">=&gt;</span> <span class="nx">a</span> <span class="o">*</span> <span class="nx">b</span><span class="p">;</span>
+  <span class="nx">goForthAndCurry</span><span class="p">(</span><span class="mi">4</span><span class="p">)(</span><span class="mi">2</span><span class="p">);</span> <span class="c1">// 8</span></code></pre></figure>
+
+<p>Excellent.</p>
+
+<p>A simple way to look at this is we’re now giving our arguments one at a time in parentheses rather than commas.
+Parentheses mean we are invoking a function, so <code class="highlighter-rouge">goForthAndCurry(4)</code> must actually be a function. And looking closely
+at the code, it is! Replacing <code class="highlighter-rouge">a</code> with <code class="highlighter-rouge">4</code>, you can see that <code class="highlighter-rouge">goForthAndCurry(4)</code> is the equivalent of <code class="highlighter-rouge">const goForthAndCurry = b =&gt; 4 * b;</code>.</p>
+
+<p>The best part is you can actually save <code class="highlighter-rouge">goForthAndCurry(4)</code> in a variable because in Javascript, functions are first class.
+Allow me to expand on this point in the next section.</p>
+
+<h3 id="but-why-ツ">But Why? ¯\<em>(ツ)</em>/¯</h3>
+
+<p>Because:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>1) Reusable.  
+2) Functions.  
+</code></pre>
+</div>
+
+<p>Check this out.</p>
+
+<figure class="highlight"><pre><code class="language-javascript" data-lang="javascript">  <span class="kr">const</span> <span class="nx">multiply2</span> <span class="o">=</span> <span class="nx">goForthAndCurry</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span></code></pre></figure>
+
+<p>That line of code actually returns a <em>function</em> which will multiply a given number by 2. Used like so:</p>
+
+<figure class="highlight"><pre><code class="language-javascript" data-lang="javascript">  <span class="nx">multiply2</span><span class="p">(</span><span class="mi">21</span><span class="p">);</span> <span class="c1">// 42</span></code></pre></figure>
+
+<p>We had a multiply function (called <code class="highlighter-rouge">goForthAndMultiply</code>) already. Since we were smart and <em>curried</em> that function, we didn’t have to re-invent the wheel just to multiply a number by 2. That sounds like a <em>reusable</em> <em>function</em> to me.</p>
+
+<p>There is so much more to learn. I’ll be posting more about other cool things like function “arity” and partial application in the future. Stay tuned. ✌️</p>
+
+  </div>
+
+  
+</article>
+
+      </div>
+    </main>
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+
+        </ul>
+      </div>
+
+      <div class="footer-col footer-col-2">
+        <ul class="social-media-list">
+          
+          <li><a href="mailto:vcampanale0294@gmail.com">email</a></li>
+          
+
+          
+          <li><a href="https://github.com/vincecampanale" target="_blank">github</a></li>
+          
+
+          
+          <li><a href="https://twitter.com/_vincecampanale" target="_blank">twitter</a></li>
+          
+        </ul>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+
+
+  </body>
+
+</html>

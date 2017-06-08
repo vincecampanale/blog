@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Using the Vignere Cipher to Encrypt a Message (Part 1)</title>
+  <meta name="description" content="This post is Part 1 of a three part series: Using the Vignere Cipher to Encrypt a Message (Part 1) &amp;lt;– You are here Using the Vignere Cipher to Encrypt a M...">
+
+  <link rel="stylesheet" href="/blog/assets/main.css">
+  <link rel="canonical" href="http://localhost:4000/blog/2017/01/20/vignere-cipher-part1/">
+  <link rel="alternate" type="application/rss+xml" title="Vince Campanale/Blog/" href="/blog/feed.xml">
+
+  
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:site" content="@_vincecampanale">
+  <meta name="twitter:creator" content="@_vincecampanale">
+  
+    <meta name="twitter:title" content="Using the Vignere Cipher to Encrypt a Message (Part 1)">
+  
+  
+    <meta name="twitter:url" content="http://localhost:4000/2017/01/20/vignere-cipher-part1/">
+  
+  
+    <meta name="twitter:description" content="Software blog, front-end development, HTML, CSS, Javascript.">
+  
+  
+
+  <link rel="icon" href="assets/favicon.ico"/>
+<script src="http://127.0.0.1:35729/livereload.js"></script></head>
+
+
+  <body>
+
+    <header class="site-header" role="banner">
+  <div class="wrapper site-nav">
+    <a class="site-title" href="/blog/">Vince Campanale/Blog/</a>
+
+    <div class="link-wrapper">
+      <a class="page-link" href="http://vincecampanale.com/about/">About</a>
+      <a class="page-link" href="/blog/">Blog</a>
+      <a class="page-link" href="http://vincecampanale.com">Portfolio</a>
+    </div>
+  </div>
+</header>
+
+
+    <main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title" itemprop="name headline">Using the Vignere Cipher to Encrypt a Message (Part 1)</h1>
+    <p class="post-meta"><time datetime="2017-01-20T00:00:00-05:00" itemprop="datePublished">Jan 20, 2017</time></p>
+  </header>
+
+  <div class="post-content" itemprop="articleBody">
+    <p>This post is Part 1 of a three part series:<br />
+Using the Vignere Cipher to Encrypt a Message (Part 1) &lt;– You are here<br />
+<a href="http://www.vincecampanale.com/blog/2017/02/01/vigenere-cipher-part2/">Using the Vignere Cipher to Encrypt a Message (Part 2)</a><br />
+<a href="http://www.vincecampanale.com/blog/2017/02/06/vignere-cipher-part3/">Using the Vignere Cipher to Encrypt a Message (Part 3)</a></p>
+
+<p>The Vignère Cipher is a “method of encrypting alphabetic text by using a series of different Caesar ciphers based on the letters of the keyword.” Read more about it <a href="https://en.wikipedia.org/wiki/Vigen%C3%A8re_cipher">here</a>, it has a really cool history. It’s called a “polyalphabetic cipher” because it uses two or more cipher alphabets to encrypt the original message.</p>
+
+<p>In the next couple of posts, I’m going to walk through my solution to implementing a Vignère Cipher in Javascript. I’m sure there are plenty of ways to do it, and I’ll probably find this solution pretty basic when I look at it again in a year, but for now, I’m satisfied. I thought this problem was a lot of fun to solve and was a great extension of the Caesar Cipher, which I covered in my <a href="http://www.vincecampanale.com/blog/2017/01/20/caesar-cipher/">last post</a>.</p>
+
+<h3 id="how-it-works">How it Works</h3>
+<p>The process goes like this:</p>
+
+<p><strong>Step 1</strong> Get the message you want to encrypt (no spaces, all lower case), for example “thisisamessage.”</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>message: thisisamessage
+</code></pre>
+</div>
+
+<p><strong>Step 2</strong> Choose a keyword to encrypt the message with, i.e. “lemon”, and repeat it over and over until you get a string that is the same length as your message.</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>keyword: lemonlemonlemo
+</code></pre>
+</div>
+
+<p><strong>Step 3</strong> This step is very similar to the Caesar Cipher. Add each letter of the original message to the letter of the keyword string to produce a new letter. For example, <code class="highlighter-rouge">t</code> is index 19, and <code class="highlighter-rouge">l</code> is index 11. If you combine them, and wrap back around to the beginning of the alphabet, you end up with the letter <code class="highlighter-rouge">e</code> at index 4. After you do that for every letter, you’ll get the cipher text. In this example,</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>ciphertext: elugvdeysfdess
+</code></pre>
+</div>
+
+<p><strong>Alternative Step 3</strong> Instead of combining the indices of the letters in the message string and the keyword string, you can actually use a Vignère table to look up the new letter. This is a bit harder to implement in code, but it’s a fun exercise for sure.</p>
+
+<p>I’ll go through both solutions in this series. I’ll cover the Caesar Cipher solution first since it’s a bit easier in my opinion.</p>
+
+<p>Continue to <a href="http://www.vincecampanale.com/blog/2017/02/01/vigenere-cipher-part2/">Part 2</a> to see the solution without the table or skip to <a href="">Part 3</a> to see the solution with the table.</p>
+
+  </div>
+
+  
+</article>
+
+      </div>
+    </main>
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+
+        </ul>
+      </div>
+
+      <div class="footer-col footer-col-2">
+        <ul class="social-media-list">
+          
+          <li><a href="mailto:vcampanale0294@gmail.com">email</a></li>
+          
+
+          
+          <li><a href="https://github.com/vincecampanale" target="_blank">github</a></li>
+          
+
+          
+          <li><a href="https://twitter.com/_vincecampanale" target="_blank">twitter</a></li>
+          
+        </ul>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+
+
+  </body>
+
+</html>

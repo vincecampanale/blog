@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Solved: Symmetric Difference of Multiple Arrays (Part 2)</title>
+  <meta name="description" content="This post is Part 2 of a four part series: Symmetric Difference of Multiple Arrays (Part 1) Symmetric Difference of Multiple Arrays (Part 2) &amp;lt;- You are he...">
+
+  <link rel="stylesheet" href="/blog/assets/main.css">
+  <link rel="canonical" href="http://localhost:4000/blog/2017/01/05/symmetric-difference-of-multiple-arrays-part2/">
+  <link rel="alternate" type="application/rss+xml" title="Vince Campanale/Blog/" href="/blog/feed.xml">
+
+  
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:site" content="@_vincecampanale">
+  <meta name="twitter:creator" content="@_vincecampanale">
+  
+    <meta name="twitter:title" content="Solved: Symmetric Difference of Multiple Arrays (Part 2)">
+  
+  
+    <meta name="twitter:url" content="http://localhost:4000/2017/01/05/symmetric-difference-of-multiple-arrays-part2/">
+  
+  
+    <meta name="twitter:description" content="Software blog, front-end development, HTML, CSS, Javascript.">
+  
+  
+
+  <link rel="icon" href="assets/favicon.ico"/>
+<script src="http://127.0.0.1:35729/livereload.js"></script></head>
+
+
+  <body>
+
+    <header class="site-header" role="banner">
+  <div class="wrapper site-nav">
+    <a class="site-title" href="/blog/">Vince Campanale/Blog/</a>
+
+    <div class="link-wrapper">
+      <a class="page-link" href="http://vincecampanale.com/about/">About</a>
+      <a class="page-link" href="/blog/">Blog</a>
+      <a class="page-link" href="http://vincecampanale.com">Portfolio</a>
+    </div>
+  </div>
+</header>
+
+
+    <main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title" itemprop="name headline">Solved: Symmetric Difference of Multiple Arrays (Part 2)</h1>
+    <p class="post-meta"><time datetime="2017-01-05T00:00:00-05:00" itemprop="datePublished">Jan 5, 2017</time></p>
+  </header>
+
+  <div class="post-content" itemprop="articleBody">
+    <p>This post is Part 2 of a four part series:<br />
+<a href="http://www.vincecampanale.com/blog/2017/01/03/symmetric-difference-of-multiple-arrays-part1/">Symmetric Difference of Multiple Arrays (Part 1)</a><br />
+Symmetric Difference of Multiple Arrays (Part 2) &lt;- You are here<br />
+<a href="http://www.vincecampanale.com/blog/2017/01/10/symmetric-difference-of-multiple-arrays-part3/">Symmetric Difference of Multiple Arrays (Part 3)</a><br />
+<a href="http://www.vincecampanale.com/blog/2017/01/12/symmetric-difference-of-multiple-arrays-part4/">Symmetric Difference of Multiple Arrays (Part 4)</a></p>
+
+<p>In this section, I’m going to go over steps one and two of the strategy outlined in the previous post.<br />
+For a brief recap, in step 1, we want to separate each argument array and create a new array in our function to store them. In step 2, we will write a function that returns the symmetric difference of two arrays.</p>
+
+<h4 id="step-1-creating-arguments-array">Step 1: Creating Arguments Array</h4>
+<p>I’m going to show two ways to do this. The first is an older, hackier way. The second uses <code class="highlighter-rouge">.from()</code> which was introduced in ES2015.</p>
+
+<p>First way:</p>
+
+<figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="kd">var</span> <span class="nx">argArray</span> <span class="o">=</span> <span class="nb">Array</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">slice</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span><span class="nx">arguments</span><span class="p">);</span></code></pre></figure>
+
+<p>This <a href="http://stackoverflow.com/questions/7056925/how-does-array-prototype-slice-call-work" target="_blank">Stackoverflow post</a> explains this line of code very well.
+Here’s the most important information from that post:</p>
+<blockquote>
+  <p>The <code class="highlighter-rouge">.call()</code> and <code class="highlighter-rouge">.apply()</code> methods let you manually set the value of this in a function. So if we set the value of this in <code class="highlighter-rouge">.slice()</code> to an array-like object, <code class="highlighter-rouge">.slice()</code> will just assume it’s working with an Array, and will do its thing.</p>
+</blockquote>
+
+<p>Second way:</p>
+
+<figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="kd">var</span> <span class="nx">argArray</span> <span class="o">=</span> <span class="nb">Array</span><span class="p">.</span><span class="nx">from</span><span class="p">(</span><span class="nx">arguments</span><span class="p">);</span></code></pre></figure>
+
+<p>This is a much cleaner way to get an array from an array-like object. We’ll use the <code class="highlighter-rouge">.from()</code> approach in our final solution.</p>
+
+<h4 id="step-2-finding-the-symmetric-difference-of-two-arrays">Step 2: Finding the symmetric difference of two arrays.</h4>
+<p>This step is definitely the hardest part of the solution. We <em>could</em> use a boat load of for loops here (which I spent a long time doing the first time I solved this), but I’ve recently discovered the beauty of higher-order functions. I’m going to skip straight to those because it’s cleaner code.</p>
+
+<p>Let’s outline our function.</p>
+
+<figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="kd">function</span> <span class="nx">symDiffTwoArrays</span><span class="p">(</span><span class="nx">arr1</span><span class="p">,</span> <span class="nx">arr2</span><span class="p">)</span> <span class="p">{</span>
+  <span class="c1">//remove elements from array 1 that are in array 2</span>
+  <span class="c1">//remove elements from array 2 that are in array 1</span>
+  <span class="c1">//concatenate filtered arrays</span>
+  <span class="c1">//return concatenated array</span>
+<span class="p">}</span></code></pre></figure>
+
+<p>Okay, now we can use the <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/filter" target="_blank"><code class="highlighter-rouge">Array.prototype.filter()</code></a> method to process each element in <code class="highlighter-rouge">arr1</code> and check if it is in <code class="highlighter-rouge">arr2</code>:</p>
+
+<figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="kd">function</span> <span class="nx">symDiffTwoArrays</span><span class="p">(</span><span class="nx">arr1</span><span class="p">,</span> <span class="nx">arr2</span><span class="p">)</span> <span class="p">{</span>
+  <span class="c1">//remove elements from arr2 that are in arr1</span>
+  <span class="kd">var</span> <span class="nx">filteredArray1</span> <span class="o">=</span> <span class="nx">arr1</span><span class="p">.</span><span class="nx">filter</span><span class="p">(</span><span class="kd">function</span> <span class="nx">isInOtherArray</span><span class="p">(</span><span class="nx">element</span><span class="p">){</span>
+    <span class="k">return</span> <span class="nx">arr2</span><span class="p">.</span><span class="nx">indexOf</span><span class="p">(</span><span class="nx">element</span><span class="p">)</span> <span class="o">===</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+  <span class="p">});</span>
+  <span class="c1">//remove elements from arr2 that are in arr1</span>
+  <span class="c1">//concatenate filtered arrays</span>
+  <span class="c1">//return concatenated array</span>
+<span class="p">}</span></code></pre></figure>
+
+<p>The method <code class="highlighter-rouge">.filter()</code> implements the callback function <code class="highlighter-rouge">isInOtherArray</code> on each element of <code class="highlighter-rouge">arr1</code> and only keeps elements for which the callback function returns true. <em>(Side note: You can use an anonymous function for the callback, as is most common, but I threw a name on there for the sake of clarity. (Side side note: Sometimes it’s a good idea to give names to callback functions because it helps with understanding the call stack and debugging)).</em> In this callback, only elements that are not in <code class="highlighter-rouge">arr2</code> (i.e. their index strictly equals -1) will return true and thus remain in the <code class="highlighter-rouge">filteredArray1</code> array.</p>
+
+<p>Then we give <code class="highlighter-rouge">arr2</code> the same treatment:</p>
+
+<figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="kd">function</span> <span class="nx">symDiffTwoArrays</span><span class="p">(</span><span class="nx">arr1</span><span class="p">,</span> <span class="nx">arr2</span><span class="p">)</span> <span class="p">{</span>
+  <span class="c1">//remove elements from arr2 that are in arr1</span>
+  <span class="kd">var</span> <span class="nx">filteredArray1</span> <span class="o">=</span> <span class="nx">arr1</span><span class="p">.</span><span class="nx">filter</span><span class="p">(</span><span class="kd">function</span> <span class="nx">isInOtherArray</span><span class="p">(</span><span class="nx">element</span><span class="p">){</span>
+    <span class="k">return</span> <span class="nx">arr2</span><span class="p">.</span><span class="nx">indexOf</span><span class="p">(</span><span class="nx">element</span><span class="p">)</span> <span class="o">===</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+  <span class="p">});</span>
+  <span class="c1">//remove elements from arr2 that are in arr1</span>
+  <span class="kd">var</span> <span class="nx">filteredArray2</span> <span class="o">=</span> <span class="nx">arr2</span><span class="p">.</span><span class="nx">filter</span><span class="p">(</span><span class="kd">function</span> <span class="nx">isInOtherArray</span><span class="p">(</span><span class="nx">element</span><span class="p">){</span>
+    <span class="k">return</span> <span class="nx">arr1</span><span class="p">.</span><span class="nx">indexOf</span><span class="p">(</span><span class="nx">element</span><span class="p">)</span> <span class="o">===</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+  <span class="p">});</span>
+  <span class="c1">//concatenate filtered arrays</span>
+  <span class="c1">//return concatenated array</span>
+<span class="p">}</span></code></pre></figure>
+
+<p>To keep our code <a href="https://en.wikipedia.org/wiki/Don't_repeat_yourself" target="_blank">D.R.Y.</a>, we should separate the logic of the callback function out:</p>
+
+<figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="kd">function</span> <span class="nx">symDiffTwoArrays</span><span class="p">(</span><span class="nx">arr1</span><span class="p">,</span> <span class="nx">arr2</span><span class="p">)</span> <span class="p">{</span>
+  <span class="c1">//filter a by checking for elements in b</span>
+  <span class="kd">function</span> <span class="nx">filterArray</span><span class="p">(</span><span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">){</span>
+    <span class="k">return</span> <span class="nx">a</span><span class="p">.</span><span class="nx">filter</span><span class="p">(</span><span class="kd">function</span> <span class="nx">isInOtherArray</span><span class="p">(</span><span class="nx">element</span><span class="p">){</span>
+      <span class="k">return</span> <span class="nx">b</span><span class="p">.</span><span class="nx">indexOf</span><span class="p">(</span><span class="nx">element</span><span class="p">)</span> <span class="o">===</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+    <span class="p">});</span>
+  <span class="p">}</span>
+
+  <span class="c1">//remove elements from arr2 that are in arr1</span>
+  <span class="kd">var</span> <span class="nx">filteredArr1</span> <span class="o">=</span> <span class="nx">filterArray</span><span class="p">(</span><span class="nx">arr1</span><span class="p">,</span> <span class="nx">arr2</span><span class="p">);</span>
+
+  <span class="c1">//remove elements from arr2 that are in arr1</span>
+  <span class="kd">var</span> <span class="nx">filteredArr2</span> <span class="o">=</span> <span class="nx">filterArray</span><span class="p">(</span><span class="nx">arr2</span><span class="p">,</span> <span class="nx">arr1</span><span class="p">);</span>
+
+  <span class="c1">//concatenate filtered arrays</span>
+  <span class="c1">//return concatenated array</span>
+<span class="p">}</span></code></pre></figure>
+
+<p>Almost done!
+Let’s concatenate these arrays using <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/concat" target="_blank"><code class="highlighter-rouge">Array.prototype.concat()</code></a> to get the symmetric difference and return that symmetric difference.</p>
+
+<figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="kd">function</span> <span class="nx">symDiffTwoArrays</span><span class="p">(</span><span class="nx">arr1</span><span class="p">,</span> <span class="nx">arr2</span><span class="p">)</span> <span class="p">{</span>
+  <span class="c1">//filter a by checking for elements in b</span>
+  <span class="kd">function</span> <span class="nx">filterArray</span><span class="p">(</span><span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">){</span>
+    <span class="k">return</span> <span class="nx">a</span><span class="p">.</span><span class="nx">filter</span><span class="p">(</span><span class="kd">function</span> <span class="nx">isInOtherArray</span><span class="p">(</span><span class="nx">element</span><span class="p">){</span>
+      <span class="k">return</span> <span class="nx">b</span><span class="p">.</span><span class="nx">indexOf</span><span class="p">(</span><span class="nx">element</span><span class="p">)</span> <span class="o">===</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+    <span class="p">});</span>
+  <span class="p">}</span>
+
+  <span class="c1">//remove elements from arr2 that are in arr1</span>
+  <span class="kd">var</span> <span class="nx">filteredArr1</span> <span class="o">=</span> <span class="nx">filterArray</span><span class="p">(</span><span class="nx">arr1</span><span class="p">,</span> <span class="nx">arr2</span><span class="p">);</span>
+
+  <span class="c1">//remove elements from arr2 that are in arr1</span>
+  <span class="kd">var</span> <span class="nx">filteredArr2</span> <span class="o">=</span> <span class="nx">filterArray</span><span class="p">(</span><span class="nx">arr2</span><span class="p">,</span> <span class="nx">arr1</span><span class="p">);</span>
+
+  <span class="c1">//concatenate filtered arrays</span>
+  <span class="kd">var</span> <span class="nx">symDiff</span> <span class="o">=</span> <span class="nx">filteredArr1</span><span class="p">.</span><span class="nx">concat</span><span class="p">(</span><span class="nx">filteredArr2</span><span class="p">);</span>
+
+  <span class="c1">//return concatenated array</span>
+  <span class="k">return</span> <span class="nx">symDiff</span><span class="p">;</span>
+<span class="p">}</span></code></pre></figure>
+
+<p>Alright! We’re done with most of the heavy lifting for this algorithm. We have processed the arguments passed to the function and written an inner, private function to calculate the symmetric difference of two arrays.</p>
+
+<p>On to <a href="http://www.vincecampanale.com/blog/2017/01/05/symmetric-difference-of-multiple-arrays-part3/">Part 3</a> to learn about <code class="highlighter-rouge">.reduce()</code> and how it works it’s magic to help us bring this solution home!</p>
+
+  </div>
+
+  
+</article>
+
+      </div>
+    </main>
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+
+        </ul>
+      </div>
+
+      <div class="footer-col footer-col-2">
+        <ul class="social-media-list">
+          
+          <li><a href="mailto:vcampanale0294@gmail.com">email</a></li>
+          
+
+          
+          <li><a href="https://github.com/vincecampanale" target="_blank">github</a></li>
+          
+
+          
+          <li><a href="https://twitter.com/_vincecampanale" target="_blank">twitter</a></li>
+          
+        </ul>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+
+
+  </body>
+
+</html>

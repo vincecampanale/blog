@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Solved: Reverse a String</title>
+  <meta name="description" content="The challenge I’m going to solve today comes from Free Code Camp’s “Basic Algorithm Scripting”. My task is this: given a string, reverse it. I believe Missy ...">
+
+  <link rel="stylesheet" href="/blog/assets/main.css">
+  <link rel="canonical" href="http://localhost:4000/blog/2016/12/08/reverse-a-string/">
+  <link rel="alternate" type="application/rss+xml" title="Vince Campanale/Blog/" href="/blog/feed.xml">
+
+  
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:site" content="@_vincecampanale">
+  <meta name="twitter:creator" content="@_vincecampanale">
+  
+    <meta name="twitter:title" content="Solved: Reverse a String">
+  
+  
+    <meta name="twitter:url" content="http://localhost:4000/2016/12/08/reverse-a-string/">
+  
+  
+    <meta name="twitter:description" content="Software blog, front-end development, HTML, CSS, Javascript.">
+  
+  
+
+  <link rel="icon" href="assets/favicon.ico"/>
+<script src="http://127.0.0.1:35729/livereload.js"></script></head>
+
+
+  <body>
+
+    <header class="site-header" role="banner">
+  <div class="wrapper site-nav">
+    <a class="site-title" href="/blog/">Vince Campanale/Blog/</a>
+
+    <div class="link-wrapper">
+      <a class="page-link" href="http://vincecampanale.com/about/">About</a>
+      <a class="page-link" href="/blog/">Blog</a>
+      <a class="page-link" href="http://vincecampanale.com">Portfolio</a>
+    </div>
+  </div>
+</header>
+
+
+    <main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title" itemprop="name headline">Solved: Reverse a String</h1>
+    <p class="post-meta"><time datetime="2016-12-07T19:30:00-05:00" itemprop="datePublished">Dec 8, 2016</time></p>
+  </header>
+
+  <div class="post-content" itemprop="articleBody">
+    <p>The challenge I’m going to solve today comes from Free Code Camp’s “Basic Algorithm Scripting”. My task is this: given a string, reverse it. I believe Missy Elliot once said something along the lines of, “I put a string down, flip it and reverse it.” I dedicate this challenge to her.</p>
+
+<p>I solved this challenge a few months ago when I first started learning to code and the solution is saved there in Free Code Camp for me to cringe at. I’ll share it with you, so you may partake in the cringe-fest.</p>
+
+<h4 id="solution-1-total-noob">Solution 1 (Total Noob)</h4>
+<div class="language-javascript highlighter-rouge"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">reverseString</span><span class="p">(</span><span class="nx">str</span><span class="p">){</span>
+  <span class="kd">var</span> <span class="nx">charArray</span> <span class="o">=</span> <span class="p">[];</span>
+  <span class="k">for</span> <span class="p">(</span><span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">str</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">){</span>
+    <span class="nx">charArray</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="o">=</span> <span class="nx">str</span><span class="p">[</span><span class="nx">i</span><span class="p">];</span>
+  <span class="p">}</span>
+
+  <span class="nx">charArray</span><span class="p">.</span><span class="nx">reverse</span><span class="p">();</span>
+  <span class="nx">strReversed</span> <span class="o">=</span> <span class="nx">charArray</span><span class="p">.</span><span class="nx">join</span><span class="p">(</span><span class="s1">''</span><span class="p">);</span>
+
+  <span class="k">return</span> <span class="nx">strReversed</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre>
+</div>
+
+<p>So here’s how it works. First, I create a dummy array. Then, I step through each character of the input string and loads the character into the array. Example: <code class="highlighter-rouge">"hello"</code> becomes <code class="highlighter-rouge">["h", "e", "l", "l", "o"]</code>. Next, it calls the <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/reverse">.reverse()</a> method on that array.  Finally, it calls the <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/join">.join()</a> method on the array with no spaces between the characters (that’s what the empty string argument does), stores the resulting string in a variable aptly named strReversed, and spits out strReversed. Another neat thing to note with this solution is that I’m taking advantage of something very cool about JavaScript: Arrays are dynamic. This means that an array will expand as you add elements to it (and shrink as you remove them). This is a very useful feature that not every language has.</p>
+
+<p>While Solution 1 works, it could be better. Here’s what I would do now, with a couple more months of coding practice and a few projects under my belt.</p>
+
+<h4 id="solution-2-less-noob">Solution 2 (Less Noob)</h4>
+<div class="language-javascript highlighter-rouge"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">reverseString</span><span class="p">(</span><span class="nx">str</span><span class="p">){</span>
+  <span class="kd">var</span> <span class="nx">strReversed</span> <span class="o">=</span> <span class="nx">str</span><span class="p">.</span><span class="nx">split</span><span class="p">(</span><span class="s1">''</span><span class="p">).</span><span class="nx">reverse</span><span class="p">().</span><span class="nx">join</span><span class="p">(</span><span class="s1">''</span><span class="p">);</span>
+  <span class="k">return</span> <span class="nx">strReversed</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre>
+</div>
+
+<p>This much cleaner, more concise solution takes advantage of method chaining, a handy technique in JavaScript. Method chaining is hard to define without using the word in the definition, so I’m going to use the word in the definition. Method chaining is when you chain methods one after the other, each method operating on whatever the previous method returned. In this example, <code class="highlighter-rouge">str.split('')</code> returns an array of characters in the input string (Side Note, from <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/split">Mozilla Docs</a> for <code class="highlighter-rouge">.split()</code>: “If separator (the first parameter) is an empty string, str is converted to an array of characters.” – this is a neat trick and very handy). Then, <code class="highlighter-rouge">.reverse()</code> operates on that array and, as in the previous solution, reverses it. Finally, <code class="highlighter-rouge">.join('')</code> joins the reversed array. The result of all these methods is then saved in the variable strReversed, which is returned. It’s considered best practice to separate the logic from the return statement when possible, however this could technically be a one-liner:</p>
+
+<p><code class="highlighter-rouge">return str.split('').reverse().join('')</code>.</p>
+
+<p>Hope this was helpful! If you have questions, concerns, suggestions, or just want to say “sup,” feel free to shoot me an email or tweet at me. Contact info is in the footer of this site.</p>
+
+<p>Til next time! Adios.</p>
+
+  </div>
+
+  
+</article>
+
+      </div>
+    </main>
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+
+        </ul>
+      </div>
+
+      <div class="footer-col footer-col-2">
+        <ul class="social-media-list">
+          
+          <li><a href="mailto:vcampanale0294@gmail.com">email</a></li>
+          
+
+          
+          <li><a href="https://github.com/vincecampanale" target="_blank">github</a></li>
+          
+
+          
+          <li><a href="https://twitter.com/_vincecampanale" target="_blank">twitter</a></li>
+          
+        </ul>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+
+
+  </body>
+
+</html>

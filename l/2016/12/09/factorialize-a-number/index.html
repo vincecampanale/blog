@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Solved: Factorialize a Number</title>
+  <meta name="description" content="While “factorialize” is far from being a real word, this is a real challenge. The task is this: given an integer, return the factorial of that integer. For e...">
+
+  <link rel="stylesheet" href="/blog/assets/main.css">
+  <link rel="canonical" href="http://localhost:4000/blog/2016/12/09/factorialize-a-number/">
+  <link rel="alternate" type="application/rss+xml" title="Vince Campanale/Blog/" href="/blog/feed.xml">
+
+  
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:site" content="@_vincecampanale">
+  <meta name="twitter:creator" content="@_vincecampanale">
+  
+    <meta name="twitter:title" content="Solved: Factorialize a Number">
+  
+  
+    <meta name="twitter:url" content="http://localhost:4000/2016/12/09/factorialize-a-number/">
+  
+  
+    <meta name="twitter:description" content="Software blog, front-end development, HTML, CSS, Javascript.">
+  
+  
+
+  <link rel="icon" href="assets/favicon.ico"/>
+<script src="http://127.0.0.1:35729/livereload.js"></script></head>
+
+
+  <body>
+
+    <header class="site-header" role="banner">
+  <div class="wrapper site-nav">
+    <a class="site-title" href="/blog/">Vince Campanale/Blog/</a>
+
+    <div class="link-wrapper">
+      <a class="page-link" href="http://vincecampanale.com/about/">About</a>
+      <a class="page-link" href="/blog/">Blog</a>
+      <a class="page-link" href="http://vincecampanale.com">Portfolio</a>
+    </div>
+  </div>
+</header>
+
+
+    <main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title" itemprop="name headline">Solved: Factorialize a Number</h1>
+    <p class="post-meta"><time datetime="2016-12-09T00:00:00-05:00" itemprop="datePublished">Dec 9, 2016</time></p>
+  </header>
+
+  <div class="post-content" itemprop="articleBody">
+    <p>While “factorialize” is far from being a real word, this is a real challenge.
+The task is this: given an integer, return the factorial of that integer.
+For example, <code class="highlighter-rouge">factorialize(5)</code> should return <code class="highlighter-rouge">5 * 4 * 3 * 2 * 1</code> which equals <code class="highlighter-rouge">120</code>.</p>
+
+<p>This challenge (from the Free Code Camp “Basic Algorithm Scripting” tasks) can be done in numerous ways, and I’m sure there’s a better way to do it, but I’ll provide two solutions I thought of for you here.</p>
+
+<p>The first solution I’ll provide was created by yours truly a couple of months ago when I was first learning to code.</p>
+
+<h4 id="solution-1">Solution 1</h4>
+<div class="language-javascript highlighter-rouge"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">factorialize</span><span class="p">(</span><span class="nx">num</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">product</span> <span class="o">=</span> <span class="nx">num</span><span class="p">;</span>
+
+  <span class="k">if</span><span class="p">(</span><span class="nx">num</span> <span class="o">===</span> <span class="mi">0</span><span class="p">){</span>
+    <span class="k">return</span> <span class="mi">1</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="k">else</span><span class="p">{</span>
+    <span class="k">while</span> <span class="p">(</span><span class="nx">num</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">){</span>
+      <span class="nx">product</span> <span class="o">*=</span> <span class="nx">num</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span>
+      <span class="nx">num</span> <span class="o">=</span> <span class="nx">num</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+
+  <span class="k">return</span> <span class="nx">product</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre>
+</div>
+
+<p>Let’s make this better. First of all, there’s no reason to arrive at the factorial by counting down (<code class="highlighter-rouge">5 * 4 * 3 * 2 * 1</code>). I can more easily get the correct answer by counting up. Second of all, there’s no need to update <em>two</em> variables, <code class="highlighter-rouge">product</code> and <code class="highlighter-rouge">num</code>.  One good thing about this solution, however, is that it establishes a base case (if <code class="highlighter-rouge">num</code> is 0, return 1). The base case is very important. Okay, onwards.</p>
+
+<h4 id="solution-2-going-up">Solution 2 (Going up!)</h4>
+<div class="language-javascript highlighter-rouge"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">factorialize</span><span class="p">(</span><span class="nx">num</span><span class="p">){</span>
+  <span class="kd">var</span> <span class="nx">product</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+  <span class="k">for</span><span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;=</span> <span class="nx">num</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">){</span>
+    <span class="nx">product</span> <span class="o">*=</span> <span class="nx">i</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="k">return</span> <span class="nx">product</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre>
+</div>
+
+<p>Much better. Let’s review: base case is handled implicitly (<code class="highlighter-rouge">product</code> is initially set to 1 and the code in the for loop will be skipped since <code class="highlighter-rouge">i = 1</code> already satisfies the break condition <code class="highlighter-rouge">i &lt;= num</code>), the handy <code class="highlighter-rouge">*=</code> operator appears once again. This operator is very cool: it multiplies two numbers (left side and right side of the operator), and assigns the result to the left side (<code class="highlighter-rouge">product</code> in this case). Finally, we return product and we’re done!</p>
+
+<p>I keep accidentally ending sentences with semicolons instead of periods. What’s happening to me…</p>
+
+  </div>
+
+  
+</article>
+
+      </div>
+    </main>
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+
+        </ul>
+      </div>
+
+      <div class="footer-col footer-col-2">
+        <ul class="social-media-list">
+          
+          <li><a href="mailto:vcampanale0294@gmail.com">email</a></li>
+          
+
+          
+          <li><a href="https://github.com/vincecampanale" target="_blank">github</a></li>
+          
+
+          
+          <li><a href="https://twitter.com/_vincecampanale" target="_blank">twitter</a></li>
+          
+        </ul>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+
+
+  </body>
+
+</html>

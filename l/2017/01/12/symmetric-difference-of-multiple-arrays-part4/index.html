@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Solved: Symmetric Difference of Multiple Arrays (Part 4)</title>
+  <meta name="description" content="This post is Part 4 of a four part series: Symmetric Difference of Multiple Arrays (Part 1) Symmetric Difference of Multiple Arrays (Part 2) Symmetric Differ...">
+
+  <link rel="stylesheet" href="/blog/assets/main.css">
+  <link rel="canonical" href="http://localhost:4000/blog/2017/01/12/symmetric-difference-of-multiple-arrays-part4/">
+  <link rel="alternate" type="application/rss+xml" title="Vince Campanale/Blog/" href="/blog/feed.xml">
+
+  
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:site" content="@_vincecampanale">
+  <meta name="twitter:creator" content="@_vincecampanale">
+  
+    <meta name="twitter:title" content="Solved: Symmetric Difference of Multiple Arrays (Part 4)">
+  
+  
+    <meta name="twitter:url" content="http://localhost:4000/2017/01/12/symmetric-difference-of-multiple-arrays-part4/">
+  
+  
+    <meta name="twitter:description" content="Software blog, front-end development, HTML, CSS, Javascript.">
+  
+  
+
+  <link rel="icon" href="assets/favicon.ico"/>
+<script src="http://127.0.0.1:35729/livereload.js"></script></head>
+
+
+  <body>
+
+    <header class="site-header" role="banner">
+  <div class="wrapper site-nav">
+    <a class="site-title" href="/blog/">Vince Campanale/Blog/</a>
+
+    <div class="link-wrapper">
+      <a class="page-link" href="http://vincecampanale.com/about/">About</a>
+      <a class="page-link" href="/blog/">Blog</a>
+      <a class="page-link" href="http://vincecampanale.com">Portfolio</a>
+    </div>
+  </div>
+</header>
+
+
+    <main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title" itemprop="name headline">Solved: Symmetric Difference of Multiple Arrays (Part 4)</h1>
+    <p class="post-meta"><time datetime="2017-01-12T00:00:00-05:00" itemprop="datePublished">Jan 12, 2017</time></p>
+  </header>
+
+  <div class="post-content" itemprop="articleBody">
+    <p>This post is Part 4 of a four part series:<br />
+<a href="http://www.vincecampanale.com/blog/2017/01/03/symmetric-difference-of-multiple-arrays-part1/">Symmetric Difference of Multiple Arrays (Part 1)</a><br />
+<a href="http://www.vincecampanale.com/blog/2017/01/05/symmetric-difference-of-multiple-arrays-part2/">Symmetric Difference of Multiple Arrays (Part 2)</a><br />
+<a href="http://www.vincecampanale.com/blog/2017/01/10/symmetric-difference-of-multiple-arrays-part3/">Symmetric Difference of Multiple Arrays (Part 3)</a><br />
+Symmetric Difference of Multiple Arrays (Part 4) &lt;– You are here</p>
+
+<p>The final post! The one where we get to put it all together and see the function in all it’s glory.</p>
+
+<p>Let’s recap what we have:</p>
+
+<h4 id="helper-function-1-symmetric-difference-of-two-arrays">Helper Function 1: Symmetric Difference of Two Arrays</h4>
+<p>This function takes in two arrays and returns their symmetric difference as an array.
+See more detail on how this was constructed in <a href="http://www.vincecampanale.com/blog/2017/01/05/symmetric-difference-of-multiple-arrays-part2/">Part 2</a>.</p>
+
+<figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="kd">function</span> <span class="nx">symDiffTwoArrays</span><span class="p">(</span><span class="nx">arr1</span><span class="p">,</span> <span class="nx">arr2</span><span class="p">)</span> <span class="p">{</span>
+  <span class="c1">//filter a by checking for elements in b</span>
+  <span class="kd">function</span> <span class="nx">filterArray</span><span class="p">(</span><span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">){</span>
+    <span class="k">return</span> <span class="nx">a</span><span class="p">.</span><span class="nx">filter</span><span class="p">(</span><span class="kd">function</span> <span class="nx">isInOtherArray</span><span class="p">(</span><span class="nx">element</span><span class="p">){</span>
+      <span class="k">return</span> <span class="nx">b</span><span class="p">.</span><span class="nx">indexOf</span><span class="p">(</span><span class="nx">element</span><span class="p">)</span> <span class="o">===</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+    <span class="p">});</span>
+  <span class="p">}</span>
+
+  <span class="c1">//remove elements from arr2 that are in arr1</span>
+  <span class="kd">var</span> <span class="nx">filteredArr1</span> <span class="o">=</span> <span class="nx">filterArray</span><span class="p">(</span><span class="nx">arr1</span><span class="p">,</span> <span class="nx">arr2</span><span class="p">);</span>
+
+  <span class="c1">//remove elements from arr2 that are in arr1</span>
+  <span class="kd">var</span> <span class="nx">filteredArr2</span> <span class="o">=</span> <span class="nx">filterArray</span><span class="p">(</span><span class="nx">arr2</span><span class="p">,</span> <span class="nx">arr1</span><span class="p">);</span>
+
+  <span class="c1">//concatenate filtered arrays</span>
+  <span class="kd">var</span> <span class="nx">symDiff</span> <span class="o">=</span> <span class="nx">filteredArr1</span><span class="p">.</span><span class="nx">concat</span><span class="p">(</span><span class="nx">filteredArr2</span><span class="p">);</span>
+
+  <span class="c1">//return concatenated array</span>
+  <span class="k">return</span> <span class="nx">symDiff</span><span class="p">;</span>
+<span class="p">}</span></code></pre></figure>
+
+<h4 id="helper-function-2-remove-duplicates-from-an-array">Helper Function 2: Remove Duplicates from an Array</h4>
+<p>This function takes in an array and returns that same array with no duplicates.
+See more detail on how this was constructed in <a href="">Part 3</a>.</p>
+
+<figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="kd">function</span> <span class="nx">removeDuplicates</span><span class="p">(</span><span class="nx">arr</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="nx">arr</span><span class="p">.</span><span class="nx">filter</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">item</span><span class="p">,</span> <span class="nx">pos</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nx">arr</span><span class="p">.</span><span class="nx">indexOf</span><span class="p">(</span><span class="nx">item</span><span class="p">)</span> <span class="o">==</span> <span class="nx">pos</span><span class="p">;</span>
+  <span class="p">});</span>
+<span class="p">}</span></code></pre></figure>
+
+<p>Okay, now it’s time to bring <code class="highlighter-rouge">.reduce()</code> in and finish this function once and for all.</p>
+
+<h4 id="applying-reduce">Applying <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/Reduce"><code class="highlighter-rouge">.reduce()</code></a></h4>
+
+<p>The MDN docs say “The reduce() method applies a function against an accumulator and each value of the array (from left-to-right) to reduce it to a single value.” Don’t worry, I don’t understand that either.</p>
+
+<p>I’ll try my own explanation, and if this doesn’t make sense, try googling “javascript .reduce” and you will find lots of useful tutorials and resources.</p>
+
+<p>Here it goes: <code class="highlighter-rouge">.reduce()</code> implements a callback function which takes two <em>primary</em> arguments (there are other options but there are two really important ones). These two arguments are two elements from the array on which you are calling the <code class="highlighter-rouge">.reduce()</code> method. The first argument is the first element in the array, and the second argument is the second element in the array. The callback function acts on both of these arguments, and returns a single <em>thing</em>, (the return value of your callback function) this can be an object, number, array, or whatever. This <em>thing</em> is referred to as the “accumulator.” The accumulator is then used as the first argument for the next round of the callback function. The second argument for the callback function comes from the next element in the array (which was not part of the first callback round). This process repeats until the entire array has been processed and the finaly value of the accumulator is returned.</p>
+
+<p>So, in our example, the callback function is going to be our symmetric difference of two arrays function, so aptly named <code class="highlighter-rouge">symDiffTwoArrays(arr1, arr2)</code>. Calling <code class="highlighter-rouge">.reduce()</code> on the <code class="highlighter-rouge">argArray</code> array will apply the symmetric difference algorithm to the first two elements, then the result of that gets stored in the “accumulator”. Then, symmetric difference algorithm gets applied to the accumulator and the next element, and so on. Here’s a pretty picture hand-drawn by moi:</p>
+
+<p><a href="http://tinypic.com?ref=2m4vkli" target="_blank"><img src="http://i66.tinypic.com/2m4vkli.jpg" border="0" alt="Image and video hosting by TinyPic" /></a></p>
+
+<p>Hopefully this shed some light on the seemingly-magical <code class="highlighter-rouge">.reduce()</code> for you.</p>
+
+<h4 id="put-it-all-together">Put It All Together</h4>
+<p>Now that we have covered each part in detail, the whole should make sense.</p>
+
+<figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="kd">function</span> <span class="nx">sym</span><span class="p">(</span><span class="nx">args</span><span class="p">)</span> <span class="p">{</span>
+
+  <span class="c1">//get symmetric difference of two arrays</span>
+  <span class="kd">function</span> <span class="nx">symDiffTwoArrays</span><span class="p">(</span><span class="nx">arr1</span><span class="p">,</span> <span class="nx">arr2</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">//filter a by checking for elements in b</span>
+    <span class="kd">function</span> <span class="nx">filterArray</span><span class="p">(</span><span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">){</span>
+      <span class="k">return</span> <span class="nx">a</span><span class="p">.</span><span class="nx">filter</span><span class="p">(</span><span class="kd">function</span> <span class="nx">isInOtherArray</span><span class="p">(</span><span class="nx">element</span><span class="p">){</span>
+        <span class="k">return</span> <span class="nx">b</span><span class="p">.</span><span class="nx">indexOf</span><span class="p">(</span><span class="nx">element</span><span class="p">)</span> <span class="o">===</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+    <span class="p">});</span>
+  <span class="p">}</span>
+
+  <span class="kd">var</span> <span class="nx">filteredArr1</span> <span class="o">=</span> <span class="nx">filterArray</span><span class="p">(</span><span class="nx">arr1</span><span class="p">,</span> <span class="nx">arr2</span><span class="p">);</span> <span class="c1">//filter arr1</span>
+  <span class="kd">var</span> <span class="nx">filteredArr2</span> <span class="o">=</span> <span class="nx">filterArray</span><span class="p">(</span><span class="nx">arr2</span><span class="p">,</span> <span class="nx">arr1</span><span class="p">);</span> <span class="c1">//filter arr2</span>
+  <span class="kd">var</span> <span class="nx">symDiff</span> <span class="o">=</span> <span class="nx">filteredArr1</span><span class="p">.</span><span class="nx">concat</span><span class="p">(</span><span class="nx">filteredArr2</span><span class="p">);</span> <span class="c1">//concatenate filtered arrays</span>
+  <span class="k">return</span> <span class="nx">symDiff</span><span class="p">;</span> <span class="c1">//return concatenated array</span>
+  <span class="p">}</span>
+
+  <span class="c1">//remove duplicates from an array</span>
+  <span class="kd">function</span> <span class="nx">removeDuplicates</span><span class="p">(</span><span class="nx">arr</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nx">arr</span><span class="p">.</span><span class="nx">filter</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">item</span><span class="p">,</span> <span class="nx">pos</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="nx">arr</span><span class="p">.</span><span class="nx">indexOf</span><span class="p">(</span><span class="nx">item</span><span class="p">)</span> <span class="o">==</span> <span class="nx">pos</span><span class="p">;</span>
+    <span class="p">});</span>
+  <span class="p">}</span>
+
+
+  <span class="c1">//PUT IT TOGETHER</span>
+  <span class="c1">//use array.from trick to get arguments into an array</span>
+  <span class="kd">var</span> <span class="nx">argArray</span> <span class="o">=</span> <span class="nb">Array</span><span class="p">.</span><span class="nx">from</span><span class="p">(</span><span class="nx">arguments</span><span class="p">);</span>
+  <span class="c1">//use reduce method to get the symmetric difference of all arrays</span>
+  <span class="kd">var</span> <span class="nx">symDifference</span> <span class="o">=</span> <span class="nx">argArray</span><span class="p">.</span><span class="nx">reduce</span><span class="p">(</span><span class="nx">symDiffTwoArrays</span><span class="p">).</span><span class="nx">sort</span><span class="p">();</span>
+  <span class="c1">//remove duplicates from the resulting array</span>
+  <span class="kd">var</span> <span class="nx">symDiffNoDups</span> <span class="o">=</span> <span class="nx">removeDuplicates</span><span class="p">(</span><span class="nx">symDifference</span><span class="p">);</span>
+
+
+  <span class="k">return</span> <span class="nx">symDiffNoDups</span><span class="p">;</span>
+<span class="p">}</span></code></pre></figure>
+
+<p>Thanks for reading!
+Peace.</p>
+
+  </div>
+
+  
+</article>
+
+      </div>
+    </main>
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+
+        </ul>
+      </div>
+
+      <div class="footer-col footer-col-2">
+        <ul class="social-media-list">
+          
+          <li><a href="mailto:vcampanale0294@gmail.com">email</a></li>
+          
+
+          
+          <li><a href="https://github.com/vincecampanale" target="_blank">github</a></li>
+          
+
+          
+          <li><a href="https://twitter.com/_vincecampanale" target="_blank">twitter</a></li>
+          
+        </ul>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+
+
+  </body>
+
+</html>

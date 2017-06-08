@@ -1,0 +1,922 @@
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="http://jekyllrb.com" version="3.3.1">Jekyll</generator><link href="http://localhost:4000/blog/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/blog/" rel="alternate" type="text/html" /><updated>2017-06-08T08:44:47-04:00</updated><id>http://localhost:4000/blog/</id><title type="html">Vince Campanale/Blog/</title><subtitle>Software blog, front-end development, HTML, CSS, Javascript.</subtitle><author><name>Vince Campanale</name></author><entry><title type="html">Learn RxJS with a Button</title><link href="http://localhost:4000/blog/2017/05/24/learn-rxjs-with-a-button/" rel="alternate" type="text/html" title="Learn RxJS with a Button" /><published>2017-05-24T00:00:00-04:00</published><updated>2017-05-24T00:00:00-04:00</updated><id>http://localhost:4000/blog/2017/05/24/learn-rxjs-with-a-button</id><content type="html" xml:base="http://localhost:4000/blog/2017/05/24/learn-rxjs-with-a-button/">&lt;p&gt;Welcome. The goal of this post is to teach you the fundamentals of Reactive Extensions for Javascript (RxJS). I will only scrape the surface of this very cool library to give you a sense of what you can do with it, but there is so much more to learn.&lt;/p&gt;
+
+&lt;p&gt;I’m still getting a grasp on using RxJS in production myself, so if you are reading this with experience and have feedback, please hit me up on Twitter (handle in footer) or email me – don’t hold back! If you’re completely new to RxJS, don’t worry, I have made no assumptions about prior knowledge in this post.&lt;/p&gt;
+
+&lt;p&gt;I’m going to build on the first example introduced in &lt;a href=&quot;https://www.youtube.com/watch?v=5CTL7aqSvJU&quot;&gt;this talk&lt;/a&gt; by Lukas Ruebellke.&lt;/p&gt;
+
+&lt;p&gt;Clone &lt;a href=&quot;https://github.com/vincecampanale/learn-rxjs-with-a-button&quot;&gt;this repo&lt;/a&gt; to get the seed locally. You can also &lt;code class=&quot;highlighter-rouge&quot;&gt;checkout&lt;/code&gt; the &lt;code class=&quot;highlighter-rouge&quot;&gt;completed&lt;/code&gt; branch to see the end result (along with a bonus feature not covered in this guide 🕵️).&lt;/p&gt;
+
+&lt;p&gt;You don’t need to know Angular to follow along, just follow the instructions in the README, open &lt;code class=&quot;highlighter-rouge&quot;&gt;src/app/app.component.ts&lt;/code&gt; and you’re good to go. There will be a comment in the &lt;code class=&quot;highlighter-rouge&quot;&gt;ngOnInit()&lt;/code&gt; method in the &lt;code class=&quot;highlighter-rouge&quot;&gt;AppComponent&lt;/code&gt; class – replace that comment with the code as I cover it line-by-line. I encourage you to experiment and see what other cool streams you can make as we progress.&lt;/p&gt;
+
+&lt;h2&gt;The Button&lt;/h2&gt;
+
+&lt;p&gt;The part of the code we will be interacting with is in the &lt;code class=&quot;highlighter-rouge&quot;&gt;template&lt;/code&gt; property of the root component.&lt;/p&gt;
+
+&lt;p&gt;I’ve also provided it here in case you don’t feel like cloning the project and installing / serving it:&lt;/p&gt;
+
+&lt;div class=&quot;language-html highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nt&quot;&gt;&amp;lt;button&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;#&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;btn&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;md-raised-button&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;color=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;accent&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;
+    Button
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;/button&amp;gt;&lt;/span&gt;
+
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;div&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;class=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;container&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;h1&amp;gt;&lt;/span&gt;{ { messages } }&lt;span class=&quot;nt&quot;&gt;&amp;lt;/h1&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;/div&amp;gt;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Here we have a button and a message.&lt;/p&gt;
+
+&lt;p&gt;We are going to listen for click events on this button and update the message when the button is clicked.&lt;/p&gt;
+
+&lt;h3 id=&quot;creating-a-click-stream-&quot;&gt;Creating a Click Stream 🐟&lt;/h3&gt;
+
+&lt;p&gt;Just as a stream of water runs downhill, time flows in one direction, continuous and uninterrupted. Now, imagine a rock dropping into a flowing stream. There would be a splash. RxJS allows you to respond to UI events just as a stream responds to a falling rock.&lt;/p&gt;
+
+&lt;p&gt;As an example, let’s model click events on a particular button as a stream.&lt;/p&gt;
+
+&lt;p&gt;Here’s a handy diagram:&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;------x-----x-----x---&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;The arrow here represents time, you could think of each &lt;code class=&quot;highlighter-rouge&quot;&gt;-&lt;/code&gt; as a discrete moment. Let’s pretend that this stream represents a button sitting on the screen. As time passes, a user may or may not click on the aforementioned button. Each &lt;code class=&quot;highlighter-rouge&quot;&gt;x&lt;/code&gt; indicates that the user has clicked on the button, thus firing a ‘click’ event.&lt;/p&gt;
+
+&lt;div class=&quot;language-javascript highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kr&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;rxBtn&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;getNativeElement&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;btn&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;       &lt;span class=&quot;c1&quot;&gt;// get the button element&lt;/span&gt;
+&lt;span class=&quot;kr&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;click$&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;Observable&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;fromEvent&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;rxBtn&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'click'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// listen for clicks&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;That’s not so bad. We’re creating a click stream, which is an &lt;code class=&quot;highlighter-rouge&quot;&gt;Observable&lt;/code&gt; (don’t worry too much about that for now, but do take a second to think about what an &lt;code class=&quot;highlighter-rouge&quot;&gt;Observable&lt;/code&gt; is just based on it’s name).&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Note:&lt;/strong&gt; A common convention when working with Observable streams is to end your stream variables with &lt;code class=&quot;highlighter-rouge&quot;&gt;$&lt;/code&gt;. It’s basically an abbreviation for “stream” – e.g. &lt;code class=&quot;highlighter-rouge&quot;&gt;clickStream&lt;/code&gt; becomes &lt;code class=&quot;highlighter-rouge&quot;&gt;click$&lt;/code&gt;.&lt;/p&gt;
+
+&lt;h3 id=&quot;rxjs-operators&quot;&gt;RxJS Operators&lt;/h3&gt;
+
+&lt;p&gt;Operators are the methods that we have access to when working with Observables. RxJS operators encourage &lt;em&gt;declarative programming&lt;/em&gt;, meaning that instead of telling the computer &lt;em&gt;how&lt;/em&gt; to do what you want (i.e. &lt;code class=&quot;highlighter-rouge&quot;&gt;for&lt;/code&gt; loops), you just tell it &lt;em&gt;what&lt;/em&gt; you want (i.,e. &lt;code class=&quot;highlighter-rouge&quot;&gt;map( from this =&amp;gt; to that )&lt;/code&gt;).&lt;/p&gt;
+
+&lt;h5 id=&quot;begin-tangent&quot;&gt;[Begin Tangent]&lt;/h5&gt;
+
+&lt;p&gt;A brief example of using &lt;em&gt;declarative&lt;/em&gt; programming to double numbers in an array:&lt;/p&gt;
+
+&lt;div class=&quot;language-javascript highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c1&quot;&gt;// not declarative :( &lt;/span&gt;
+&lt;span class=&quot;kr&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;a&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
+&lt;span class=&quot;kr&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;kr&quot;&gt;double&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;arr&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;arr&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;length&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;++&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;nx&quot;&gt;arr&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;arr&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;arr&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; 
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;kr&quot;&gt;double&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;a&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// [2, 4, 6]&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;div class=&quot;language-javascript highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c1&quot;&gt;// declarative :) &lt;/span&gt;
+&lt;span class=&quot;kr&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;a&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
+&lt;span class=&quot;kr&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;kr&quot;&gt;double&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;arr&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;arr&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;map&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;x&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;x&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;kr&quot;&gt;double&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;a&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// [2, 4, 6]&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Side note: There’s another difference between these two blocks – the latter returns a new array, the former just mutates the original array. Always prefer the approach &lt;em&gt;without&lt;/em&gt; mutation.&lt;/p&gt;
+
+&lt;h5 id=&quot;end-tangent&quot;&gt;[End Tangent]&lt;/h5&gt;
+
+&lt;p&gt;Okay, back to the task at hand.&lt;/p&gt;
+
+&lt;p&gt;If you go up to the top of the &lt;code class=&quot;highlighter-rouge&quot;&gt;app.component.ts&lt;/code&gt; file, you’ll see several &lt;code class=&quot;highlighter-rouge&quot;&gt;import&lt;/code&gt; statements that look like this:&lt;/p&gt;
+
+&lt;div class=&quot;language-javascript highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kr&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'rxjs/add/observable/fromEvent'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;kr&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'rxjs/add/observable/timer'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+
+&lt;span class=&quot;kr&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'rxjs/add/operator/filter'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;kr&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'rxjs/add/operator/map'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;kr&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'rxjs/add/operator/debounceTime'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;kr&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'rxjs/add/operator/buffer'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;These are all the operators we will use in this example.&lt;/p&gt;
+
+&lt;p&gt;Let’s start by taking our click stream and splitting it up into segments of 250 milliseconds. This gives our user plenty of time to double click, but not too much, so they won’t get impatient. In order to do this, we’re going to compose two useful operators: &lt;code class=&quot;highlighter-rouge&quot;&gt;debounceTime()&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;buffer()&lt;/code&gt;.&lt;/p&gt;
+
+&lt;h4 id=&quot;debouncetime&quot;&gt;&lt;strong&gt;debounceTime()&lt;/strong&gt;&lt;/h4&gt;
+
+&lt;p&gt;The first step to segmenting our clickStream (&lt;code class=&quot;highlighter-rouge&quot;&gt;click$&lt;/code&gt;) is to debounce based on time between inputs. In other words, when the user clicks, we start a timer that goes for 250 milliseconds. If the user clicks again while that timer is running, the timer will begin again. The debounced stream will not &lt;em&gt;emit&lt;/em&gt; until that timer runs to completion (250 milliseconds pass without clicks from the user).&lt;/p&gt;
+
+&lt;p&gt;In code, it will look something like this:&lt;/p&gt;
+&lt;div class=&quot;language-javascript highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kr&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;debounced$&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;click$&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;debounceTime&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;250&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;If you &lt;code class=&quot;highlighter-rouge&quot;&gt;console.log&lt;/code&gt; the &lt;code class=&quot;highlighter-rouge&quot;&gt;debouncedClicks$&lt;/code&gt; like so:&lt;/p&gt;
+
+&lt;div class=&quot;language-javascript highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nx&quot;&gt;debounced$&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;subscribe&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;console&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;…you should see…&lt;/p&gt;
+
+&lt;div class=&quot;language-console highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;MouseEvent {isTrusted: true, screenX: 3046, screenY: 239, clientX: 161, clientY: 132…}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;…in the console.&lt;/p&gt;
+
+&lt;p&gt;As you can see, we give the user time to get their double click in, but only one event is emitted! So, how do we collect the clicks that got debounced?&lt;/p&gt;
+
+&lt;h4 id=&quot;buffer&quot;&gt;&lt;strong&gt;buffer()&lt;/strong&gt;&lt;/h4&gt;
+
+&lt;p&gt;Buffer works like this:&lt;/p&gt;
+
+&lt;p&gt;Let’s say this is our &lt;code class=&quot;highlighter-rouge&quot;&gt;click$&lt;/code&gt; event stream (the arrow is time, &lt;code class=&quot;highlighter-rouge&quot;&gt;x&lt;/code&gt;s are clicks).&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;-----x---x-------x----x---x-x----x-&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Buffer will collect output values until the &lt;em&gt;provided observable&lt;/em&gt; “emits.” So we need to give &lt;code class=&quot;highlighter-rouge&quot;&gt;buffer()&lt;/code&gt; an &lt;em&gt;observable&lt;/em&gt; as our first argument. Buffer will then collect output values into a bucket until that provided observable “emits,” at which point it will set that bucket aside and begin collecting a new bucket. It just so happens that we have a &lt;code class=&quot;highlighter-rouge&quot;&gt;debounceTime()&lt;/code&gt; event emitting after 250 milliseconds of silence post-click event. Let’s collect all the click events that happen during that 250 mililisecond window into a bucket.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;   *   = `debounced$` observable emits
+
+   ==  = 250 milliseconds
+
+--x--&amp;gt; = `click$` observable
+
+|____| = `buffer` bucket
+
+
+        ==*      ==*         ==* ==*
+-----x--x--------x------x---x----x-----&amp;gt;
+     |____|      |_|    |______| |_|
+
+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Note that the buckets end when &lt;code class=&quot;highlighter-rouge&quot;&gt;debouncedClicks$&lt;/code&gt; emits.&lt;/p&gt;
+
+&lt;p&gt;Now, the code should be easy to understand. If it’s not, tweet at me (not a joke, save me some embarassment).&lt;/p&gt;
+
+&lt;div class=&quot;language-javascript highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kr&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;buffered$&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;clicks$&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;buffer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;debounced$&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Reviewing what we have so far in code:&lt;/p&gt;
+
+&lt;div class=&quot;language-javascript highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kr&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;rxBtn&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;getNativeElement&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;btn&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;       &lt;span class=&quot;c1&quot;&gt;// get the button element&lt;/span&gt;
+&lt;span class=&quot;kr&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;click$&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;Observable&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;fromEvent&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;rxBtn&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'click'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// listen for clicks&lt;/span&gt;
+
+&lt;span class=&quot;kr&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;debounced$&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;click$&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;debounceTime&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;250&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// debounce the click stream&lt;/span&gt;
+&lt;span class=&quot;kr&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;buffered$&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;click$&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;buffer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;debounced$&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// buffer the debounced stream&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;The next step is to find a way to count the number of clicks in each bucket so we can pinpoint bucket with two clicks.&lt;/p&gt;
+
+&lt;h4 id=&quot;map-&quot;&gt;&lt;strong&gt;map()&lt;/strong&gt; 🗺&lt;/h4&gt;
+
+&lt;p&gt;Not to be confused with &lt;a href=&quot;https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/map?v=example&quot;&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Array.prototype.map()&lt;/code&gt;&lt;/a&gt;, this is &lt;a href=&quot;http://reactivex.io/documentation/operators/map.html&quot;&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Observable.map()&lt;/code&gt;&lt;/a&gt;. It does the same thing as &lt;code class=&quot;highlighter-rouge&quot;&gt;Array.prototype.map()&lt;/code&gt;, but with ~observables~.&lt;/p&gt;
+
+&lt;p&gt;In this step, we’re going to do something simple, yet powerful.&lt;/p&gt;
+
+&lt;p&gt;Each buffered bucket is an array of &lt;code class=&quot;highlighter-rouge&quot;&gt;MouseEvents&lt;/code&gt; (clicks in this case). If I quickly click the button three times in a row, it looks like this:&lt;/p&gt;
+
+&lt;div class=&quot;language-javascript highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nx&quot;&gt;buffered$&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;subscribe&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;console&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// [MouseEvent, MouseEvent, MouseEvent]&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;Just like any Javascript array, this array has a &lt;code class=&quot;highlighter-rouge&quot;&gt;.length&lt;/code&gt; property, which we are going to use to count the number of clicks in this bucket.&lt;/p&gt;
+
+&lt;p&gt;Let’s create a function that takes an array and returns its length:&lt;/p&gt;
+
+&lt;div class=&quot;language-javascript highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kr&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;toLength&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;a&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;a&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;length&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;We can apply this to our buffered click stream to get the number of clicks in each bucket:&lt;/p&gt;
+
+&lt;div class=&quot;language-javascript highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kr&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;clickCount$&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;buffered$&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;map&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;toLength&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Great. We have converted our buckets of clicks into counts. But, we still have not isolated &lt;em&gt;double&lt;/em&gt; clicks.&lt;/p&gt;
+
+&lt;h4 id=&quot;filter&quot;&gt;&lt;strong&gt;filter()&lt;/strong&gt;&lt;/h4&gt;
+
+&lt;p&gt;Imagine we have an array of numbers &lt;code class=&quot;highlighter-rouge&quot;&gt;a  = [1, 2, 3, 2, 2, 1]&lt;/code&gt; and we want to only keep the &lt;code class=&quot;highlighter-rouge&quot;&gt;2&lt;/code&gt;s and move them to a new array. Our &lt;code class=&quot;highlighter-rouge&quot;&gt;filter()&lt;/code&gt; call would look like &lt;code class=&quot;highlighter-rouge&quot;&gt;a.filter(x =&amp;gt; x === 2)&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;Well, observables have a &lt;code class=&quot;highlighter-rouge&quot;&gt;filter()&lt;/code&gt; too!&lt;/p&gt;
+
+&lt;div class=&quot;language-javascript highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kr&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;doubleClick$&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;clickCount$&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;filter&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;x&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;x&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;===&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;The resulting observable (&lt;code class=&quot;highlighter-rouge&quot;&gt;doubleClick$&lt;/code&gt;) will now only emit when the user double clicks on the button!&lt;/p&gt;
+
+&lt;p&gt;Now we can respond to this event and update the message!&lt;/p&gt;
+
+&lt;h3 id=&quot;subscribe&quot;&gt;&lt;strong&gt;subscribe()&lt;/strong&gt;&lt;/h3&gt;
+
+&lt;p&gt;I’ve already shown &lt;code class=&quot;highlighter-rouge&quot;&gt;.subscribe()&lt;/code&gt; in action earlier in this post – back in the &lt;code class=&quot;highlighter-rouge&quot;&gt;debounceTime()&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;buffer()&lt;/code&gt; sections I used it to log the contents of a the &lt;code class=&quot;highlighter-rouge&quot;&gt;debounced$&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;buffer$&lt;/code&gt; observable streams to the console. Similar to a magazine, you won’t receive any content from an observable stream unless you &lt;em&gt;subscribe&lt;/em&gt; to it.&lt;/p&gt;
+
+&lt;p&gt;We want to subscribe to our &lt;code class=&quot;highlighter-rouge&quot;&gt;doubleClick$&lt;/code&gt; observable and respond to it’s events by updating the message to say &lt;code class=&quot;highlighter-rouge&quot;&gt;&quot;Double click!&quot;&lt;/code&gt;.&lt;/p&gt;
+
+&lt;div class=&quot;language-javascript highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nx&quot;&gt;doubleClick$&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;subscribe&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;event&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;message&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'Double click!'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;That’s it! It’s really that easy. No, this is not a trap.&lt;/p&gt;
+
+&lt;p&gt;Notice that we are mapping the double-click event to something completely unrelated. The event itself isn’t useful to us, just knowing that it occured is what we need. What we do with that event when it occurs is completely up to us. While what we’re doing here is technically a side-effect and there’s a whole can o’ worms there, I’m just going to ignore that and focus on the fact that we can do &lt;em&gt;whatever&lt;/em&gt; we want with this observable stream once we get ahold of it.&lt;/p&gt;
+
+&lt;p&gt;To wrap everything up, here’s the entire block of code we have constructed throughout this guide:&lt;/p&gt;
+
+&lt;div class=&quot;language-javascript highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kr&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;toLength&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;a&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;a&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;length&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// helper -- gets length of given array&lt;/span&gt;
+
+&lt;span class=&quot;kr&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;rxBtn&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;getNativeElement&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;btn&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;       &lt;span class=&quot;c1&quot;&gt;// get the button element&lt;/span&gt;
+&lt;span class=&quot;kr&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;click$&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;Observable&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;fromEvent&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;rxBtn&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'click'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// listen for clicks&lt;/span&gt;
+
+&lt;span class=&quot;kr&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;debounced$&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;click$&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;debounceTime&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;250&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// debounce the click stream&lt;/span&gt;
+&lt;span class=&quot;kr&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;buffered$&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;click$&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;buffer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;debounced$&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// buffer the debounced stream&lt;/span&gt;
+
+&lt;span class=&quot;kr&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;clickCount$&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;buffered$&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;map&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;tolength&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;            &lt;span class=&quot;c1&quot;&gt;// get buffer lengths&lt;/span&gt;
+&lt;span class=&quot;kr&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;doubleClick$&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;clickCount$&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;filter&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;x&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;x&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;===&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;  &lt;span class=&quot;c1&quot;&gt;// filter for length 2&lt;/span&gt;
+
+&lt;span class=&quot;nx&quot;&gt;doubleClick$&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;subscribe&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;event&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;message&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'Double click!'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Note: observable methods can be chained and composed just like any other Javascript methods.
+Sometimes it’s nice to have your streams partitioned for reusability and cleanliness, but sometimes it’s also nice to eliminate intermediate variables.&lt;/p&gt;
+
+&lt;p&gt;Check it:&lt;/p&gt;
+
+&lt;div class=&quot;language-javascript highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kr&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;rxBtn&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;getNativeElement&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;btn&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;       &lt;span class=&quot;c1&quot;&gt;// get the button element&lt;/span&gt;
+&lt;span class=&quot;kr&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;click$&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;Observable&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;fromEvent&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;rxBtn&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'click'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// listen for clicks&lt;/span&gt;
+
+&lt;span class=&quot;nx&quot;&gt;click$&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;buffer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;click$&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;debounceTime&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;250&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;map&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;a&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;a&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;length&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;filter&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;x&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;x&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;===&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;subscribe&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;e&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;message&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'Double click!'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h4 id=&quot;bonus-challenges&quot;&gt;Bonus Challenges:&lt;/h4&gt;
+&lt;p&gt;1) Make a clear button to clear the message (using observables!).&lt;/p&gt;
+
+&lt;p&gt;2) Update the message to say &lt;em&gt;~Shift Click~&lt;/em&gt; when the user shift-clicks on the button.&lt;/p&gt;
+
+&lt;p&gt;3) Build a function that takes a number and a click stream and returns a new stream containing clicks of that number (i.e. &lt;code class=&quot;highlighter-rouge&quot;&gt;filterClickCount$(click$)(3)&lt;/code&gt;) returns a stream of triple clicks. Note that I ended the function name with &lt;code class=&quot;highlighter-rouge&quot;&gt;$&lt;/code&gt; because it returns a stream. &lt;em&gt;&lt;a href=&quot;http://www.vincecampanale.com/blog/2017/04/22/what-is-currying/&quot;&gt;Currying&lt;/a&gt; is optional but encouraged!&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Solutions to these challenges are in the &lt;code class=&quot;highlighter-rouge&quot;&gt;bonus&lt;/code&gt; branch on the git repo.&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;h4 id=&quot;extra-resources&quot;&gt;Extra Resources&lt;/h4&gt;
+&lt;ul&gt;
+  &lt;li&gt;This post was inspired by my meanderings through Lukas Reubellke’s course &lt;a href=&quot;https://courses.ultimateangular.com/p/hello-rxjs&quot;&gt;Hello RxJS&lt;/a&gt;.&lt;/li&gt;
+  &lt;li&gt;Lukas also gave a &lt;a href=&quot;https://www.youtube.com/watch?v=5CTL7aqSvJU&quot;&gt;talk&lt;/a&gt; on RxJS, mentioned at the top of this post.&lt;/li&gt;
+  &lt;li&gt;Andre Staltz wrote an excellent, in-depth gist on Reactive Programming: &lt;a href=&quot;https://gist.github.com/staltz/868e7e9bc2a7b8c1f754&quot;&gt;The introduction to Reactive Programming you’ve been missing&lt;/a&gt;.&lt;/li&gt;
+&lt;/ul&gt;</content><author><name>Vince Campanale</name></author><summary type="html">Welcome. The goal of this post is to teach you the fundamentals of Reactive Extensions for Javascript (RxJS). I will only scrape the surface of this very cool library to give you a sense of what you can do with it, but there is so much more to learn.</summary></entry><entry><title type="html">Thoughts on Interactions</title><link href="http://localhost:4000/blog/2017/05/01/thoughts-on-interactions/" rel="alternate" type="text/html" title="Thoughts on Interactions" /><published>2017-05-01T00:00:00-04:00</published><updated>2017-05-01T00:00:00-04:00</updated><id>http://localhost:4000/blog/2017/05/01/thoughts-on-interactions</id><content type="html" xml:base="http://localhost:4000/blog/2017/05/01/thoughts-on-interactions/">&lt;p&gt;Humans, much like machines, respond to specific information with a specific response. Whether the response represents a misunderstanding of the information (like an error) or a function of the information (like the fulfillment of a Promise), each and every human interaction is simply an exchange of information. The ways humans exchange information are manifold and the majority of them are subconscious. I do not claim to know what these subconscious exchanges are or how they work, however I am certain they exist. This essay discusses the primary, &lt;em&gt;conscious&lt;/em&gt; channel humans use to communicate with one another: the “word”. Exchanges via this channel are often taken for granted due to the ubiquity with which they are transmitted.&lt;/p&gt;
+
+&lt;p&gt;More often than not, the primary tool you use to pass information to other humans is the “word.” Whether spoken or written, words are powerful tools. They encapsulate meaning in little packages of mostly arbitrary characters that are associated with sounds (we call these “letters”). Words can be recorded, invented, jumbled, combined, and contextualized in countless ways. Every word I say to you is an agreement between you and I that &lt;em&gt;this&lt;/em&gt; sound or &lt;em&gt;this&lt;/em&gt; string of characters stands for &lt;em&gt;this&lt;/em&gt; idea. Careful and intentional word choice really increases the likelihood of clear communication.&lt;/p&gt;
+
+&lt;!-- Gestures are another simple, yet powerful way to convey meaning. For some, gestures adequately serve as an entire language.  Assuming two people share the same community / culture, a simple gesture can stand for an entire phrase or concept. Additionally, many gestures are universal. A grin, for example, can be understood by every member of the human race (and even some other species). Indeed, all facial expressions can be understood without the pact of language and certainly preceded language (I think it’s fair to assume that words like “smile” and “frown” were at some point in their etymological tree simply “made up” by some dude). Even infants are capable of both sending and receiving information through facial expressions. These and other gestures convey immense meaning *without* words. This point may seem obvious and somewhat frivolous at first, but consider the power that a warm hug can have at the right moment. There is no word or string of words that can have that effect.   --&gt;
+
+&lt;p&gt;We have been familiar with this concept for so long that we take it for granted. This familiarity unfortunately makes room for abuse, even on a grand, societal scale.&lt;/p&gt;
+
+&lt;!-- When it comes to gestures, we have known them since the day we were born. Due to this familiarity, it is easy to forget the weight of these words and gestures.    --&gt;
+
+&lt;!-- These forms of communication can be abused and frequently are -- especially words.   --&gt;
+
+&lt;p&gt;Some words are not “just words.” Some words inspire hatred, fear, disgust, and sadness. Some words are truly better left &lt;em&gt;unsaid&lt;/em&gt;. It is important to be aware of these words and comprehend their meaning because depending on context and intention, a single slip-up can change someone’s life. The agreements with these words are typically strong within a culture at large and understood by a fairly young age. You know what these words are in your culture.   &lt;!-- To purposefully ignore the direness of these words is to purposefully ignore experiences and sentiments that have deep impacts. --&gt;&lt;/p&gt;
+
+&lt;p&gt;Much like computers, humans receiving the wrong word at the wrong time can lead to errors of misunderstanding that have major consequences.&lt;/p&gt;
+
+&lt;!-- The same goes for some gestures.   --&gt;
+
+&lt;p&gt;Encountering another person with whom you share a large set of agreements (language, culture) is remarkable on the scale of human life. Your thread is sufficiently intertwined with their thread that an interaction has surfaced. Your actions (words, gestures) are merging with their actions. It is important to recognize the weight of these interactions and act with wisdom, no matter the interaction. When you take a moment to recognize the importance of a word before you say it, you give appreciation to the billions of years of evolution that went into that word. You sense its importance and feel the power of expression it provides you. This may feel unnatural at first. We use so many words so frequently. They &lt;em&gt;all&lt;/em&gt; can’t possibly mean &lt;em&gt;that&lt;/em&gt; much, can they?&lt;/p&gt;
+
+&lt;!-- Well, yes and no. Even the filler words came from somewhere. For example, the word &quot;like&quot; is *everywhere* for a segment of humans on this planet. --&gt;</content><author><name>Vince Campanale</name></author><summary type="html">Humans, much like machines, respond to specific information with a specific response. Whether the response represents a misunderstanding of the information (like an error) or a function of the information (like the fulfillment of a Promise), each and every human interaction is simply an exchange of information. The ways humans exchange information are manifold and the majority of them are subconscious. I do not claim to know what these subconscious exchanges are or how they work, however I am certain they exist. This essay discusses the primary, conscious channel humans use to communicate with one another: the “word”. Exchanges via this channel are often taken for granted due to the ubiquity with which they are transmitted.</summary></entry><entry><title type="html">What is Currying?</title><link href="http://localhost:4000/blog/2017/04/22/what-is-currying/" rel="alternate" type="text/html" title="What is Currying?" /><published>2017-04-22T00:00:00-04:00</published><updated>2017-04-22T00:00:00-04:00</updated><id>http://localhost:4000/blog/2017/04/22/what-is-currying</id><content type="html" xml:base="http://localhost:4000/blog/2017/04/22/what-is-currying/">&lt;p&gt;For the record, this article is more for personal reference than anything. I am still in the midst of learning the basics of functional programming. This is my attempt to pin down my understanding of &lt;strong&gt;currying&lt;/strong&gt;. I’m going to break down my explanation into five parts:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;1) I'll start by creating a function that is NOT curried.  
+2) Then, I'll curry that function and analyze the difference.  
+3) Show how you can save pieces of a curried function in variables and reuse them later.  
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Okay, here goes.&lt;/p&gt;
+
+&lt;h3 id=&quot;a-function-that-is-not-curried-&quot;&gt;A “Function” That Is Not “Curried” 👍&lt;/h3&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-javascript&quot; data-lang=&quot;javascript&quot;&gt;  &lt;span class=&quot;kr&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;goForthAndMultiply&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;a&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;b&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;a&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;b&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;goForthAndMultiply&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;4&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// 8&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;Wonderful.&lt;/p&gt;
+
+&lt;h3 id=&quot;curry-&quot;&gt;Curry 🏀&lt;/h3&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-javascript&quot; data-lang=&quot;javascript&quot;&gt;  &lt;span class=&quot;kr&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;goForthAndCurry&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;a&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;b&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;a&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;b&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;goForthAndCurry&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;4&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// 8&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;Excellent.&lt;/p&gt;
+
+&lt;p&gt;A simple way to look at this is we’re now giving our arguments one at a time in parentheses rather than commas.
+Parentheses mean we are invoking a function, so &lt;code class=&quot;highlighter-rouge&quot;&gt;goForthAndCurry(4)&lt;/code&gt; must actually be a function. And looking closely
+at the code, it is! Replacing &lt;code class=&quot;highlighter-rouge&quot;&gt;a&lt;/code&gt; with &lt;code class=&quot;highlighter-rouge&quot;&gt;4&lt;/code&gt;, you can see that &lt;code class=&quot;highlighter-rouge&quot;&gt;goForthAndCurry(4)&lt;/code&gt; is the equivalent of &lt;code class=&quot;highlighter-rouge&quot;&gt;const goForthAndCurry = b =&amp;gt; 4 * b;&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;The best part is you can actually save &lt;code class=&quot;highlighter-rouge&quot;&gt;goForthAndCurry(4)&lt;/code&gt; in a variable because in Javascript, functions are first class.
+Allow me to expand on this point in the next section.&lt;/p&gt;
+
+&lt;h3 id=&quot;but-why-ツ&quot;&gt;But Why? ¯\&lt;em&gt;(ツ)&lt;/em&gt;/¯&lt;/h3&gt;
+
+&lt;p&gt;Because:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;1) Reusable.  
+2) Functions.  
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Check this out.&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-javascript&quot; data-lang=&quot;javascript&quot;&gt;  &lt;span class=&quot;kr&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;multiply2&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;goForthAndCurry&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;That line of code actually returns a &lt;em&gt;function&lt;/em&gt; which will multiply a given number by 2. Used like so:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-javascript&quot; data-lang=&quot;javascript&quot;&gt;  &lt;span class=&quot;nx&quot;&gt;multiply2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;21&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// 42&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;We had a multiply function (called &lt;code class=&quot;highlighter-rouge&quot;&gt;goForthAndMultiply&lt;/code&gt;) already. Since we were smart and &lt;em&gt;curried&lt;/em&gt; that function, we didn’t have to re-invent the wheel just to multiply a number by 2. That sounds like a &lt;em&gt;reusable&lt;/em&gt; &lt;em&gt;function&lt;/em&gt; to me.&lt;/p&gt;
+
+&lt;p&gt;There is so much more to learn. I’ll be posting more about other cool things like function “arity” and partial application in the future. Stay tuned. ✌️&lt;/p&gt;</content><author><name>Vince Campanale</name></author><summary type="html">For the record, this article is more for personal reference than anything. I am still in the midst of learning the basics of functional programming. This is my attempt to pin down my understanding of currying. I’m going to break down my explanation into five parts:</summary></entry><entry><title type="html">The Beauty of Javascript’s .map &amp;amp; .filter</title><link href="http://localhost:4000/blog/2017/04/08/map-and-filter/" rel="alternate" type="text/html" title="The Beauty of Javascript's .map &amp; .filter" /><published>2017-04-08T00:00:00-04:00</published><updated>2017-04-08T00:00:00-04:00</updated><id>http://localhost:4000/blog/2017/04/08/map-and-filter</id><content type="html" xml:base="http://localhost:4000/blog/2017/04/08/map-and-filter/">&lt;p&gt;Functional programming has been a hot topic as of late.&lt;/p&gt;
+
+&lt;p&gt;Map &amp;amp; filter are two crucial functions in functional programming. You don’t have to know anything about functional programming to know how to use them and I guarantee you that these two little functions &lt;em&gt;will&lt;/em&gt; improve your code.&lt;/p&gt;
+
+&lt;p&gt;Let’s learn by example. This exercise is taken straight from a tutorial I’m currently working through called “Functional Programming in Javascript,” which is intended to serve as an introduction to RxJs (Reactive Extensions). &lt;a href=&quot;http://reactivex.io/learnrx/&quot;&gt;Check it out&lt;/a&gt; when you’re done reading this article. I’m going to solve the same problem in a couple different ways to show the true beauty of &lt;code class=&quot;highlighter-rouge&quot;&gt;.map()&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;.filter()&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;Here we have some data containing a list of newly released movies in JSON format:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-javascript&quot; data-lang=&quot;javascript&quot;&gt;&lt;span class=&quot;c1&quot;&gt;//Excellent test data from http://reactivex.io/learnrx/&lt;/span&gt;
+ &lt;span class=&quot;kd&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;newReleases&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;
+     &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+       &lt;span class=&quot;s2&quot;&gt;&quot;id&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;70111470&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+       &lt;span class=&quot;s2&quot;&gt;&quot;title&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;Die Hard&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+       &lt;span class=&quot;s2&quot;&gt;&quot;boxart&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;http://cdn-0.nflximg.com/images/2891/DieHard.jpg&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+       &lt;span class=&quot;s2&quot;&gt;&quot;uri&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;http://api.netflix.com/catalog/titles/movies/70111470&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+       &lt;span class=&quot;s2&quot;&gt;&quot;rating&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;4.0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+       &lt;span class=&quot;s2&quot;&gt;&quot;bookmark&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[]&lt;/span&gt;
+     &lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;
+     &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+       &lt;span class=&quot;s2&quot;&gt;&quot;id&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;654356453&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+       &lt;span class=&quot;s2&quot;&gt;&quot;title&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;Bad Boys&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+       &lt;span class=&quot;s2&quot;&gt;&quot;boxart&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;http://cdn-0.nflximg.com/images/2891/BadBoys.jpg&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+       &lt;span class=&quot;s2&quot;&gt;&quot;uri&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;http://api.netflix.com/catalog/titles/movies/70111470&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+       &lt;span class=&quot;s2&quot;&gt;&quot;rating&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;5.0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+       &lt;span class=&quot;s2&quot;&gt;&quot;bookmark&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[{&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;id&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;432534&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;time&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;65876586&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}]&lt;/span&gt;
+     &lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;
+     &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+       &lt;span class=&quot;s2&quot;&gt;&quot;id&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;65432445&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+       &lt;span class=&quot;s2&quot;&gt;&quot;title&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;The Chamber&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+       &lt;span class=&quot;s2&quot;&gt;&quot;boxart&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;http://cdn-0.nflximg.com/images/2891/TheChamber.jpg&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+       &lt;span class=&quot;s2&quot;&gt;&quot;uri&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;http://api.netflix.com/catalog/titles/movies/70111470&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+       &lt;span class=&quot;s2&quot;&gt;&quot;rating&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;4.0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+       &lt;span class=&quot;s2&quot;&gt;&quot;bookmark&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[]&lt;/span&gt;
+     &lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;
+     &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+       &lt;span class=&quot;s2&quot;&gt;&quot;id&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;675465&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+       &lt;span class=&quot;s2&quot;&gt;&quot;title&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;Fracture&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+       &lt;span class=&quot;s2&quot;&gt;&quot;boxart&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;http://cdn-0.nflximg.com/images/2891/Fracture.jpg&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+       &lt;span class=&quot;s2&quot;&gt;&quot;uri&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;http://api.netflix.com/catalog/titles/movies/70111470&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+       &lt;span class=&quot;s2&quot;&gt;&quot;rating&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;5.0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+       &lt;span class=&quot;s2&quot;&gt;&quot;bookmark&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[{&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;id&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;432534&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;time&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;65876586&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}]&lt;/span&gt;
+     &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+   &lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;Each movie has several properties: &lt;code class=&quot;highlighter-rouge&quot;&gt;id&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;title&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;boxart&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;uri&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;rating&lt;/code&gt;, and &lt;code class=&quot;highlighter-rouge&quot;&gt;bookmark&lt;/code&gt; (an array of JSON objects).&lt;/p&gt;
+
+&lt;p&gt;In this tutorial, I’m going to solve a simple problem: &lt;strong&gt;Collect the IDs of movies with 5.0 ratings&lt;/strong&gt;.&lt;/p&gt;
+
+&lt;h4 id=&quot;-for-the-love-of-loops-&quot;&gt;💓 For the Love of Loops 💓&lt;/h4&gt;
+&lt;p&gt;The first way I will solve this problem makes use of our oldest friend, the humble &lt;code class=&quot;highlighter-rouge&quot;&gt;for&lt;/code&gt; loop.&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-javascript&quot; data-lang=&quot;javascript&quot;&gt;&lt;span class=&quot;kd&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;counter&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;otherCounter&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;favorites&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[],&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;favoriteIds&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[];&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;counter&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;counter&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;newReleases&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;length&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;counter&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;++&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;newReleases&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;counter&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;].&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;rating&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;===&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;5.0&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;nx&quot;&gt;favorites&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;push&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;newReleases&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;counter&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]);&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;otherCounter&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;otherCounter&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;favorites&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;length&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;otherCounter&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;++&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;favoriteIds&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;push&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;favorites&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;otherCounter&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;].&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;id&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;Lovely. This gets the job done, but I have three problems with this code:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;1) There's a lot of code here to do a simple task.  
+
+2) We're making a lot of variables to track our values, which is pretty wasteful memory-wise.  
+
+3) Does it really matter that we traverse the movie list from the beginning to end? Couldn't we do it in any order? Do we really *need* to explicitly spell that out in our code?  
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Ask yourself number three and really sit and contemplate that for a moment. When we use the &lt;code class=&quot;highlighter-rouge&quot;&gt;for&lt;/code&gt; loop to tell an iterator to traverse an array, we have to spell out in code the &lt;em&gt;order&lt;/em&gt; in which the array is traversed. This is useful sometimes, but most of the time we’re just going from beginning to end – smells like an opportunity for abstraction to me.&lt;/p&gt;
+
+&lt;h4 id=&quot;for-each-or-not-for-each-&quot;&gt;For Each or Not For Each 📖&lt;/h4&gt;
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;.forEach()&lt;/code&gt; abstracts the explicit logic of the &lt;code class=&quot;highlighter-rouge&quot;&gt;for&lt;/code&gt; loop away. We call &lt;code class=&quot;highlighter-rouge&quot;&gt;.forEach()&lt;/code&gt; on our &lt;code class=&quot;highlighter-rouge&quot;&gt;newReleases&lt;/code&gt; array and trust that the computer will traverse the array. The computer can traverse the array beginning to end, end to beginning, middle out, upside-down, it really doesn’t matter. The point is: &lt;em&gt;we don’t have to tell the computer about how the array is traversed – we just know we’re going to do something on each element of the array&lt;/em&gt;. That’s where the &lt;strong&gt;iterator function&lt;/strong&gt; comes in. The iterator function is our instruction to the computer about &lt;em&gt;what&lt;/em&gt; should happen when the iterating mechanism (the hidden / implied &lt;code class=&quot;highlighter-rouge&quot;&gt;for&lt;/code&gt; loop) encounters each element in the array. For example, let’s say we want to check if a movie has a rating of 5 stars and push it to a new array called &lt;code class=&quot;highlighter-rouge&quot;&gt;favorites&lt;/code&gt; if it does. Our function would look like this:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-javascript&quot; data-lang=&quot;javascript&quot;&gt;&lt;span class=&quot;kd&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;movie&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;movie&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;rating&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;===&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;5.0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;nx&quot;&gt;favorites&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;push&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;movie&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;By passing this function as an iterator to &lt;code class=&quot;highlighter-rouge&quot;&gt;.forEach()&lt;/code&gt;, we run it on every element in the array.&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-javascript&quot; data-lang=&quot;javascript&quot;&gt;&lt;span class=&quot;kd&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;favorites&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[],&lt;/span&gt;
+    &lt;span class=&quot;nx&quot;&gt;favoriteIds&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[];&lt;/span&gt;
+
+&lt;span class=&quot;nx&quot;&gt;newReleases&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;forEach&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kd&quot;&gt;function&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;movie&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;movie&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;rating&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;===&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;5.0&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;nx&quot;&gt;favorites&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;push&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;movie&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;});&lt;/span&gt;
+
+&lt;span class=&quot;nx&quot;&gt;favorites&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;forEach&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kd&quot;&gt;function&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;movie&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;favoriteIds&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;push&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;movie&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;id&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;});&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;Unfortunately, the problems I had with the &lt;code class=&quot;highlighter-rouge&quot;&gt;for&lt;/code&gt; loop solution remain with the &lt;code class=&quot;highlighter-rouge&quot;&gt;.forEach()&lt;/code&gt; solution.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;1) Still a lot of code for such a simple task.
+
+2) Still using variables to hold values as we go along.
+
+3) We may have gotten rid of the explicit `for` loops, but I still see the word &quot;for&quot; in there. The extra code defining the order of traversal is gone, but we're still saying &quot;for each element in this array, do something.&quot; I think the fact that we want to apply this function to each element should be *implied*.  
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h4 id=&quot;introducing-the-stars-of-the-show&quot;&gt;Introducing the 🌟Stars🌟 of the Show&lt;/h4&gt;
+&lt;p&gt;Time to use &lt;code class=&quot;highlighter-rouge&quot;&gt;.map()&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;.filter()&lt;/code&gt; to get the job done. Now that we understand exactly what needs to be done to solve this problem, it should be easy to reverse understand what &lt;code class=&quot;highlighter-rouge&quot;&gt;.map()&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;.filter()&lt;/code&gt; do for us.&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;.map()&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;.filter()&lt;/code&gt; are just unique variations on the classic &lt;code class=&quot;highlighter-rouge&quot;&gt;.forEach()&lt;/code&gt;. The nice thing about them is that they handle a specific case for us so we don’t have to bother telling the computer “for this element, do this”. It just goes without saying that we want each element of the collection to be processed by the &lt;strong&gt;reducer function&lt;/strong&gt; (the same thing as the iterator function in &lt;code class=&quot;highlighter-rouge&quot;&gt;.forEach()&lt;/code&gt;).&lt;br /&gt;
+ &lt;code class=&quot;highlighter-rouge&quot;&gt;.filter()&lt;/code&gt; is used when we want to *&lt;em&gt;ahem&lt;/em&gt;* filter each element in the collection based on a certain condition.&lt;br /&gt;
+&lt;code class=&quot;highlighter-rouge&quot;&gt;.map()&lt;/code&gt; is used when we want to change each element in the array in some way. We’re “mapping” each element from one value to another.&lt;/p&gt;
+
+&lt;p&gt;The moment we’ve all been waiting for:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-javascript&quot; data-lang=&quot;javascript&quot;&gt;&lt;span class=&quot;kd&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;favorites&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;newReleases&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;filter&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kd&quot;&gt;function&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;movie&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;movie&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;rating&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;===&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;5.0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;});&lt;/span&gt;
+
+&lt;span class=&quot;kd&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;favoriteIds&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;favorites&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;map&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kd&quot;&gt;function&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;movie&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;movie&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;id&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;});&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;Hmmm… better…&lt;/p&gt;
+
+&lt;p&gt;Let’s look at our original pain points and compare:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;1) I still think we could do this with less code.
+
+2) Still skeptical about the need for two variables to compute one value...
+
+3) ✔️ No more &quot;for&quot;! I'd say this problem is solved.  
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Whew, abstracting away that &lt;code class=&quot;highlighter-rouge&quot;&gt;for&lt;/code&gt; loop took some effort, but it’s officially taken care of now. We’re almost done, I promise.&lt;/p&gt;
+
+&lt;h4 id=&quot;filtermap&quot;&gt;FILTER🔗MAP&lt;/h4&gt;
+&lt;p&gt;Method chaining is a wonderful thing.&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-javascript&quot; data-lang=&quot;javascript&quot;&gt;&lt;span class=&quot;kd&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;favoriteIds&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;newReleases&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;filter&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kd&quot;&gt;function&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;movie&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;movie&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;ration&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;===&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;5.0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;})&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;map&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kd&quot;&gt;function&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;movie&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;movie&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;id&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;});&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;That takes care of number 2.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;1) Still a bit verbose. I think we could sweeten this up with some syntactic sugar.*
+
+2) ✔️ One value. One variable.
+
+3) ✔️ No more &quot;for&quot;!
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;*&lt;em&gt;Note: Despite what some may believe, arrow functions in Javascript are much more than mere syntactic sugar. Just wanted to use the ‘sweeten’ joke.&lt;/em&gt;&lt;/p&gt;
+
+&lt;h4 id=&quot;arrows-️-️-️-️-️&quot;&gt;ARROWS ↗️ ⬅️ ⬆️ ➡️ ↘️&lt;/h4&gt;
+&lt;p&gt;Let’s shorten this with some ES6 arrows.&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-javascript&quot; data-lang=&quot;javascript&quot;&gt;&lt;span class=&quot;kd&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;favoriteIds&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;newReleases&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;filter&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;movie&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;movie&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;rating&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;===&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;5.0&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}).&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;map&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;movie&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;movie&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;id&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;});&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;h4 id=&quot;abbreviated-variables-const--implicit-return-danger-experts-only&quot;&gt;Abbreviated Variables, &lt;code class=&quot;highlighter-rouge&quot;&gt;const&lt;/code&gt;, &amp;amp; Implicit Return [DANGER: Experts only.]&lt;/h4&gt;
+&lt;p&gt;Proceed with caution. Someone call the fire department. 🚒&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-javascript&quot; data-lang=&quot;javascript&quot;&gt;&lt;span class=&quot;kr&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;favIds&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;newReleases&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;filter&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;m&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;m&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;rating&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;===&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;5.0&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;map&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;m&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;m&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;id&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;1) ✔️ Short &amp;amp; sweet.
+
+2) ✔️ One value. One variable.
+
+3) ✔️ No more &quot;for&quot;!
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Aren’t &lt;code class=&quot;highlighter-rouge&quot;&gt;.map()&lt;/code&gt; &amp;amp; &lt;code class=&quot;highlighter-rouge&quot;&gt;.filter()&lt;/code&gt; the best?&lt;/p&gt;
+
+&lt;p&gt;To Learn More:&lt;br /&gt;
+     1) Here’s the link to the tutorial I got this problem from: &lt;a href=&quot;http://reactivex.io/learnrx/&quot;&gt;http://reactivex.io/learnrx/&lt;/a&gt;.&lt;br /&gt;
+     2) Type ‘Eric Elliot functional programming’ into The Almighty Google and start reading.&lt;/p&gt;</content><author><name>Vince Campanale</name></author><summary type="html">Functional programming has been a hot topic as of late.</summary></entry><entry><title type="html">Solved: Confirm the Ending</title><link href="http://localhost:4000/blog/2017/03/19/confirm-the-ending/" rel="alternate" type="text/html" title="Solved: Confirm the Ending" /><published>2017-03-19T00:00:00-04:00</published><updated>2017-03-19T00:00:00-04:00</updated><id>http://localhost:4000/blog/2017/03/19/confirm-the-ending</id><content type="html" xml:base="http://localhost:4000/blog/2017/03/19/confirm-the-ending/">&lt;p&gt;“Confirm the Ending” is another great problem from Free Code Camp’s algorithm scripting challenges. In the words of the Free Code Camp folks, “The goal is to check if a string (first argument, &lt;code class=&quot;highlighter-rouge&quot;&gt;str&lt;/code&gt;) ends with the given target string (second argument, &lt;code class=&quot;highlighter-rouge&quot;&gt;target&lt;/code&gt;)”.&lt;/p&gt;
+
+&lt;p&gt;As is common for coding exercises, this challenge can be solved countless ways. Today, I’m going to walk through my solution from when I first started coding, explain the concept of extending a prototype in Javascript, describe the difference between &lt;code class=&quot;highlighter-rouge&quot;&gt;.substr()&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;.substring()&lt;/code&gt;, two built-in array methods on the Javascript &lt;code class=&quot;highlighter-rouge&quot;&gt;String&lt;/code&gt; prototype, and finally, provide a memory-efficient, one-line solution to the problem.&lt;/p&gt;
+
+&lt;h4 id=&quot;beginner-solution&quot;&gt;Beginner Solution&lt;/h4&gt;
+
+&lt;p&gt;When I had first ventured into learning to code, I took a stab at this problem and successfully solved it, however my solution is a little…“verbose”…&lt;/p&gt;
+
+&lt;p&gt;I decided to use the &lt;code class=&quot;highlighter-rouge&quot;&gt;.substr()&lt;/code&gt; method which takes two arguments. The first argument is the index in the string to &lt;em&gt;start&lt;/em&gt; at and the second argument number of characters to extract from that index. So, say you want to get &lt;code class=&quot;highlighter-rouge&quot;&gt;&quot;lo&quot;&lt;/code&gt; from &lt;code class=&quot;highlighter-rouge&quot;&gt;&quot;hello!&quot;&quot;&lt;/code&gt;. In order to do this with &lt;code class=&quot;highlighter-rouge&quot;&gt;.substr()&lt;/code&gt;, you would say &lt;code class=&quot;highlighter-rouge&quot;&gt;&quot;hello!&quot;.substr(3, 2)&lt;/code&gt;. This will go to the third character in &lt;code class=&quot;highlighter-rouge&quot;&gt;&quot;hello&quot;!&lt;/code&gt;, which is the first &lt;code class=&quot;highlighter-rouge&quot;&gt;&quot;l&quot;&lt;/code&gt;, then go for one more character before stopping at the fourth character in &lt;code class=&quot;highlighter-rouge&quot;&gt;&quot;hello!&quot;&lt;/code&gt;, which is &lt;code class=&quot;highlighter-rouge&quot;&gt;&quot;o&quot;&lt;/code&gt;. If you’re thinking my counting skills need some work, which they probably do, remember that in Javascript, indices are 0-based. So the character &lt;code class=&quot;highlighter-rouge&quot;&gt;&quot;h&quot;&lt;/code&gt; has index 0 in the string.&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-javascript&quot; data-lang=&quot;javascript&quot;&gt;&lt;span class=&quot;kd&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;confirmEnding&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;str&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;target&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;kd&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;substr&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;str&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;substr&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;str&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;length&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;target&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;length&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;target&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;length&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+
+  &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;substr&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;===&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;target&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;true&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;else&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;Just to briefly touch on what I did here: create a variable containing a string chopped off the end of the &lt;code class=&quot;highlighter-rouge&quot;&gt;str&lt;/code&gt; argument that has the same length as the target string. If the string contained in that variable matches the target, return true. Otherwise, return false. Pretty simple solution to a pretty simple problem but this can be way better.&lt;/p&gt;
+
+&lt;h4 id=&quot;better-solution&quot;&gt;Better Solution&lt;/h4&gt;
+
+&lt;p&gt;There’s a neat trick you can use when calling &lt;code class=&quot;highlighter-rouge&quot;&gt;.substr&lt;/code&gt;. If you give it a negative number as it’s first and only argument, e.g. &lt;code class=&quot;highlighter-rouge&quot;&gt;&quot;string&quot;.substr(-3)&lt;/code&gt;, you will get a string containing the characters starting at the given number &lt;em&gt;from the end of the string&lt;/em&gt;. So &lt;code class=&quot;highlighter-rouge&quot;&gt;&quot;string&quot;.substr(-3)&lt;/code&gt; returns &lt;code class=&quot;highlighter-rouge&quot;&gt;&quot;ing&quot;&lt;/code&gt;. Let’s employ this trick in our solution:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-javascript&quot; data-lang=&quot;javascript&quot;&gt;&lt;span class=&quot;kd&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;confirmEnding&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;str&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;target&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;target&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;===&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;str&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;substr&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;target&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;length&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;In English, this function says: return a string with the same length as &lt;code class=&quot;highlighter-rouge&quot;&gt;target&lt;/code&gt; from the end of &lt;code class=&quot;highlighter-rouge&quot;&gt;str&lt;/code&gt; and compare the new string to &lt;code class=&quot;highlighter-rouge&quot;&gt;target&lt;/code&gt;. If they are &lt;em&gt;strictly&lt;/em&gt; equal, return true. Otherwise, return false. This will work with two equal signs as well, but just to be super duper sure, it’s typically good practice to use the triple equals.&lt;/p&gt;
+
+&lt;h4 id=&quot;the-difference-between-susbtr-and-substring&quot;&gt;The Difference Between &lt;code class=&quot;highlighter-rouge&quot;&gt;.susbtr()&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;.substring()&lt;/code&gt;&lt;/h4&gt;
+
+&lt;p&gt;This feat can also be accomplished with &lt;code class=&quot;highlighter-rouge&quot;&gt;.substring()&lt;/code&gt;, however I don’t think the solution is quite as elegant. It’s a good exercise though, and I’ll leave it to you to try it out. These methods may appear to be aliases for one another, however they actually do different things.&lt;/p&gt;
+
+&lt;p&gt;From the MDN docs (aka the Javascript Bible):&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;.substr()&lt;/code&gt;: “returns the characters in a string beginning at the specified location through the specified number of characters”.&lt;br /&gt;
+&lt;code class=&quot;highlighter-rouge&quot;&gt;.substring()&lt;/code&gt;: “returns a subset of a string between one index and another, or through the end of the string”.&lt;/p&gt;
+
+&lt;p&gt;Perhaps an easier way to think about it is this:&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;.substr()&lt;/code&gt;: starting at index &lt;em&gt;argument one&lt;/em&gt;, get &lt;em&gt;argument two&lt;/em&gt; number of characters.&lt;br /&gt;
+&lt;code class=&quot;highlighter-rouge&quot;&gt;.substring()&lt;/code&gt;: starting at index &lt;em&gt;argument one&lt;/em&gt;, get the characters up until &lt;em&gt;argument two&lt;/em&gt;.&lt;/p&gt;
+
+&lt;p&gt;Yet another way to look at it:&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;.substr(from this index, for this many characters)&lt;/code&gt;&lt;br /&gt;
+&lt;code class=&quot;highlighter-rouge&quot;&gt;.substring(from this index, to this index)&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;Hope this was helpful! Reach out anytime with feedback, questions, tips, and especially compliments – my twitter handle and email address are in the footer.&lt;/p&gt;
+
+&lt;p&gt;Vinny out.&lt;/p&gt;</content><author><name>Vince Campanale</name></author><summary type="html">“Confirm the Ending” is another great problem from Free Code Camp’s algorithm scripting challenges. In the words of the Free Code Camp folks, “The goal is to check if a string (first argument, str) ends with the given target string (second argument, target)”.</summary></entry><entry><title type="html">The Importance of the Craftsman Mindset in Software Development</title><link href="http://localhost:4000/blog/2017/02/16/craftsman-mindset/" rel="alternate" type="text/html" title="The Importance of the Craftsman Mindset in Software Development" /><published>2017-02-16T00:00:00-05:00</published><updated>2017-02-16T00:00:00-05:00</updated><id>http://localhost:4000/blog/2017/02/16/craftsman-mindset</id><content type="html" xml:base="http://localhost:4000/blog/2017/02/16/craftsman-mindset/">&lt;p&gt;I just finished reading “So Good They Can’t Ignore You” by Cal Newport. The book is centered around Cal’s argument that skills trump passion when it comes to finding work you love. He breaks his argument down into tenets and incrementally proves his thesis as only someone with a Ph.D. in Computer Science could do. His proof was a pleasure to read, refreshing in its simplicity and contrarian perspective.&lt;/p&gt;
+
+&lt;p&gt;The four rules of finding work you love are as follows:&lt;br /&gt;
+1) Don’t Follow Your Passion.&lt;br /&gt;
+2) Be So Good They Can’t Ignore You (Or, &lt;em&gt;The Importance of Skill&lt;/em&gt;)&lt;br /&gt;
+3) Turn Down a Promotion (Or, &lt;em&gt;The Importance of Control&lt;/em&gt;)&lt;br /&gt;
+4) Think Small, Act Big (Or, &lt;em&gt;The Importance of Mission&lt;/em&gt;)&lt;/p&gt;
+
+&lt;p&gt;In introducing the second rule, Cal introduces what he calls “the craftsman mindset.” In his words, the craftsman mindset represents a “focus on what value you’re producing in your job” and is juxtaposed with “the passion mindset” which is “a focus on what value your job offers you.” Cal reasons that the Craftsman Mindset (capital C, M) is crucial to being so good that “they” can’t ignore you which is, in turn, crucial to finding work you love.&lt;/p&gt;
+
+&lt;p&gt;This observation resonated with me. It’s one of those things that you read and realize that you already knew it, but didn’t know you knew. There is a fundamental problem with pursuing a pre-existing passion: it’s probably not valuable to anyone but you. If you focus instead on providing value to others, to the world, your chances of developing a passion increase ten-fold.&lt;/p&gt;
+
+&lt;p&gt;Software development is a craft. And I don’t mean just crafting what appears on a screen, or building a bulletproof database. I’m talking about the code itself. Well-written, organized, readable code is downright beautiful. It has an energy of it’s own – it’s almost poetic.&lt;/p&gt;
+
+&lt;p&gt;As software developers, we have countless tools at our disposal. And there is a low barrier of entry to acquiring the skill necessary to get something “functional,” pun intended. But true mastery of these tools is paramount in order to build something “elegant.” The only way to obtain this mastery is to adopt the craftsman mindset and build. Stretch your abilities and incrementally build more challenging projects – consistent, deliberate practice over hours and hours, years and years.&lt;/p&gt;
+
+&lt;p&gt;There is a certain satisfaction in eliminating that unnecessary variable declaration, or converting that for loop to a higher order function. Finding joy in those small victories and looking for them in every line of code you write is a surefire way to happiness in life as a software developer. Those tiny battles add up over time. They add up to hand-wavy, feel-good things like “loving your work,” “living your dream,” and “finding your passion.”&lt;/p&gt;
+
+&lt;p&gt;I don’t know about you, but that sounds pretty damn good to me.&lt;/p&gt;</content><author><name>Vince Campanale</name></author><summary type="html">I just finished reading “So Good They Can’t Ignore You” by Cal Newport. The book is centered around Cal’s argument that skills trump passion when it comes to finding work you love. He breaks his argument down into tenets and incrementally proves his thesis as only someone with a Ph.D. in Computer Science could do. His proof was a pleasure to read, refreshing in its simplicity and contrarian perspective.</summary></entry><entry><title type="html">Using the Vignere Cipher to Encrypt a Message (Part 3)</title><link href="http://localhost:4000/blog/2017/02/06/vignere-cipher-part3/" rel="alternate" type="text/html" title="Using the Vignere Cipher to Encrypt a Message (Part 3)" /><published>2017-02-06T00:00:00-05:00</published><updated>2017-02-06T00:00:00-05:00</updated><id>http://localhost:4000/blog/2017/02/06/vignere-cipher-part3</id><content type="html" xml:base="http://localhost:4000/blog/2017/02/06/vignere-cipher-part3/">&lt;p&gt;This post is Part 3 of a three part series:&lt;br /&gt;
+&lt;a href=&quot;http://www.vincecampanale.com/blog/2017/01/20/vignere-cipher-part1/&quot;&gt;Using the Vignere Cipher to Encrypt a Message (Part 1)&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&quot;http://www.vincecampanale.com/blog/2017/02/01/vigenere-cipher-part2/&quot;&gt;Using the Vignere Cipher to Encrypt a Message (Part 2)&lt;/a&gt;&lt;br /&gt;
+Using the Vignere Cipher to Encrypt a Message (Part 3) &amp;lt;– You are here&lt;/p&gt;
+
+&lt;p&gt;In &lt;a href=&quot;http://www.vincecampanale.com/blog/2017/01/20/vignere-cipher-part1/&quot;&gt;Part 1&lt;/a&gt;, I gave a brief overview of the Vignere cipher and discussed the two approaches to solving it (the two approaches that I could come up with - there are definitely others). In &lt;a href=&quot;http://www.vincecampanale.com/blog/2017/02/01/vigenere-cipher-part2/&quot;&gt;Part 2&lt;/a&gt;, I covered the first approach, which is essentially a Caesar cipher with a dynamic shift number. In this part, I’m going to step through the more interesting solution - the way it’s really intended to be done - using the magical Vignere table.&lt;/p&gt;
+
+&lt;p&gt;A Vignere table looks like this:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/Vigen%C3%A8re_square_shading.svg/864px-Vigen%C3%A8re_square_shading.svg.png&quot; style=&quot;width: 600px;            height: 600px;&quot; /&gt;&lt;/p&gt;
+
+&lt;h6 id=&quot;by-brandon-t-fields-cdated---based-upon-vigenere-squarepng-by-enusermatt-crypto-this-version-created-by-bdesham-in-inkscape-and-modified-by-cdated-to-include-visual-guidesthis-vector-image-was-created-with-inkscape-public-domain-link&quot;&gt;By Brandon T. Fields (&lt;a href=&quot;//commons.wikimedia.org/w/index.php?title=User:Cdated&amp;amp;action=edit&amp;amp;redlink=1&quot; class=&quot;new&quot; title=&quot;User:Cdated (page does not exist)&quot;&gt;cdated&lt;/a&gt;) - Based upon &lt;a href=&quot;//commons.wikimedia.org/wiki/File:Vigenere-square.png&quot; title=&quot;File:Vigenere-square.png&quot;&gt;Vigenere-square.png&lt;/a&gt; by &lt;a href=&quot;https://en.wikipedia.org/wiki/User:Matt_Crypto&quot; class=&quot;extiw&quot; title=&quot;en:User:Matt Crypto&quot;&gt;en:User:Matt Crypto&lt;/a&gt;. This version created by &lt;a href=&quot;//commons.wikimedia.org/wiki/User:Bdesham&quot; title=&quot;User:Bdesham&quot;&gt;bdesham&lt;/a&gt; in Inkscape, and modified by &lt;a href=&quot;//commons.wikimedia.org/w/index.php?title=User:Cdated&amp;amp;action=edit&amp;amp;redlink=1&quot; class=&quot;new&quot; title=&quot;User:Cdated (page does not exist)&quot;&gt;cdated&lt;/a&gt; to include visual guides.&lt;a href=&quot;//commons.wikimedia.org/wiki/File:Inkscape_Logo.svg&quot; title=&quot;File:Inkscape Logo.svg&quot;&gt;&lt;/a&gt;This &lt;a href=&quot;https://en.wikipedia.org/wiki/Vector_images&quot; class=&quot;extiw&quot; title=&quot;w:Vector images&quot;&gt;vector image&lt;/a&gt; was created with &lt;a href=&quot;//commons.wikimedia.org/wiki/Help:Inkscape&quot; title=&quot;Help:Inkscape&quot;&gt;Inkscape&lt;/a&gt;., Public Domain, &lt;a href=&quot;https://commons.wikimedia.org/w/index.php?curid=15037524&quot;&gt;Link&lt;/a&gt;&lt;/h6&gt;
+
+&lt;p&gt;Don’t worry about deciphering this now, you’ll gain a deeper understanding as I go over the code to build this thing.&lt;/p&gt;
+
+&lt;p&gt;The process breaks down into four primary functions: the &lt;code class=&quot;highlighter-rouge&quot;&gt;generateAlphabet&lt;/code&gt; function, the &lt;code class=&quot;highlighter-rouge&quot;&gt;generateVignereTable&lt;/code&gt; function, the &lt;code class=&quot;highlighter-rouge&quot;&gt;encodeWithTable&lt;/code&gt; function, and of course the &lt;code class=&quot;highlighter-rouge&quot;&gt;vignereCipherWithTable&lt;/code&gt; function.&lt;/p&gt;
+
+&lt;p&gt;In high-level pseudocode, we want to:&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;1) Generate an alphabet starting with a given letter (a in the first column, b in the second, etc) - note: the alphabet must wrap around to the beginning when it reaches z
+2) Generate a Vignere table
+  - The keys consist of the standard alphabet (a-z)
+  - Each key's value is an alphabet starting with that key and wrapping back   around to a (each value is 26 letters)
+3) Encode the message by looking up each letter of the original message in the   keys of the Vignere table, then traversing the table to get the value from the   character code of the keyword letter  
+4) Put it all together in the final function  
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h3 id=&quot;step-1-build-the-generatealphabet-function&quot;&gt;Step 1: Build the &lt;code class=&quot;highlighter-rouge&quot;&gt;generateAlphabet&lt;/code&gt; function&lt;/h3&gt;
+
+&lt;p&gt;In this function, the parameter will be a starting index. We are going to iterate over twenty-six char codes, starting at the provided start index. Presumably, the first char code will be 97, and they will go up from there. In order to account for char codes over 122, we add some if/else logic into the &lt;code class=&quot;highlighter-rouge&quot;&gt;String.fromCharCode&lt;/code&gt; method. Ternary operators allow us to keep this code succinct.&lt;/p&gt;
+
+&lt;div class=&quot;language-js highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kd&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;generateAlphabet&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;start&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;kd&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;alphabet&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[];&lt;/span&gt;
+  &lt;span class=&quot;c1&quot;&gt;//from start index to 26 chars later&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kd&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;start&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;start&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;26&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;++&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;c1&quot;&gt;//convert the char code into a letter and push it to the alphabet array&lt;/span&gt;
+    &lt;span class=&quot;nx&quot;&gt;alphabet&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;push&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;fromCharCode&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;
+      &lt;span class=&quot;nx&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;122&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;?&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;26&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;//if char code &amp;gt; 122, return code - 26, else&lt;/span&gt;
+      &lt;span class=&quot;nx&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;97&lt;/span&gt;  &lt;span class=&quot;p&quot;&gt;?&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;26&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;//if char code &amp;lt; 97, return code + 26, else&lt;/span&gt;
+      &lt;span class=&quot;nx&quot;&gt;i&lt;/span&gt;                  &lt;span class=&quot;c1&quot;&gt;//just return the code&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;));&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;alphabet&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;//return the alphabet array&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h3 id=&quot;step-2-build-the-generatevigneretable-function&quot;&gt;Step 2: Build the &lt;code class=&quot;highlighter-rouge&quot;&gt;generateVignereTable&lt;/code&gt; function&lt;/h3&gt;
+
+&lt;p&gt;Dedicating a function to generating alphabets with different starting character codes allows us to keep the Vignere table function surprisingly simple.&lt;/p&gt;
+
+&lt;p&gt;All we need to do is instantiate an empty object, &lt;code class=&quot;highlighter-rouge&quot;&gt;table&lt;/code&gt;. Load the keys of that object up with the standard alphabet, starting with the letter ‘a’ (char code 97). Then for each key in the table, we generate an alphabet that starts at the key’s index. So the second key (‘b’) has an alphabet starting with b and wrapping back around to end with a. The third key (‘c’) has an alphabet starting with c and wrapping back around to end with b. And so on.&lt;/p&gt;
+
+&lt;p&gt;In code:&lt;/p&gt;
+&lt;div class=&quot;language-js highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c1&quot;&gt;//generate an object, where each key is a letter and each value is another alphabet&lt;/span&gt;
+&lt;span class=&quot;kd&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;generateVignereTable&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;kd&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;table&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{};&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;//instantiate a temporary object to hold the table&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;table&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;keys&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;generateAlphabet&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;97&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;//set the keys of the object equal to the standard alphabet (starting at 97)&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;table&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;keys&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;forEach&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;key&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;index&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;table&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;key&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;generateAlphabet&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;97&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;index&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;});&lt;/span&gt;  &lt;span class=&quot;c1&quot;&gt;//set the value of each key as the alphabet&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;table&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;//return the table&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h3 id=&quot;step-3-encode-each-character-using-a-vignere-table&quot;&gt;Step 3: Encode each character using a Vignere table&lt;/h3&gt;
+
+&lt;p&gt;This is the most important step in the solution - the piece where we put our Vignere table to use. See the comments for a line-by-line explanation.&lt;/p&gt;
+
+&lt;div class=&quot;language-js highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kd&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;encodeWithTable&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;message&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;keywordStr&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;kd&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;messageArray&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;message&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;split&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;''&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;//split the message into an array&lt;/span&gt;
+  &lt;span class=&quot;kd&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;keywordArray&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;keywordStr&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;split&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;''&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;//split the keyword string into an array&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;messageArray&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;forEach&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;letter&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;index&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;//for each letter and index in the message array&lt;/span&gt;
+    &lt;span class=&quot;kd&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;messageChar&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;letter&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;//make a temp variable to hold the letter&lt;/span&gt;
+    &lt;span class=&quot;kd&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;keywordChar&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;keywordArray&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;index&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;//get the corresponding letter from the keyword string using the index&lt;/span&gt;
+
+    &lt;span class=&quot;kd&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;keywordCharIndex&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;keywordChar&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;charCodeAt&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;97&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;//get the index of the keyword by subtracting 97 from the charcode&lt;/span&gt;
+    &lt;span class=&quot;kd&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;vignereTable&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;generateVignereTable&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;//create a vignere table&lt;/span&gt;
+
+    &lt;span class=&quot;kd&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;cipherChar&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;vignereTable&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;messageChar&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;][&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;keywordCharIndex&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;//look up the corresponding letter in the table&lt;/span&gt;
+
+    &lt;span class=&quot;nx&quot;&gt;messageArray&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;index&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;cipherChar&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;//replace the letter in the message with the cipher letter&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;});&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;messageArray&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;join&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;''&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;//convert the messageArray back to a string and return it&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h3 id=&quot;step-4-the-actual-function&quot;&gt;Step 4: The Actual Function&lt;/h3&gt;
+
+&lt;p&gt;Since we’ve taken the time to break down our problem and write thorough helper functions, the cipher function itself is nothing special. In fact, it’s identical to the function in Part 2, except now we are encoding with the Vignere table, rather than with the boring old Caesar cipher.&lt;/p&gt;
+
+&lt;div class=&quot;language-js highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kd&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;vignereCipherWithTable&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;message&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;keyword&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;lemon&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;message&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;length&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;++&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;nx&quot;&gt;keyword&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;keyword&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// repeat the keyword a bunch of times&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+  &lt;span class=&quot;kd&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;keywordStr&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;keyword&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;substr&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;message&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;length&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;);&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// cut the keyword string so it's the same length as the message&lt;/span&gt;
+  &lt;span class=&quot;kd&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;ciphertext&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;encodeWithTable&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;message&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;keywordStr&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;);&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// encode the string using the vignere table&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;ciphertext&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;//return the cipher text!&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;And there you have it! Have fun passing secret messages back and forth with your friends…good luck decoding them though…  ;)&lt;/p&gt;
+
+&lt;p&gt;Hope this was enjoyable and helpful. Shoot me an email or tweet at me with comments, questions, complaints, and suggestions. Comments section coming soon! Contact info in footer.&lt;/p&gt;</content><author><name>Vince Campanale</name></author><summary type="html">This post is Part 3 of a three part series: Using the Vignere Cipher to Encrypt a Message (Part 1) Using the Vignere Cipher to Encrypt a Message (Part 2) Using the Vignere Cipher to Encrypt a Message (Part 3) &amp;lt;– You are here</summary></entry><entry><title type="html">Using the Vignere Cipher to Encrypt a Message (Part 2)</title><link href="http://localhost:4000/blog/2017/02/01/vigenere-cipher-part2/" rel="alternate" type="text/html" title="Using the Vignere Cipher to Encrypt a Message (Part 2)" /><published>2017-02-01T00:00:00-05:00</published><updated>2017-02-01T00:00:00-05:00</updated><id>http://localhost:4000/blog/2017/02/01/vigenere-cipher-part2</id><content type="html" xml:base="http://localhost:4000/blog/2017/02/01/vigenere-cipher-part2/">&lt;p&gt;This post is Part 2 of a three part series:&lt;br /&gt;
+&lt;a href=&quot;http://www.vincecampanale.com/blog/2017/01/20/vignere-cipher-part1/&quot;&gt;Using the Vignere Cipher to Encrypt a Message (Part 1)&lt;/a&gt;&lt;br /&gt;
+Using the Vignere Cipher to Encrypt a Message (Part 2) &amp;lt;– You are here&lt;br /&gt;
+&lt;a href=&quot;http://www.vincecampanale.com/blog/2017/02/06/vignere-cipher-part3/&quot;&gt;Using the Vignere Cipher to Encrypt a Message (Part 3)&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;In &lt;a href=&quot;http://www.vincecampanale.com/blog/2017/01/20/vignere-cipher-part1/&quot;&gt;Part 1&lt;/a&gt;, I gave a brief introduction to the Vignere cipher and how it works. I mentioned that there are two ways to go about emulating the Vignere cipher with a program. One of them involves essentially replicating the Caesar cipher, which I covered in &lt;a href=&quot;http://www.vincecampanale.com/blog/2017/01/20/caesar-cipher/&quot;&gt;this post&lt;/a&gt;, except with a dynamic shift number based on the keyword. The other method involves a Vignere table. In this post, I’m going to cover the first approach: the pseudo-Caesar cipher method.&lt;/p&gt;
+
+&lt;p&gt;This is a really fun problem and it takes a little while to get into, but once you get a grasp on what’s happening, it’s extremely rewarding.&lt;/p&gt;
+
+&lt;p&gt;Onwards!&lt;/p&gt;
+
+&lt;h4 id=&quot;psuedocode&quot;&gt;Psuedocode&lt;/h4&gt;
+
+&lt;p&gt;Outlining our approach in psuedocode would look something like this:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-javascript&quot; data-lang=&quot;javascript&quot;&gt;&lt;span class=&quot;c1&quot;&gt;//Create a function that takes two variables: a message and a keyword (both strings)&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;//Make a string by repeating the keyword over and over again&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;//Get the portion of the repeated keyword string that is as long as the message argument&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;//Encode the message with the keyword&lt;/span&gt;
+  &lt;span class=&quot;c1&quot;&gt;//split the message into an array&lt;/span&gt;
+  &lt;span class=&quot;c1&quot;&gt;//replace each element of the message array with the right letter&lt;/span&gt;
+  &lt;span class=&quot;c1&quot;&gt;//join that array back together&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;//return the new string of encoded characters&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;h4 id=&quot;diving-in&quot;&gt;Diving In&lt;/h4&gt;
+
+&lt;p&gt;Let’s make our basic function first, then deal with the details of how to encode it after.&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-javascript&quot; data-lang=&quot;javascript&quot;&gt;&lt;span class=&quot;kd&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;vignere&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;message&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;keyword&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;lemon&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;//default keyword is lemon&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;message&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;length&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;++&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;nx&quot;&gt;keyword&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;keyword&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;//repeat the keyword the number of times the string is long&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+  &lt;span class=&quot;kr&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;keywordStr&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;keyword&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;substr&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;message&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;length&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+  &lt;span class=&quot;kr&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;ciphertext&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;encode&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;message&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;keywordStr&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;//figure out this function in next step&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;ciphertext&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;So, in this block, we have laid the groundwork for our vunderful program. Now, we need to give the &lt;code class=&quot;highlighter-rouge&quot;&gt;encode()&lt;/code&gt; function some function-ality!&lt;/p&gt;
+
+&lt;h4 id=&quot;to-encode-or-not-to-encode&quot;&gt;To encode or not to encode?&lt;/h4&gt;
+
+&lt;p&gt;We’ll start by asking ourselves what we want this function to accomplish. We want it to take in two parameters: a message, and a string with the same length as message consisting of a keyword repeated over and over again. Then, we want to do some magic to these inputs, and essentially layer them together to create an encoded word.&lt;/p&gt;
+
+&lt;p&gt;In order to do this “layering,” we will use the Caesar cipher approach. We’ll get the character code of each letter in the message, the character code of the corresponding letter in the keyword string (at the same index), combine these character codes, and presto change-o this cumulative character code into a new letter: our cipher letter. Do this for each letter in the message, and we have our cipher text.&lt;/p&gt;
+
+&lt;p&gt;Now, in code:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-javascript&quot; data-lang=&quot;javascript&quot;&gt;&lt;span class=&quot;kd&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;encode&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;message&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;keywordStr&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;kr&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;baseArray&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;message&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;split&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;''&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;//call it the base array because we will be adding the keyword character code &quot;on top&quot; of each character&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;baseArray&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;forEach&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kd&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;addKeywordToBase&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;letter&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;index&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;){&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;//decided to give this callback a name in case something goes wrong, it can be easily debugged&lt;/span&gt;
+    &lt;span class=&quot;kd&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;baseCharCode&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;letter&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;charCodeAt&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;kd&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;keywordedCharCode&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;keywordStr&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;index&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;].&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;charCodeAt&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;kd&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;combinedCharCode&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;baseCharCode&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;keywordedCharCode&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;97&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;//subtract 97 to prevent double counting of the first 97 char codes (since 'a' is charcode 97)&lt;/span&gt;
+    &lt;span class=&quot;nx&quot;&gt;baseArray&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;index&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;fromCharCode&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;
+      &lt;span class=&quot;nx&quot;&gt;combinedCharCode&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;122&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;?&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;combinedCharCode&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;26&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;//wrap back around alphabet&lt;/span&gt;
+      &lt;span class=&quot;nx&quot;&gt;combinedCharCode&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;97&lt;/span&gt;  &lt;span class=&quot;p&quot;&gt;?&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;combinedCharCode&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;26&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;//same as above line, on other side of alphabet&lt;/span&gt;
+      &lt;span class=&quot;nx&quot;&gt;combinedCharCode&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;//if in range, just return the value&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;});&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;baseArray&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;join&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;''&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;See where I used the &lt;code class=&quot;highlighter-rouge&quot;&gt;let&lt;/code&gt; keyword in the callback to the &lt;code class=&quot;highlighter-rouge&quot;&gt;.forEach&lt;/code&gt; method? To be honest, I’m not quite sure when it’s appropriate to use &lt;code class=&quot;highlighter-rouge&quot;&gt;let&lt;/code&gt; vs. when not to. Perhaps that’s a good topic for a future post. I know it has something to do with block scoping and the variable getting “trashed” after it’s used, so it doesn’t waste memory. Based on these two pieces of information, I think it’s safe to say that it’s best to use &lt;code class=&quot;highlighter-rouge&quot;&gt;let&lt;/code&gt; when you have a for loop or a higher order function and want to generate a temporary, local variable to operate on, such as in this case.&lt;/p&gt;
+
+&lt;p&gt;Anyways, back from tangent town – this function looks a lot like the Caesar cipher because it is, in fact, a Caesar cipher. Nothing really new here, so in the interest of keeping this blog DRY, I’d recommend checking out &lt;a href=&quot;&quot;&gt;this post&lt;/a&gt; to learn more about how this code works.&lt;/p&gt;
+
+&lt;p&gt;In &lt;a href=&quot;http://www.vincecampanale.com/blog/2017/02/06/vignere-cipher-part3/&quot;&gt;Part 3&lt;/a&gt;, things get a little more interesting. I’ll go over how to solve this problem using a Vignere table instead.&lt;/p&gt;
+
+&lt;p&gt;Til next time, Vinny out.&lt;/p&gt;</content><author><name>Vince Campanale</name></author><summary type="html">This post is Part 2 of a three part series: Using the Vignere Cipher to Encrypt a Message (Part 1) Using the Vignere Cipher to Encrypt a Message (Part 2) &amp;lt;– You are here Using the Vignere Cipher to Encrypt a Message (Part 3)</summary></entry><entry><title type="html">Using the Vignere Cipher to Encrypt a Message (Part 1)</title><link href="http://localhost:4000/blog/2017/01/20/vignere-cipher-part1/" rel="alternate" type="text/html" title="Using the Vignere Cipher to Encrypt a Message (Part 1)" /><published>2017-01-20T00:00:00-05:00</published><updated>2017-01-20T00:00:00-05:00</updated><id>http://localhost:4000/blog/2017/01/20/vignere-cipher-part1</id><content type="html" xml:base="http://localhost:4000/blog/2017/01/20/vignere-cipher-part1/">&lt;p&gt;This post is Part 1 of a three part series:&lt;br /&gt;
+Using the Vignere Cipher to Encrypt a Message (Part 1) &amp;lt;– You are here&lt;br /&gt;
+&lt;a href=&quot;http://www.vincecampanale.com/blog/2017/02/01/vigenere-cipher-part2/&quot;&gt;Using the Vignere Cipher to Encrypt a Message (Part 2)&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&quot;http://www.vincecampanale.com/blog/2017/02/06/vignere-cipher-part3/&quot;&gt;Using the Vignere Cipher to Encrypt a Message (Part 3)&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;The Vignère Cipher is a “method of encrypting alphabetic text by using a series of different Caesar ciphers based on the letters of the keyword.” Read more about it &lt;a href=&quot;https://en.wikipedia.org/wiki/Vigen%C3%A8re_cipher&quot;&gt;here&lt;/a&gt;, it has a really cool history. It’s called a “polyalphabetic cipher” because it uses two or more cipher alphabets to encrypt the original message.&lt;/p&gt;
+
+&lt;p&gt;In the next couple of posts, I’m going to walk through my solution to implementing a Vignère Cipher in Javascript. I’m sure there are plenty of ways to do it, and I’ll probably find this solution pretty basic when I look at it again in a year, but for now, I’m satisfied. I thought this problem was a lot of fun to solve and was a great extension of the Caesar Cipher, which I covered in my &lt;a href=&quot;http://www.vincecampanale.com/blog/2017/01/20/caesar-cipher/&quot;&gt;last post&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h3 id=&quot;how-it-works&quot;&gt;How it Works&lt;/h3&gt;
+&lt;p&gt;The process goes like this:&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Step 1&lt;/strong&gt; Get the message you want to encrypt (no spaces, all lower case), for example “thisisamessage.”&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;message: thisisamessage
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;&lt;strong&gt;Step 2&lt;/strong&gt; Choose a keyword to encrypt the message with, i.e. “lemon”, and repeat it over and over until you get a string that is the same length as your message.&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;keyword: lemonlemonlemo
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;&lt;strong&gt;Step 3&lt;/strong&gt; This step is very similar to the Caesar Cipher. Add each letter of the original message to the letter of the keyword string to produce a new letter. For example, &lt;code class=&quot;highlighter-rouge&quot;&gt;t&lt;/code&gt; is index 19, and &lt;code class=&quot;highlighter-rouge&quot;&gt;l&lt;/code&gt; is index 11. If you combine them, and wrap back around to the beginning of the alphabet, you end up with the letter &lt;code class=&quot;highlighter-rouge&quot;&gt;e&lt;/code&gt; at index 4. After you do that for every letter, you’ll get the cipher text. In this example,&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;ciphertext: elugvdeysfdess
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;&lt;strong&gt;Alternative Step 3&lt;/strong&gt; Instead of combining the indices of the letters in the message string and the keyword string, you can actually use a Vignère table to look up the new letter. This is a bit harder to implement in code, but it’s a fun exercise for sure.&lt;/p&gt;
+
+&lt;p&gt;I’ll go through both solutions in this series. I’ll cover the Caesar Cipher solution first since it’s a bit easier in my opinion.&lt;/p&gt;
+
+&lt;p&gt;Continue to &lt;a href=&quot;http://www.vincecampanale.com/blog/2017/02/01/vigenere-cipher-part2/&quot;&gt;Part 2&lt;/a&gt; to see the solution without the table or skip to &lt;a href=&quot;&quot;&gt;Part 3&lt;/a&gt; to see the solution with the table.&lt;/p&gt;</content><author><name>Vince Campanale</name></author><summary type="html">This post is Part 1 of a three part series: Using the Vignere Cipher to Encrypt a Message (Part 1) &amp;lt;– You are here Using the Vignere Cipher to Encrypt a Message (Part 2) Using the Vignere Cipher to Encrypt a Message (Part 3)</summary></entry><entry><title type="html">Solved: The Caesar Cipher</title><link href="http://localhost:4000/blog/2017/01/20/caesar-cipher/" rel="alternate" type="text/html" title="Solved: The Caesar Cipher" /><published>2017-01-20T00:00:00-05:00</published><updated>2017-01-20T00:00:00-05:00</updated><id>http://localhost:4000/blog/2017/01/20/caesar-cipher</id><content type="html" xml:base="http://localhost:4000/blog/2017/01/20/caesar-cipher/">&lt;p&gt;&lt;a href=&quot;https://learncryptography.com/classical-encryption/caesar-cipher&quot;&gt;According to learncryptography.com&lt;/a&gt;, the Caesar Cipher (aka a shift cipher), is a very simple form of encryption “where each letter in the original message is replaced with a letter corresponding to a certain number of letters up or down in the alphabet.”&lt;/p&gt;
+
+&lt;p&gt;In this solution, I step through my approach to constructing a Javascript function that emulates the Caesar Cipher. The function takes two arguments: the string to encrypt, and the shift constant. The shift constant determines how many letters we go up (if positive) or down (if negative) in the alphabet to replace each letter. For example, &lt;code class=&quot;highlighter-rouge&quot;&gt;caesarCipher(&quot;hello&quot;, 5)&lt;/code&gt; should return &lt;code class=&quot;highlighter-rouge&quot;&gt;&quot;mjqqt&quot;&lt;/code&gt;.&lt;/p&gt;
+
+&lt;h4 id=&quot;outlining--pseudocode&quot;&gt;Outlining &amp;amp; Pseudocode&lt;/h4&gt;
+&lt;p&gt;To start, let’s construct the shell of the function and get a sense for how it should work in the end.&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-javascript&quot; data-lang=&quot;javascript&quot;&gt;&lt;span class=&quot;kd&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;caesarCipher&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;str&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;shiftNum&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;c1&quot;&gt;//split the input string into an array to operate on each element&lt;/span&gt;
+  &lt;span class=&quot;kr&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;strAsArray&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;str&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;split&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+  &lt;span class=&quot;c1&quot;&gt;//create a dummy array to push the shifted elements into&lt;/span&gt;
+  &lt;span class=&quot;kr&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;shifted&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[];&lt;/span&gt;
+
+  &lt;span class=&quot;c1&quot;&gt;//instantiate the function that will shift each letter   &lt;/span&gt;
+  &lt;span class=&quot;kd&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;shift&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;letter&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;c1&quot;&gt;//TODO: Shift the letter&lt;/span&gt;
+    &lt;span class=&quot;nx&quot;&gt;shifted&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;push&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;letter&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;//push the shifted letter to the shifted array&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+  &lt;span class=&quot;c1&quot;&gt;//use higher order function .forEach to shift each letter in strAsArray&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;strAsArray&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;forEach&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;shift&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+
+  &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;shifted&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;join&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;//return shifted array as a string&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;h4 id=&quot;shifting-a-letter&quot;&gt;Shifting a Letter&lt;/h4&gt;
+&lt;p&gt;We’re going to use the ASCII code to shift the letters. We’ll use the &lt;a href=&quot;https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/charCodeAt&quot;&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;.charCodeAt()&lt;/code&gt;&lt;/a&gt; method in order to get the ASCII code of each letter. Since all the letters of the alphabet are in order of ascending ASCII codes, all we have to do is add &lt;code class=&quot;highlighter-rouge&quot;&gt;shiftNum&lt;/code&gt; to the character code of the current letter to get the new letter’s code. Then, we can use &lt;a href=&quot;https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/fromCharCode&quot;&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;.fromCharCode()&lt;/code&gt;&lt;/a&gt; to convert back to the letter version.&lt;/p&gt;
+
+&lt;p&gt;In code,&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-javascript&quot; data-lang=&quot;javascript&quot;&gt;&lt;span class=&quot;kd&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;caesarCipher&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;str&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;shiftNum&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;c1&quot;&gt;//split the input string into an array to operate on each element&lt;/span&gt;
+  &lt;span class=&quot;kr&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;strAsArray&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;str&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;split&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+  &lt;span class=&quot;c1&quot;&gt;//create a dummy array to push the shifted elements into&lt;/span&gt;
+  &lt;span class=&quot;kr&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;shifted&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[];&lt;/span&gt;
+
+  &lt;span class=&quot;c1&quot;&gt;//instantiate the function that will shift each letter&lt;/span&gt;
+  &lt;span class=&quot;kd&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;shift&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;letter&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;nx&quot;&gt;letter&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;fromCharCode&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;letter&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;charCodeAt&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;shiftNum&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;nx&quot;&gt;shifted&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;push&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;letter&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;//push the shifted letter to the shifted array&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+  &lt;span class=&quot;c1&quot;&gt;//use higher order function .forEach to shift each letter in strAsArray&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;strAsArray&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;forEach&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;shift&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+
+  &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;shifted&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;join&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;//return shifted array as a string&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;Note that the callback function &lt;code class=&quot;highlighter-rouge&quot;&gt;shift&lt;/code&gt; operates on one letter at a time, so we want the character code of the only letter in a one-letter string, which is at index 0, hence &lt;code class=&quot;highlighter-rouge&quot;&gt;letter.charCodeAt(0)&lt;/code&gt;.&lt;/p&gt;
+
+&lt;h4 id=&quot;but-wait-theres-more&quot;&gt;But Wait, There’s More.&lt;/h4&gt;
+&lt;p&gt;What if we want to shift &lt;code class=&quot;highlighter-rouge&quot;&gt;&quot;zebra&quot;&lt;/code&gt; by 3 characters? The way our function is set up right now, we’d end up with &lt;code class=&quot;highlighter-rouge&quot;&gt;&quot;}jgwf&quot;&lt;/code&gt; because the character code for &lt;code class=&quot;highlighter-rouge&quot;&gt;122 + 3&lt;/code&gt; corresponds to the symbol &lt;code class=&quot;highlighter-rouge&quot;&gt;&quot;}&quot;&lt;/code&gt;. Likewise, if applying the shift constant results in a character code below 97, we’ll end up with a capital letter rather than the correctly shifted one.&lt;/p&gt;
+
+&lt;p&gt;Let’s do some math. If the resulting shifted code is greater than 122, we want to take the difference between our sum and 122, and add that to 97. Likewise, if the resulting shifted code is less than 97, we want to take the difference between our sum and 97, and subtract that number from 122. Translation:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-javascript&quot; data-lang=&quot;javascript&quot;&gt;&lt;span class=&quot;kr&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;sum&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;letter&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;charCodeAt&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;shiftNum&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;sum&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;122&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;letter&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;fromCharCode&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;97&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;sum&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;122&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;//the -1 is to adjust for inclusion&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;else&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;sum&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;97&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;letter&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;fromCharCode&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;122&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;97&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;sum&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;//the +1 mirrors the -1 above&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;else&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;letter&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;fromCharCode&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;sum&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;Let’s drop that into our function.&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-javascript&quot; data-lang=&quot;javascript&quot;&gt;&lt;span class=&quot;kd&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;caesarCipher&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;str&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;shiftNum&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;c1&quot;&gt;//split the input string into an array to operate on each element&lt;/span&gt;
+  &lt;span class=&quot;kr&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;strAsArray&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;str&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;split&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+  &lt;span class=&quot;c1&quot;&gt;//create a dummy array to push the shifted elements into&lt;/span&gt;
+  &lt;span class=&quot;kr&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;shifted&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[];&lt;/span&gt;
+
+  &lt;span class=&quot;c1&quot;&gt;//instantiate the function that will shift each letter&lt;/span&gt;
+  &lt;span class=&quot;kd&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;shift&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;letter&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;kr&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;sum&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;letter&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;charCodeAt&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;shiftNum&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;sum&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;122&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+      &lt;span class=&quot;nx&quot;&gt;letter&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;fromCharCode&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;97&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;sum&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;122&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;//the -1 is to adjust for inclusion&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;else&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;sum&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;97&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+      &lt;span class=&quot;nx&quot;&gt;letter&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;fromCharCode&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;122&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;97&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;sum&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;//the +1 mirrors the -1 above&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;else&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+      &lt;span class=&quot;nx&quot;&gt;letter&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;fromCharCode&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;sum&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+    &lt;span class=&quot;nx&quot;&gt;shifted&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;push&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;letter&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;//push the shifted letter to the shifted array&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+  &lt;span class=&quot;c1&quot;&gt;//use higher order function .forEach to shift each letter in strAsArray&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;strAsArray&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;forEach&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;shift&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+
+  &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;shifted&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;join&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;//return shifted array as a string&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;h4 id=&quot;refactor--get-creative&quot;&gt;Refactor &amp;amp; Get Creative&lt;/h4&gt;
+&lt;p&gt;I think it makes more sense syntactically to append this method to the String prototype, so it can be used like “&lt;code class=&quot;highlighter-rouge&quot;&gt;&quot;hello&quot;.encryptWithCaesars(3)&lt;/code&gt; where &lt;code class=&quot;highlighter-rouge&quot;&gt;&quot;hello&quot;&lt;/code&gt; is the string to be encrypted and the argument passed to the method is the shift constant.&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-javascript&quot; data-lang=&quot;javascript&quot;&gt;&lt;span class=&quot;c1&quot;&gt;//This adds a new method to the String prototype which implements the function &quot;encryptWithCaesars&quot; on that string.&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;//The method takes one parameter, &quot;shiftNum&quot;, for which the default value is 2 (if no shiftNum is provided).&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;//Saves memory by replacing the letters in place, rather than creating a new array and pushing the letters to that array.&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;prototype&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;encryptWithCaesars&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;encryptWithCaesars&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;shiftNum&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;kr&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;strAsArray&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;split&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;strAsArray&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;forEach&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;letter&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;strAsArray&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;strAsArray&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;indexOf&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;letter&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;
+    &lt;span class=&quot;nb&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;fromCharCode&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;
+      &lt;span class=&quot;nx&quot;&gt;letter&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;charCodeAt&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;shiftNum&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;122&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;?&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;letter&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;charCodeAt&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;shiftNum&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;26&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
+      &lt;span class=&quot;nx&quot;&gt;letter&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;charCodeAt&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;shiftNum&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;97&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;?&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;letter&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;charCodeAt&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;shiftNum&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;26&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
+      &lt;span class=&quot;nx&quot;&gt;letter&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;charCodeAt&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;shiftNum&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;});&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;strAsArray&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;join&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;//Note: this solution only works with lowercase letters.&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;Let me know what you think! Contact info in the footer - tweet at me with suggestions/comments.
+Hope I was able to pass on a little knowledge and help you out with this problem!&lt;/p&gt;
+
+&lt;p&gt;Adios.&lt;/p&gt;</content><author><name>Vince Campanale</name></author><summary type="html">According to learncryptography.com, the Caesar Cipher (aka a shift cipher), is a very simple form of encryption “where each letter in the original message is replaced with a letter corresponding to a certain number of letters up or down in the alphabet.”</summary></entry></feed>

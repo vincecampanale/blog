@@ -65,7 +65,24 @@ console.log(typeof Car) // Function
 
 ### Under the Hood
 
-In this section, I'm just going to explain the things that the `new` keyword is doing with human words. Then in the next section, I'll show it in computer words. 
+Whether you are using a vanilla Constructor function or a <strike>unnecessary</strike> special keyword to instantiate your object constructing mechanism, you will be using the `new` keyword. (There is another secret and powerful way to generate objects in Javascript called a [factory](https://medium.com/javascript-scene/javascript-factory-functions-vs-constructor-functions-vs-classes-2f22ceddf33e) function which will have to be covered in a future post).
+
+So what is the `new` keyword doing under the hood (in human words)?
+
+Three letters, four actions. When you say `var myCar = new Car()`, it...
+
+```
+1) Creates a new (empty) object 
+2) Gets the prototype of the constructor function (Car) and sets it as the empty object's prototype
+3) Calls the constructor function with the new empty object as `this` (more on this (ha) step later)
+4) Return the new object
+```
+
+Now, what does this process look like in computer words?
+
+```javascript
+```
+
 
 <!--
 OUTLINE 
@@ -73,7 +90,7 @@ OUTLINE
 
 [x] Brief intro to class keyword
 
-[] Javascript's `new` keyword does some interesting stuff under the hood (4 things - bulletted list)
+[x] Javascript's `new` keyword does some interesting stuff under the hood (4 things - bulletted list)
 
 [] reimplementing it in code 
 

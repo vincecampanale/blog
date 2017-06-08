@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Using the Vignere Cipher to Encrypt a Message (Part 2)</title>
+  <meta name="description" content="This post is Part 2 of a three part series: Using the Vignere Cipher to Encrypt a Message (Part 1) Using the Vignere Cipher to Encrypt a Message (Part 2) &amp;lt...">
+
+  <link rel="stylesheet" href="/blog/assets/main.css">
+  <link rel="canonical" href="http://localhost:4000/blog/2017/02/01/vigenere-cipher-part2/">
+  <link rel="alternate" type="application/rss+xml" title="Vince Campanale/Blog/" href="/blog/feed.xml">
+
+  
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:site" content="@_vincecampanale">
+  <meta name="twitter:creator" content="@_vincecampanale">
+  
+    <meta name="twitter:title" content="Using the Vignere Cipher to Encrypt a Message (Part 2)">
+  
+  
+    <meta name="twitter:url" content="http://localhost:4000/2017/02/01/vigenere-cipher-part2/">
+  
+  
+    <meta name="twitter:description" content="Software blog, front-end development, HTML, CSS, Javascript.">
+  
+  
+
+  <link rel="icon" href="assets/favicon.ico"/>
+<script src="http://127.0.0.1:35729/livereload.js"></script></head>
+
+
+  <body>
+
+    <header class="site-header" role="banner">
+  <div class="wrapper site-nav">
+    <a class="site-title" href="/blog/">Vince Campanale/Blog/</a>
+
+    <div class="link-wrapper">
+      <a class="page-link" href="http://vincecampanale.com/about/">About</a>
+      <a class="page-link" href="/blog/">Blog</a>
+      <a class="page-link" href="http://vincecampanale.com">Portfolio</a>
+    </div>
+  </div>
+</header>
+
+
+    <main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title" itemprop="name headline">Using the Vignere Cipher to Encrypt a Message (Part 2)</h1>
+    <p class="post-meta"><time datetime="2017-02-01T00:00:00-05:00" itemprop="datePublished">Feb 1, 2017</time></p>
+  </header>
+
+  <div class="post-content" itemprop="articleBody">
+    <p>This post is Part 2 of a three part series:<br />
+<a href="http://www.vincecampanale.com/blog/2017/01/20/vignere-cipher-part1/">Using the Vignere Cipher to Encrypt a Message (Part 1)</a><br />
+Using the Vignere Cipher to Encrypt a Message (Part 2) &lt;– You are here<br />
+<a href="http://www.vincecampanale.com/blog/2017/02/06/vignere-cipher-part3/">Using the Vignere Cipher to Encrypt a Message (Part 3)</a></p>
+
+<p>In <a href="http://www.vincecampanale.com/blog/2017/01/20/vignere-cipher-part1/">Part 1</a>, I gave a brief introduction to the Vignere cipher and how it works. I mentioned that there are two ways to go about emulating the Vignere cipher with a program. One of them involves essentially replicating the Caesar cipher, which I covered in <a href="http://www.vincecampanale.com/blog/2017/01/20/caesar-cipher/">this post</a>, except with a dynamic shift number based on the keyword. The other method involves a Vignere table. In this post, I’m going to cover the first approach: the pseudo-Caesar cipher method.</p>
+
+<p>This is a really fun problem and it takes a little while to get into, but once you get a grasp on what’s happening, it’s extremely rewarding.</p>
+
+<p>Onwards!</p>
+
+<h4 id="psuedocode">Psuedocode</h4>
+
+<p>Outlining our approach in psuedocode would look something like this:</p>
+
+<figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="c1">//Create a function that takes two variables: a message and a keyword (both strings)</span>
+<span class="c1">//Make a string by repeating the keyword over and over again</span>
+<span class="c1">//Get the portion of the repeated keyword string that is as long as the message argument</span>
+<span class="c1">//Encode the message with the keyword</span>
+  <span class="c1">//split the message into an array</span>
+  <span class="c1">//replace each element of the message array with the right letter</span>
+  <span class="c1">//join that array back together</span>
+<span class="c1">//return the new string of encoded characters</span></code></pre></figure>
+
+<h4 id="diving-in">Diving In</h4>
+
+<p>Let’s make our basic function first, then deal with the details of how to encode it after.</p>
+
+<figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="kd">function</span> <span class="nx">vignere</span> <span class="p">(</span><span class="nx">message</span><span class="p">,</span> <span class="nx">keyword</span> <span class="o">=</span> <span class="s2">"lemon"</span><span class="p">)</span> <span class="p">{</span> <span class="c1">//default keyword is lemon</span>
+  <span class="k">for</span> <span class="p">(</span> <span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">message</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span> <span class="p">)</span> <span class="p">{</span>
+    <span class="nx">keyword</span> <span class="o">+=</span> <span class="nx">keyword</span><span class="p">;</span> <span class="c1">//repeat the keyword the number of times the string is long</span>
+  <span class="p">}</span>
+  <span class="kr">const</span> <span class="nx">keywordStr</span> <span class="o">=</span> <span class="nx">keyword</span><span class="p">.</span><span class="nx">substr</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nx">message</span><span class="p">.</span><span class="nx">length</span><span class="p">);</span>
+  <span class="kr">const</span> <span class="nx">ciphertext</span> <span class="o">=</span> <span class="nx">encode</span><span class="p">(</span><span class="nx">message</span><span class="p">,</span> <span class="nx">keywordStr</span><span class="p">);</span> <span class="c1">//figure out this function in next step</span>
+  <span class="k">return</span> <span class="nx">ciphertext</span><span class="p">;</span>
+<span class="p">}</span></code></pre></figure>
+
+<p>So, in this block, we have laid the groundwork for our vunderful program. Now, we need to give the <code class="highlighter-rouge">encode()</code> function some function-ality!</p>
+
+<h4 id="to-encode-or-not-to-encode">To encode or not to encode?</h4>
+
+<p>We’ll start by asking ourselves what we want this function to accomplish. We want it to take in two parameters: a message, and a string with the same length as message consisting of a keyword repeated over and over again. Then, we want to do some magic to these inputs, and essentially layer them together to create an encoded word.</p>
+
+<p>In order to do this “layering,” we will use the Caesar cipher approach. We’ll get the character code of each letter in the message, the character code of the corresponding letter in the keyword string (at the same index), combine these character codes, and presto change-o this cumulative character code into a new letter: our cipher letter. Do this for each letter in the message, and we have our cipher text.</p>
+
+<p>Now, in code:</p>
+
+<figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="kd">function</span> <span class="nx">encode</span> <span class="p">(</span><span class="nx">message</span><span class="p">,</span> <span class="nx">keywordStr</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kr">const</span> <span class="nx">baseArray</span> <span class="o">=</span> <span class="nx">message</span><span class="p">.</span><span class="nx">split</span><span class="p">(</span><span class="s1">''</span><span class="p">);</span> <span class="c1">//call it the base array because we will be adding the keyword character code "on top" of each character</span>
+  <span class="nx">baseArray</span><span class="p">.</span><span class="nx">forEach</span><span class="p">(</span><span class="kd">function</span> <span class="nx">addKeywordToBase</span><span class="p">(</span><span class="nx">letter</span><span class="p">,</span> <span class="nx">index</span><span class="p">){</span> <span class="c1">//decided to give this callback a name in case something goes wrong, it can be easily debugged</span>
+    <span class="kd">let</span> <span class="nx">baseCharCode</span> <span class="o">=</span> <span class="nx">letter</span><span class="p">.</span><span class="nx">charCodeAt</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+    <span class="kd">let</span> <span class="nx">keywordedCharCode</span> <span class="o">=</span> <span class="nx">keywordStr</span><span class="p">[</span><span class="nx">index</span><span class="p">].</span><span class="nx">charCodeAt</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+    <span class="kd">let</span> <span class="nx">combinedCharCode</span> <span class="o">=</span> <span class="nx">baseCharCode</span> <span class="o">+</span> <span class="nx">keywordedCharCode</span> <span class="o">-</span> <span class="mi">97</span><span class="p">;</span> <span class="c1">//subtract 97 to prevent double counting of the first 97 char codes (since 'a' is charcode 97)</span>
+    <span class="nx">baseArray</span><span class="p">[</span><span class="nx">index</span><span class="p">]</span> <span class="o">=</span> <span class="nb">String</span><span class="p">.</span><span class="nx">fromCharCode</span><span class="p">(</span>
+      <span class="nx">combinedCharCode</span> <span class="o">&gt;</span> <span class="mi">122</span> <span class="p">?</span> <span class="nx">combinedCharCode</span> <span class="o">-</span> <span class="mi">26</span> <span class="p">:</span> <span class="c1">//wrap back around alphabet</span>
+      <span class="nx">combinedCharCode</span> <span class="o">&lt;</span> <span class="mi">97</span>  <span class="p">?</span> <span class="nx">combinedCharCode</span> <span class="o">+</span> <span class="mi">26</span> <span class="p">:</span> <span class="c1">//same as above line, on other side of alphabet</span>
+      <span class="nx">combinedCharCode</span> <span class="c1">//if in range, just return the value</span>
+    <span class="p">);</span>
+  <span class="p">});</span>
+  <span class="k">return</span> <span class="nx">baseArray</span><span class="p">.</span><span class="nx">join</span><span class="p">(</span><span class="s1">''</span><span class="p">);</span>
+<span class="p">}</span></code></pre></figure>
+
+<p>See where I used the <code class="highlighter-rouge">let</code> keyword in the callback to the <code class="highlighter-rouge">.forEach</code> method? To be honest, I’m not quite sure when it’s appropriate to use <code class="highlighter-rouge">let</code> vs. when not to. Perhaps that’s a good topic for a future post. I know it has something to do with block scoping and the variable getting “trashed” after it’s used, so it doesn’t waste memory. Based on these two pieces of information, I think it’s safe to say that it’s best to use <code class="highlighter-rouge">let</code> when you have a for loop or a higher order function and want to generate a temporary, local variable to operate on, such as in this case.</p>
+
+<p>Anyways, back from tangent town – this function looks a lot like the Caesar cipher because it is, in fact, a Caesar cipher. Nothing really new here, so in the interest of keeping this blog DRY, I’d recommend checking out <a href="">this post</a> to learn more about how this code works.</p>
+
+<p>In <a href="http://www.vincecampanale.com/blog/2017/02/06/vignere-cipher-part3/">Part 3</a>, things get a little more interesting. I’ll go over how to solve this problem using a Vignere table instead.</p>
+
+<p>Til next time, Vinny out.</p>
+
+  </div>
+
+  
+</article>
+
+      </div>
+    </main>
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+
+        </ul>
+      </div>
+
+      <div class="footer-col footer-col-2">
+        <ul class="social-media-list">
+          
+          <li><a href="mailto:vcampanale0294@gmail.com">email</a></li>
+          
+
+          
+          <li><a href="https://github.com/vincecampanale" target="_blank">github</a></li>
+          
+
+          
+          <li><a href="https://twitter.com/_vincecampanale" target="_blank">twitter</a></li>
+          
+        </ul>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+
+
+  </body>
+
+</html>

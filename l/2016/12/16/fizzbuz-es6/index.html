@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Fizzbuzz, meet ES6</title>
+  <meta name="description" content="For my challenge today, I’m going to put a new twist on a classic problem. If you haven’t heard of “Fizzbuzz,” I’m truly honored to be the first person to in...">
+
+  <link rel="stylesheet" href="/blog/assets/main.css">
+  <link rel="canonical" href="http://localhost:4000/blog/2016/12/16/fizzbuz-es6/">
+  <link rel="alternate" type="application/rss+xml" title="Vince Campanale/Blog/" href="/blog/feed.xml">
+
+  
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:site" content="@_vincecampanale">
+  <meta name="twitter:creator" content="@_vincecampanale">
+  
+    <meta name="twitter:title" content="Fizzbuzz, meet ES6">
+  
+  
+    <meta name="twitter:url" content="http://localhost:4000/2016/12/16/fizzbuz-es6/">
+  
+  
+    <meta name="twitter:description" content="Software blog, front-end development, HTML, CSS, Javascript.">
+  
+  
+
+  <link rel="icon" href="assets/favicon.ico"/>
+<script src="http://127.0.0.1:35729/livereload.js"></script></head>
+
+
+  <body>
+
+    <header class="site-header" role="banner">
+  <div class="wrapper site-nav">
+    <a class="site-title" href="/blog/">Vince Campanale/Blog/</a>
+
+    <div class="link-wrapper">
+      <a class="page-link" href="http://vincecampanale.com/about/">About</a>
+      <a class="page-link" href="/blog/">Blog</a>
+      <a class="page-link" href="http://vincecampanale.com">Portfolio</a>
+    </div>
+  </div>
+</header>
+
+
+    <main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title" itemprop="name headline">Fizzbuzz, meet ES6</h1>
+    <p class="post-meta"><time datetime="2016-12-16T00:00:00-05:00" itemprop="datePublished">Dec 16, 2016</time></p>
+  </header>
+
+  <div class="post-content" itemprop="articleBody">
+    <p>For my challenge today, I’m going to put a new twist on a classic problem. If you haven’t heard of “Fizzbuzz,” I’m truly honored to be the first person to introduce you two. This most certainly will not be the last time you encounter “the ‘Buzz”.</p>
+
+<p>Fizzbuzz is simple: take in a number and return every number from 1 to that input number, replacing multiples of 3 with “fizz”, multiples of 5 with “buzz”, and multiples of both 3 and 5 with “fizzbuzz”. The console output for <code class="highlighter-rouge">fizzbuzz(20)</code> would look like this:</p>
+<div class="language-javascript highlighter-rouge"><pre class="highlight"><code><span class="mi">1</span>
+<span class="mi">2</span>
+<span class="nx">fizz</span>
+<span class="mi">4</span>
+<span class="nx">buzz</span>
+<span class="nx">fizz</span>
+<span class="mi">7</span>
+<span class="mi">8</span>
+<span class="nx">fizz</span>
+<span class="nx">buzz</span>
+<span class="mi">11</span>
+<span class="nx">fizz</span>
+<span class="mi">13</span>
+<span class="mi">14</span>
+<span class="nx">fizzbuzz</span>
+<span class="mi">16</span>
+<span class="mi">17</span>
+<span class="nx">fizz</span>
+<span class="mi">19</span>
+<span class="nx">buzz</span>
+</code></pre>
+</div>
+
+<p>A solid solution just handles each situation with an <code class="highlighter-rouge">if</code> statement.</p>
+
+<div class="language-javascript highlighter-rouge"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">boringFizzBuzz</span><span class="p">(</span><span class="nx">n</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">for</span><span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;=</span> <span class="nx">n</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">){</span>
+    <span class="k">if</span><span class="p">(</span><span class="nx">i</span> <span class="o">%</span> <span class="mi">3</span> <span class="o">===</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="nx">i</span> <span class="o">%</span> <span class="mi">5</span> <span class="o">===</span> <span class="mi">0</span><span class="p">){</span>
+      <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">"fizzbuzz"</span><span class="p">);</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">i</span> <span class="o">%</span> <span class="mi">3</span> <span class="o">===</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">"fizz"</span><span class="p">);</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">i</span> <span class="o">%</span> <span class="mi">5</span> <span class="o">===</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">"buzz"</span><span class="p">);</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+      <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">i</span><span class="p">);</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre>
+</div>
+
+<p>It works but…</p>
+<iframe src="//giphy.com/embed/xTiTndCIut7o7OpEL6" width="480" height="292" frameborder="0" class="giphy-embed" allowfullscreen=""></iframe>
+<p><a href="http://giphy.com/gifs/mashable-xTiTndCIut7o7OpEL6">via GIPHY</a></p>
+
+<p>Let’s spice this function up with some ES6 syntax and ternary operator magic.</p>
+
+<div class="language-javascript highlighter-rouge"><pre class="highlight"><code><span class="kr">const</span> <span class="nx">coolFizzBuzz</span> <span class="o">=</span> <span class="p">(</span><span class="nx">num</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="k">for</span><span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;=</span> <span class="nx">num</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">){</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">((</span><span class="nx">i</span> <span class="o">%</span> <span class="mi">3</span> <span class="o">===</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="nx">i</span> <span class="o">%</span> <span class="mi">5</span> <span class="o">===</span> <span class="mi">0</span><span class="p">)</span> <span class="p">?</span>
+                  <span class="s2">"fizzbuzz"</span> <span class="p">:</span> <span class="p">(</span><span class="nx">i</span> <span class="o">%</span> <span class="mi">5</span> <span class="o">===</span> <span class="mi">0</span> <span class="p">?</span>
+                    <span class="s2">"buzz"</span> <span class="p">:</span> <span class="p">(</span><span class="nx">i</span> <span class="o">%</span> <span class="mi">3</span> <span class="o">===</span> <span class="mi">0</span> <span class="p">?</span>
+                      <span class="s2">"fizz"</span> <span class="p">:</span> <span class="nx">i</span><span class="p">)));</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre>
+</div>
+
+<iframe src="//giphy.com/embed/6FymBmqKeBrl6" width="480" height="421" frameborder="0" class="giphy-embed" allowfullscreen=""></iframe>
+<p><a href="http://giphy.com/gifs/jaw-drop-oooooh-6FymBmqKeBrl6">via GIPHY</a></p>
+
+<h4 id="sweet-es6-things-used">Sweet ES6 things used:</h4>
+
+<p>1) const.
+  <code class="highlighter-rouge">const</code> stands for “constant”. In Javascript, constants are block-scoped, similar to variables that are defined with <code class="highlighter-rouge">let</code> (another new ES6 feature). A “block-scoped” variable is only available inside of the curly braces in which it is confined. Additionally, and more importantly, declaring a <code class="highlighter-rouge">const</code> variable means that the variable cannot be re-assigned to a different value later on. However, it’s important to note declaring something with <code class="highlighter-rouge">const</code> does not necessarily make that thing “immutable”. Check out <a href="https://jack.ofspades.com/es6-const-not-immutable/">this</a> blog post for more information on that. Also, <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/const">MDN docs</a> always keep it real.</p>
+
+<p>2) =&gt;
+  Arrow functions! Arrow functions are a shorthand way of declaring anonymous functions. You put the arguments on the left side and then what you want to do with the arguments on the right side. Super handy and concise. In this case, we take advantage of Javascript’s functional programming capabilities (using functions as values) to un-anonymize our arrow function. We give the arrow function a name by storing it in a <code class="highlighter-rouge">const</code> called “coolFizzBuzz”. More good stuff about the arrow function <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/Arrow_functions">here</a>.</p>
+
+<h4 id="ternary-operator-usage">Ternary operator usage:</h4>
+<p>I like ternary operators because they let me condense simple conditional logic flows into one-liners.
+  In this example, the ternary operator line translates to this logic flow:
+  <a href="http://tinypic.com?ref=9la3hx" target="_blank"><img src="http://i63.tinypic.com/9la3hx.jpg" border="0" alt="Image and video hosting by TinyPic" /></a></p>
+
+<p>All in one line (kind of). I broke it up into multiple lines because nobody likes sideways scrolling. Anyways, pretty cool, huh?</p>
+
+<p>Please don’t hesitate to email or tweet at me with questions or suggestions - contact info in the footer.</p>
+
+<p>Happy Friday - have a great weekend. Vince out.</p>
+
+  </div>
+
+  
+</article>
+
+      </div>
+    </main>
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+
+        </ul>
+      </div>
+
+      <div class="footer-col footer-col-2">
+        <ul class="social-media-list">
+          
+          <li><a href="mailto:vcampanale0294@gmail.com">email</a></li>
+          
+
+          
+          <li><a href="https://github.com/vincecampanale" target="_blank">github</a></li>
+          
+
+          
+          <li><a href="https://twitter.com/_vincecampanale" target="_blank">twitter</a></li>
+          
+        </ul>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+
+
+  </body>
+
+</html>

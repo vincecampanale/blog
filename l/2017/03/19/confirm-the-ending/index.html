@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Solved: Confirm the Ending</title>
+  <meta name="description" content="“Confirm the Ending” is another great problem from Free Code Camp’s algorithm scripting challenges. In the words of the Free Code Camp folks, “The goal is to...">
+
+  <link rel="stylesheet" href="/blog/assets/main.css">
+  <link rel="canonical" href="http://localhost:4000/blog/2017/03/19/confirm-the-ending/">
+  <link rel="alternate" type="application/rss+xml" title="Vince Campanale/Blog/" href="/blog/feed.xml">
+
+  
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:site" content="@_vincecampanale">
+  <meta name="twitter:creator" content="@_vincecampanale">
+  
+    <meta name="twitter:title" content="Solved: Confirm the Ending">
+  
+  
+    <meta name="twitter:url" content="http://localhost:4000/2017/03/19/confirm-the-ending/">
+  
+  
+    <meta name="twitter:description" content="Software blog, front-end development, HTML, CSS, Javascript.">
+  
+  
+
+  <link rel="icon" href="assets/favicon.ico"/>
+<script src="http://127.0.0.1:35729/livereload.js"></script></head>
+
+
+  <body>
+
+    <header class="site-header" role="banner">
+  <div class="wrapper site-nav">
+    <a class="site-title" href="/blog/">Vince Campanale/Blog/</a>
+
+    <div class="link-wrapper">
+      <a class="page-link" href="http://vincecampanale.com/about/">About</a>
+      <a class="page-link" href="/blog/">Blog</a>
+      <a class="page-link" href="http://vincecampanale.com">Portfolio</a>
+    </div>
+  </div>
+</header>
+
+
+    <main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title" itemprop="name headline">Solved: Confirm the Ending</h1>
+    <p class="post-meta"><time datetime="2017-03-19T00:00:00-04:00" itemprop="datePublished">Mar 19, 2017</time></p>
+  </header>
+
+  <div class="post-content" itemprop="articleBody">
+    <p>“Confirm the Ending” is another great problem from Free Code Camp’s algorithm scripting challenges. In the words of the Free Code Camp folks, “The goal is to check if a string (first argument, <code class="highlighter-rouge">str</code>) ends with the given target string (second argument, <code class="highlighter-rouge">target</code>)”.</p>
+
+<p>As is common for coding exercises, this challenge can be solved countless ways. Today, I’m going to walk through my solution from when I first started coding, explain the concept of extending a prototype in Javascript, describe the difference between <code class="highlighter-rouge">.substr()</code> and <code class="highlighter-rouge">.substring()</code>, two built-in array methods on the Javascript <code class="highlighter-rouge">String</code> prototype, and finally, provide a memory-efficient, one-line solution to the problem.</p>
+
+<h4 id="beginner-solution">Beginner Solution</h4>
+
+<p>When I had first ventured into learning to code, I took a stab at this problem and successfully solved it, however my solution is a little…“verbose”…</p>
+
+<p>I decided to use the <code class="highlighter-rouge">.substr()</code> method which takes two arguments. The first argument is the index in the string to <em>start</em> at and the second argument number of characters to extract from that index. So, say you want to get <code class="highlighter-rouge">"lo"</code> from <code class="highlighter-rouge">"hello!""</code>. In order to do this with <code class="highlighter-rouge">.substr()</code>, you would say <code class="highlighter-rouge">"hello!".substr(3, 2)</code>. This will go to the third character in <code class="highlighter-rouge">"hello"!</code>, which is the first <code class="highlighter-rouge">"l"</code>, then go for one more character before stopping at the fourth character in <code class="highlighter-rouge">"hello!"</code>, which is <code class="highlighter-rouge">"o"</code>. If you’re thinking my counting skills need some work, which they probably do, remember that in Javascript, indices are 0-based. So the character <code class="highlighter-rouge">"h"</code> has index 0 in the string.</p>
+
+<figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="kd">function</span> <span class="nx">confirmEnding</span><span class="p">(</span><span class="nx">str</span><span class="p">,</span> <span class="nx">target</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">substr</span> <span class="o">=</span> <span class="nx">str</span><span class="p">.</span><span class="nx">substr</span><span class="p">(</span><span class="nx">str</span><span class="p">.</span><span class="nx">length</span> <span class="o">-</span> <span class="nx">target</span><span class="p">.</span><span class="nx">length</span><span class="p">,</span> <span class="nx">target</span><span class="p">.</span><span class="nx">length</span><span class="p">);</span>
+
+  <span class="k">if</span> <span class="p">(</span><span class="nx">substr</span> <span class="o">===</span> <span class="nx">target</span><span class="p">)</span> <span class="k">return</span> <span class="kc">true</span><span class="p">;</span>
+  <span class="k">else</span> <span class="k">return</span> <span class="kc">false</span><span class="p">;</span>
+<span class="p">}</span></code></pre></figure>
+
+<p>Just to briefly touch on what I did here: create a variable containing a string chopped off the end of the <code class="highlighter-rouge">str</code> argument that has the same length as the target string. If the string contained in that variable matches the target, return true. Otherwise, return false. Pretty simple solution to a pretty simple problem but this can be way better.</p>
+
+<h4 id="better-solution">Better Solution</h4>
+
+<p>There’s a neat trick you can use when calling <code class="highlighter-rouge">.substr</code>. If you give it a negative number as it’s first and only argument, e.g. <code class="highlighter-rouge">"string".substr(-3)</code>, you will get a string containing the characters starting at the given number <em>from the end of the string</em>. So <code class="highlighter-rouge">"string".substr(-3)</code> returns <code class="highlighter-rouge">"ing"</code>. Let’s employ this trick in our solution:</p>
+
+<figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="kd">function</span> <span class="nx">confirmEnding</span><span class="p">(</span><span class="nx">str</span><span class="p">,</span> <span class="nx">target</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="nx">target</span> <span class="o">===</span> <span class="nx">str</span><span class="p">.</span><span class="nx">substr</span><span class="p">(</span><span class="o">-</span><span class="nx">target</span><span class="p">.</span><span class="nx">length</span><span class="p">);</span>
+<span class="p">}</span></code></pre></figure>
+
+<p>In English, this function says: return a string with the same length as <code class="highlighter-rouge">target</code> from the end of <code class="highlighter-rouge">str</code> and compare the new string to <code class="highlighter-rouge">target</code>. If they are <em>strictly</em> equal, return true. Otherwise, return false. This will work with two equal signs as well, but just to be super duper sure, it’s typically good practice to use the triple equals.</p>
+
+<h4 id="the-difference-between-susbtr-and-substring">The Difference Between <code class="highlighter-rouge">.susbtr()</code> and <code class="highlighter-rouge">.substring()</code></h4>
+
+<p>This feat can also be accomplished with <code class="highlighter-rouge">.substring()</code>, however I don’t think the solution is quite as elegant. It’s a good exercise though, and I’ll leave it to you to try it out. These methods may appear to be aliases for one another, however they actually do different things.</p>
+
+<p>From the MDN docs (aka the Javascript Bible):</p>
+
+<p><code class="highlighter-rouge">.substr()</code>: “returns the characters in a string beginning at the specified location through the specified number of characters”.<br />
+<code class="highlighter-rouge">.substring()</code>: “returns a subset of a string between one index and another, or through the end of the string”.</p>
+
+<p>Perhaps an easier way to think about it is this:</p>
+
+<p><code class="highlighter-rouge">.substr()</code>: starting at index <em>argument one</em>, get <em>argument two</em> number of characters.<br />
+<code class="highlighter-rouge">.substring()</code>: starting at index <em>argument one</em>, get the characters up until <em>argument two</em>.</p>
+
+<p>Yet another way to look at it:</p>
+
+<p><code class="highlighter-rouge">.substr(from this index, for this many characters)</code><br />
+<code class="highlighter-rouge">.substring(from this index, to this index)</code></p>
+
+<p>Hope this was helpful! Reach out anytime with feedback, questions, tips, and especially compliments – my twitter handle and email address are in the footer.</p>
+
+<p>Vinny out.</p>
+
+  </div>
+
+  
+</article>
+
+      </div>
+    </main>
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+
+        </ul>
+      </div>
+
+      <div class="footer-col footer-col-2">
+        <ul class="social-media-list">
+          
+          <li><a href="mailto:vcampanale0294@gmail.com">email</a></li>
+          
+
+          
+          <li><a href="https://github.com/vincecampanale" target="_blank">github</a></li>
+          
+
+          
+          <li><a href="https://twitter.com/_vincecampanale" target="_blank">twitter</a></li>
+          
+        </ul>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+
+
+  </body>
+
+</html>

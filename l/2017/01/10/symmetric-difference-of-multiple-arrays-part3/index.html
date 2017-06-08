@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Solved: Symmetric Difference of Multiple Arrays (Part 3)</title>
+  <meta name="description" content="This post is Part 3 of a four part series: Symmetric Difference of Multiple Arrays (Part 1) Symmetric Difference of Multiple Arrays (Part 2) Symmetric Differ...">
+
+  <link rel="stylesheet" href="/blog/assets/main.css">
+  <link rel="canonical" href="http://localhost:4000/blog/2017/01/10/symmetric-difference-of-multiple-arrays-part3/">
+  <link rel="alternate" type="application/rss+xml" title="Vince Campanale/Blog/" href="/blog/feed.xml">
+
+  
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:site" content="@_vincecampanale">
+  <meta name="twitter:creator" content="@_vincecampanale">
+  
+    <meta name="twitter:title" content="Solved: Symmetric Difference of Multiple Arrays (Part 3)">
+  
+  
+    <meta name="twitter:url" content="http://localhost:4000/2017/01/10/symmetric-difference-of-multiple-arrays-part3/">
+  
+  
+    <meta name="twitter:description" content="Software blog, front-end development, HTML, CSS, Javascript.">
+  
+  
+
+  <link rel="icon" href="assets/favicon.ico"/>
+<script src="http://127.0.0.1:35729/livereload.js"></script></head>
+
+
+  <body>
+
+    <header class="site-header" role="banner">
+  <div class="wrapper site-nav">
+    <a class="site-title" href="/blog/">Vince Campanale/Blog/</a>
+
+    <div class="link-wrapper">
+      <a class="page-link" href="http://vincecampanale.com/about/">About</a>
+      <a class="page-link" href="/blog/">Blog</a>
+      <a class="page-link" href="http://vincecampanale.com">Portfolio</a>
+    </div>
+  </div>
+</header>
+
+
+    <main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title" itemprop="name headline">Solved: Symmetric Difference of Multiple Arrays (Part 3)</h1>
+    <p class="post-meta"><time datetime="2017-01-10T00:00:00-05:00" itemprop="datePublished">Jan 10, 2017</time></p>
+  </header>
+
+  <div class="post-content" itemprop="articleBody">
+    <p>This post is Part 3 of a four part series:<br />
+<a href="http://www.vincecampanale.com/blog/2017/01/03/symmetric-difference-of-multiple-arrays-part1/">Symmetric Difference of Multiple Arrays (Part 1)</a><br />
+<a href="http://www.vincecampanale.com/blog/2017/01/05/symmetric-difference-of-multiple-arrays-part2/">Symmetric Difference of Multiple Arrays (Part 2)</a><br />
+Symmetric Difference of Multiple Arrays (Part 3) &lt;– You are here<br />
+<a href="http://www.vincecampanale.com/blog/2017/01/12/symmetric-difference-of-multiple-arrays-part4/">Symmetric Difference of Multiple Arrays (Part 4)</a></p>
+
+<p>In this post, I focus on the third step of the solution: write a function that removes the duplicates from an array.</p>
+
+<p>The function we want will take an array as an argument and filter out duplicates. Seems like a good time to use <code class="highlighter-rouge">.filter()</code>, eh?</p>
+
+<p>There are other solutions for this which involves for loops, but in my opinion, a solution that makes use of a higher order function like <code class="highlighter-rouge">.filter()</code> is generally more concise, readable, and elegant.</p>
+
+<p>Without further ado:</p>
+
+<figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="kd">function</span> <span class="nx">removeDuplicates</span><span class="p">(</span><span class="nx">arr</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="nx">arr</span><span class="p">.</span><span class="nx">filter</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">item</span><span class="p">,</span> <span class="nx">pos</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nx">arr</span><span class="p">.</span><span class="nx">indexOf</span><span class="p">(</span><span class="nx">item</span><span class="p">)</span> <span class="o">==</span> <span class="nx">pos</span><span class="p">;</span>
+  <span class="p">});</span>
+<span class="p">}</span></code></pre></figure>
+
+<p>Our function will step through every element in the array and filter out any element that has an index which does not match it’s <code class="highlighter-rouge">.indexOf(element)</code> value. Since the <code class="highlighter-rouge">.indexOf(element)</code> method always returns the index of the <em>first appearance</em> of that element in the array, any element that appears more than once in the array will be removed.</p>
+
+<p>That’s it for Part 3!</p>
+
+<p>In <a href="http://www.vincecampanale.com/blog/2017/01/12/symmetric-difference-of-multiple-arrays-part4/">Part 4</a>, I’ll walk you through applying <code class="highlighter-rouge">.reduce()</code> to the arguments array using our symmetric difference helper function, then sorting and filtering the results (removing duplicates).</p>
+
+  </div>
+
+  
+</article>
+
+      </div>
+    </main>
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+
+        </ul>
+      </div>
+
+      <div class="footer-col footer-col-2">
+        <ul class="social-media-list">
+          
+          <li><a href="mailto:vcampanale0294@gmail.com">email</a></li>
+          
+
+          
+          <li><a href="https://github.com/vincecampanale" target="_blank">github</a></li>
+          
+
+          
+          <li><a href="https://twitter.com/_vincecampanale" target="_blank">twitter</a></li>
+          
+        </ul>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+
+
+  </body>
+
+</html>
