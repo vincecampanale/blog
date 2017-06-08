@@ -7,8 +7,8 @@ date: 2017-06-07
 
 Good morning, afternoon, evening, or night. I have some things to share with you about the `new` keyword in Javascript. Important things. 
 
-I'll start with some context and background about Constructor functions and the `class` keyword. Then, I will explain exactly what the `new` keyword is *doing* under the hood. Next,
- I will show *how* it is doing what it does by implementing it in code. Finally, I will explain *why* it does these things and give a couple arguments for avoiding this approach altogether in most situations. The information presented here comes from [these](https://www.youtube.com/watch?v=Y3zzCY62NYc) [resources](https://medium.com/javascript-scene/javascript-factory-functions-vs-constructor-functions-vs-classes-2f22ceddf33e), processed by my brain. 
+I'll start with some context and background about Constructor functions and the `class` keyword. Then, I will explain exactly *what* the `new` keyword is doing under the hood. Next,
+ I will show *how* it is doing what it does by implementing it in code. Finally, I will explain *why* it does these things and give a couple arguments for avoiding this approach to Javascript object creation altogether in *most* situations. The information presented here comes from [these](https://www.youtube.com/watch?v=Y3zzCY62NYc) [resources](https://medium.com/javascript-scene/javascript-factory-functions-vs-constructor-functions-vs-classes-2f22ceddf33e) and several others, processed by my brain. 
 
 ### Constructor functions
 A Constructor function is a function that builds and returns a new instance of object. It looks like this: 
@@ -80,8 +80,52 @@ Three letters, four actions. When you say `var myCar = new Car()`, it...
 
 Now, what does this process look like in computer words?
 
+*Note:* In order to reimplement `new` we will have to pass in the constructor and it's arguments separately. 
+
+First, let's do it in ES5 because you only live once. 
+
 ```javascript
+// new(constructor: Function, constructorArgs: Array<any>) => Object
+function newTwo(constructor, constructorArgs) {
+
+    // Step 1: Create an empty object
+    var newObject = {};
+
+    // Step 2a: Get the prototype of the constructor function
+    var constructorPrototype = constructor.prototype;
+    // Step 2b: Set the empty object's prototype 
+    Object.setPrototypeOf(newObject, constructorPrototype);
+
+    // Retro technique to turn arguments into an actual array 
+    var argsArray = Array.prototype.slice.apply(arguments); 
+    // Slice off first argument b/c that's the constructor function itself. 
+    var realConstructorArgs = argsArray.slice(1);
+    
+    // Step 3: Invoke constructor with newObject as 'this'
+    constructor.apply(newObject, realConstructorArgs);
+
+    // Step 4: Return the new object :)
+    return newObject;
+}
 ```
+Now that we have a working implementation, we can clean it up and convert it to ES6.
+```javascript
+// new(constructor: Function, constructorArgs: Array<any>) => Object
+function newTwo(constructor, ...constructorArgs) {
+    let newObject = {};
+    Object.setPrototypeOf(newObject, constructor.prototype);    
+    constructor.apply(newObject, constructorArgs);
+    return newObject;
+}
+```
+
+And...
+```javascript
+const myCar = newTwo(Car, 4, 'blue');
+console.log(myCar) // { doors: 4, color: 'blue', drive: [Function] }
+myCar.drive() // Vroom!
+```
+It works!
 
 
 <!--
@@ -92,9 +136,7 @@ OUTLINE
 
 [x] Javascript's `new` keyword does some interesting stuff under the hood (4 things - bulletted list)
 
-[] reimplementing it in code 
-
-[] why it does these things
+[x] reimplementing it in code 
 
 [] where the new keyword came from 
 
