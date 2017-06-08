@@ -154,9 +154,9 @@ Buffer will collect output values until the *provided observable* "emits." So we
 |____| = `buffer` bucket
 
 
-        ==*      ==*         ==* ==*
------x--x--------x------x---x----x----->
-     |____|      |_|    |______| |_|
+        ==*      ==*       ==* ==*
+-----x--x--------x------x-x----x----->
+     |____|      |_|    |____| |_|
 
 
 ```
