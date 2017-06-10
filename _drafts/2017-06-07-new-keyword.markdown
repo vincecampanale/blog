@@ -10,7 +10,7 @@ Good morning, afternoon, evening, or night. I have some things to share with you
 I'll start with some context and background about Constructor functions and the `class` keyword. Then, I will explain exactly *what* the `new` keyword is doing under the hood. Next,
  I will show *how* it is doing what it does by implementing it in code. Finally, I will explain *why* it does these things and give a couple arguments for avoiding this approach to Javascript object creation altogether in *most* situations. The information presented here comes from [these](https://www.youtube.com/watch?v=Y3zzCY62NYc) [resources](https://medium.com/javascript-scene/javascript-factory-functions-vs-constructor-functions-vs-classes-2f22ceddf33e) and several others, processed by my brain. 
 
-### Constructor functions
+### Constructor functions 🛠
 A Constructor function is a function that builds and returns a new instance of object. It looks like this: 
 
 ```javascript
@@ -20,10 +20,10 @@ A Constructor function is a function that builds and returns a new instance of o
 *    drive: Function
 *   }
 *
-* CarConstructor(doors: number, color: string) => Car
+* Car(doors: number, color: string) => Car
 */
 
-function CarConstructor(doors=4, color='red') {
+function Car(doors=4, color='red') {
     this.doors = doors;
     this.color = color;
     this.drive = () => console.log('Vroom!');
@@ -32,7 +32,7 @@ function CarConstructor(doors=4, color='red') {
 
 The capital letter at the beginning of the Constructor name is simply a convention adopted by Javascript programmers to separate *Constructor* functions from regular functions. 
 
-There is an article's worth of material to cover on how Constructor functions work under the hood, but I'll leave that for another day. Today is about `new`. 
+The way Constructor functions work under the hood might make for an interesting article, but I'll leave that for another day. Today is about `new`. 
 
 The most important thing to take from this section is that the Constructor function, when invoked with the `new` keyword, will return an *object* with a `doors` property, a `color` property, and a `drive` method.
 
@@ -63,7 +63,7 @@ I'll give you a hint:
 console.log(typeof Car) // Function 
 ```
 
-### Under the Hood
+### Under the Hood 🚗
 
 Whether you are using a vanilla Constructor function or a <strike>unnecessary</strike> special keyword to instantiate your object constructing mechanism, you will be using the `new` keyword. (There is another secret and powerful way to generate objects in Javascript called a [factory](https://medium.com/javascript-scene/javascript-factory-functions-vs-constructor-functions-vs-classes-2f22ceddf33e) function which will have to be covered in a future post).
 
@@ -74,11 +74,11 @@ Three letters, four actions. When you say `var myCar = new Car()`, it...
 ```
 1) Creates a new (empty) object 
 2) Gets the prototype of the constructor function (Car) and sets it as the empty object's prototype
-3) Calls the constructor function with the new empty object as `this` (more on this (ha) step later)
+3) Calls the constructor function with the new empty object as `this` 
 4) Return the new object
 ```
 
-Now, what does this process look like in computer words?
+What does this process look like in computer words?
 
 *Note:* In order to reimplement `new` we will have to pass in the constructor and it's arguments separately. 
 
@@ -86,7 +86,7 @@ First, let's do it in ES5 because you only live once.
 
 ```javascript
 // new(constructor: Function, constructorArgs: Array<any>) => Object
-function newTwo(constructor, constructorArgs) {
+function new2(constructor, constructorArgs) {
 
     // Step 1: Create an empty object
     var newObject = {};
@@ -108,11 +108,12 @@ function newTwo(constructor, constructorArgs) {
     return newObject;
 }
 ```
-Now that we have a working implementation, we can clean it up and convert it to ES6.
+Now that we have a working implementation, we can clean it up and make use of some new tools from ES6. 
+
 ```javascript
 // new(constructor: Function, constructorArgs: Array<any>) => Object
-function newTwo(constructor, ...constructorArgs) {
-    let newObject = {};
+function new2(constructor, ...constructorArgs) {
+    const newObject = {};
     Object.setPrototypeOf(newObject, constructor.prototype);    
     constructor.apply(newObject, constructorArgs);
     return newObject;
@@ -121,28 +122,40 @@ function newTwo(constructor, ...constructorArgs) {
 
 And...
 ```javascript
-const myCar = newTwo(Car, 4, 'blue');
+const myCar = new2(Car, 4, 'blue');
 console.log(myCar) // { doors: 4, color: 'blue', drive: [Function] }
 myCar.drive() // Vroom!
 ```
-It works!
+
+*But wait*, there is an edge case. If the constructor function itself returns a new object, like this...
+
+```javascript
+function Car(doors, color) {
+    this.doors = doors;
+    this.color = color;
+    this.drive = () => console.log('Vroom!');
+    return {
+      doors,
+      color
+    }
+}
+```
+ we should just return that object directly:
+
+```javascript
+// new(constructor: Function, constructorArgs: Array<any>) => Object
+function new2(constructor, ...constructorArgs) {
+    const newObject = {};
+    Object.setPrototypeOf(newObject, constructor.prototype);
+    return constructor.apply(newObject, constructorArgs) || newObject;
+}
+```
+
+And we're done.
 
 
-<!--
-OUTLINE 
-[x] Brief intro to Constructor functions
+Hope this helped! 
 
-[x] Brief intro to class keyword
+Tweet me with feedback [@_vincecampanale](https://twitter.com/_vincecampanale) if it did or didn't.
 
-[x] Javascript's `new` keyword does some interesting stuff under the hood (4 things - bulletted list)
-
-[x] reimplementing it in code 
-
-[] where the new keyword came from 
-
-[] why Constructor functions / classes might not be the best idea (instanceof, extends, class inheritance, tight coupling and rigid hierarchies) and how `new` can be a red flag
-
-[] however, all of that being said, it is possible to use classes and sleep at night. 
-
-[] so take this information with a grain of salt and always remember: use the right tool for the job and be consistent. 
--->
+Til next time 👋.
