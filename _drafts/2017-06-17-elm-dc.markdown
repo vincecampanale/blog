@@ -1,0 +1,22 @@
+---
+layout: post
+title:  "Elm DC"
+description: "Information about the Elm DC meetup group -- who we are, what we do at meetups, where we see the future of Web Development going."
+date: 2017-06-17
+---
+<!--
+OUTLINE
+
+[] where we have meetups
+[] types of people that usually attend
+    [] years of experience
+    [] roles at work (some do front end, back end, full stack, some don't even work on web applications at work and just do it as more of a hobby etc)
+[] what we do at meetups
+    [] lightning talks
+    [] sit and chat
+    [] work on side projects
+    [] catch up on work 
+[] the future of web dev
+    [] elm architecture being adopted by other major frameworks (redux heavily inspired by elm)
+    [] benefits of elm and the elm architecture: strong typing === no runtime errors, 
+-->
