@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "What is Javascript's `new` keyword doing under the hood?"
+title:  What is Javascript's `new` keyword doing under the hood?
 description: "A description of how Javascript's Constructor function, class keyword, and new keyword work together, followed by a reimplementation of the new keyword in Javascript."
 date: 2017-06-07
 ---
