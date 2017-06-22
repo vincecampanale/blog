@@ -11,7 +11,7 @@ Aloha, web surfer. So perhaps you're a `let` enthusiast who came here to see wha
 
 ...there was a keyword for variable instantiation named `var`. 
 
-If you remember your first day of learning Javascript, it probably involved `var`. This little keyword, short for `variety` (joke), took us a long way. In fact, every web site and application that used Javascript between it's inception in 1995 and the release of ECMAScript 2015 (ES6) used `var` for every variable. 
+If you remember your first day of learning Javascript, it probably involved `var`. This little keyword, short for `variety` (joke), took us a long way. In fact, every web site and application that used Javascript between it's inception in 1995 and the release of ECMAScript 2015 (ES6) used `var` and only `var` to create variables. 
 
 The `var` keyword is no longer relevant, but in order to truly understand our present, we must understand our past.
 
