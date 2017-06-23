@@ -12,3 +12,5 @@ At a given meetup, members of the group will give lightning talks, either planne
 Amidst the ongoing lightning talks and conversations, pizza arrives. The arrival of the pizza usually indicates a shift in tone from "academic" to "casual." People begin working on side projects, catch up on work, help each other out with questions (whether Elm related or not) and just sit and chat and get to know each other. 
 
 With genuine strong-typing (no run-time errors) and functional one-way data flow (deterministic state management), there is no doubt that Elm has revolutionized the way modern web applications are built and will soon see wider adoption. As the Elm community begins to grow, our comfortable meetup will begin to expand and become more formal. For the time being, however, I believe we have managed to strike a perfect balance between socializing and learning and I hope to bring this culture of friendly knowledge-sharing into the future. 
+
+RSVP for the next Elm DC meetup [here](https://www.meetup.com/Elm-DC/)!
