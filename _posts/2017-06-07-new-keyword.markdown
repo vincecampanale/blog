@@ -8,7 +8,7 @@ date: 2017-06-07
 Good morning, afternoon, evening, or night. I have some things to share with you about the `new` keyword in Javascript. Important things. 
 
 I'll start with some context and background about Constructor functions and the `class` keyword. Then, I will explain exactly *what* the `new` keyword is doing under the hood. Next,
- I will show *how* it is doing what it does by implementing it in code. Finally, I will explain *why* it does these things and give a couple arguments for avoiding this approach to Javascript object creation altogether in *most* situations. The information presented here comes from [these](https://www.youtube.com/watch?v=Y3zzCY62NYc) [resources](https://medium.com/javascript-scene/javascript-factory-functions-vs-constructor-functions-vs-classes-2f22ceddf33e) and several others, processed by my brain. 
+ I will show *how* it does what it does by implementing it in code. Finally, I will explain *why* it does these things and give a couple arguments for avoiding this approach to Javascript object creation altogether in *most* situations. The information presented here comes from [these](https://www.youtube.com/watch?v=Y3zzCY62NYc) [resources](https://medium.com/javascript-scene/javascript-factory-functions-vs-constructor-functions-vs-classes-2f22ceddf33e) and several others, processed by my brain. 
 
 ### Constructor functions 🛠
 A Constructor function is a function that builds and returns a new instance of object. It looks like this: 
@@ -65,7 +65,7 @@ console.log(typeof Car) // Function
 
 ### Under the Hood 🚗
 
-Whether you are using a vanilla Constructor function or a <strike>unnecessary</strike> special keyword to instantiate your object constructing mechanism, you will be using the `new` keyword. (There is another secret and powerful way to generate objects in Javascript called a [factory](https://medium.com/javascript-scene/javascript-factory-functions-vs-constructor-functions-vs-classes-2f22ceddf33e) function which will have to be covered in a future post).
+Whether you are using a vanilla Constructor function or an <strike>unnecessary</strike> special keyword to instantiate your object constructing mechanism, you will be using `new` to make new instances of the defined object. (There is another not-so-secret and powerful way to generate objects in Javascript called a [factory](https://medium.com/javascript-scene/javascript-factory-functions-vs-constructor-functions-vs-classes-2f22ceddf33e) function which will have to be covered in a future post).
 
 So what is the `new` keyword doing under the hood (in human words)?
 
@@ -75,7 +75,7 @@ Three letters, four actions. When you say `var myCar = new Car()`, it...
 1) Creates a new (empty) object 
 2) Gets the prototype of the constructor function (Car) and sets it as the empty object's prototype
 3) Calls the constructor function with the new empty object as `this` 
-4) Return the new object
+4) Returns the new object
 ```
 
 What does this process look like in computer words?
@@ -147,7 +147,8 @@ function Car(doors, color) {
 function new2(constructor, ...constructorArgs) {
     const newObject = {};
     Object.setPrototypeOf(newObject, constructor.prototype);
-    return constructor.apply(newObject, constructorArgs) || newObject;
+    constructor.apply(newObject, constructorArgs;
+    return this || newObject;
 }
 ```
 
