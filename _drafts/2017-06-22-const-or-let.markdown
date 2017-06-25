@@ -31,14 +31,18 @@ Here's a code snippet that illustrates the behavior of a function scoped variabl
 ```javascript
 function logA() {
   var a = 2;
-  console.log(a); // inside of the logA function, `a` exists and has the value 2
+  console.log(a); // inside of `logA()`, `a` exists with value 2
 }
 
 try { console.log(a); } // doesn't work...error goes to catch block...
-catch (error) { console.log(error); } // ReferenceError! Outside of logA, `a` is not defined.
+catch (error) { console.log(error); } // ReferenceError! This means that outside of logA(), `a` is not defined.
 ```
 
+I think it's worth noting that when I say "inside" of `logA()`, I mean "between `logA()`'s curly brackets".
 
+#### "`var` gets hoisted"
+
+Variable hoisting is...
 
 ### How Times Have Changed
 
