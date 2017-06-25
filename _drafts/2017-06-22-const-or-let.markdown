@@ -4,12 +4,12 @@ title:  "Use const until you have to use let"
 description: "The differences between Javascript (ES6) variable instantiation keywords -- const and let -- and when to use them."
 date: 2017-06-22
 ---
-Aloha, web surfer. So perhaps you're a `let` enthusiast who came here to see what was up. Or maybe you're a beginner, just moving out of `var` world and into the wild west that is ES6 variable declaration. Whatever your experience level may be, I hope this article provides valuable insights and leaves you with a solid rule of thumb for instantiating variables in Javascript. <!--Also, I think it's worth mentioning that throughout this article I will be using "Javascript" in lieu of the more specific "ES6" because in June 2017, I'd like to believe that the language features introduced in ES6 can now be thought of as just part of Javascript rather than some "other" language.--> My other hope is that upon finishing this article, you don't even *think* about `var` anymore. 
+Aloha, web surfer. So perhaps you're a `let` fan who came here to see what was up. Or maybe you're a beginner, just moving out of `var` world and into the wild west that is ES6 variable declaration. Whatever your experience level may be, I hope this article provides valuable insights and leaves you with a solid rule of thumb for instantiating variables in Javascript. <!--Also, I think it's worth mentioning that throughout this article I will be using "Javascript" in lieu of the more specific "ES6" because in June 2017, I'd like to believe that the language features introduced in ES6 can now be thought of as just part of Javascript rather than some "other" language.--> My other hope is that, upon finishing this article, you don't even *think* about `var` anymore. 
 
 ### Once Upon A Time...
 ...in a specification authored somewhere in California...
 
-...there was a keyword for variable instantiation named `var`. 
+...there was a keyword for variable instantiation called `var`. 
 
 If you remember your first day of learning Javascript, it probably involved `var`. This little keyword, short for `variety` (joke), took us a long way. In fact, every web site and application that used Javascript between it's inception in 1995 and the release of ECMAScript 2015 (ES6) used `var` and only `var` to create variables. 
 
@@ -20,6 +20,25 @@ Some important things to know about the `var` keyword:
 1) It is function scoped
 2) It gets hoisted
 ```
+
+#### "`var` is function scoped"
+
+This means that `var` creates a variable that only exists inside of the function where it was declared. 
+
+*(Unless it was not declared inside a function. In that case, it exists ~everywhere~ 😲. More on this in the next section.)*
+
+Here's a code snippet that illustrates the behavior of a function scoped variable: 
+```javascript
+function logA() {
+  var a = 2;
+  console.log(a); // inside of the logA function, `a` exists and has the value 2
+}
+
+try { console.log(a); } // doesn't work...error goes to catch block...
+catch (error) { console.log(error); } // ReferenceError! Outside of logA, `a` is not defined.
+```
+
+
 
 ### How Times Have Changed
 
