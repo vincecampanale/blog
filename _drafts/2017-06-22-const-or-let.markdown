@@ -4,6 +4,7 @@ title:  "Use const until you have to use let"
 description: "The differences between Javascript (ES6) variable instantiation keywords -- const and let -- and when to use them."
 date: 2017-06-22
 ---
+
 Aloha, web surfer. So perhaps you're a `let` fan who came here to see what was up. Or maybe you're a beginner, just moving out of `var` town and into the wild west that is ES6 variable declaration. Whatever your experience level may be, I hope this article provides valuable insights and leaves you with a solid rule of thumb for instantiating variables in Javascript. <!--Also, I think it's worth mentioning that throughout this article I will be using "Javascript" in lieu of the more specific "ES6" because in June 2017, I'd like to believe that the language features introduced in ES6 can now be thought of as just Javascript rather than some other language.--> My other hope is that, upon finishing this article, you can confidently part ways with `var` -- it is time.
 
 ### Once Upon A Time...
@@ -18,8 +19,8 @@ The `var` keyword is no longer relevant, but in order to truly understand our pr
 Some important things to know about variables created with the `var` keyword: 
 ```
 1) They are function scoped
-2) You can instantiate them without a value
 2) Their declarations get hoisted
+3) You can instantiate them without a value
 ```
 
 #### 1 "They are function scoped"
@@ -41,11 +42,7 @@ catch (error) { console.log(error); } // ReferenceError! This means that outside
 
 I think it's worth clarifying that when I say "inside of" `logA()`, I mean "between `logA()`'s curly brackets".
 
-#### 2 "You can instantiate them without a value"
-
-
-
-#### 3 "They get hoisted" 🏋
+#### 2 "They get hoisted" 🏋
 
 Variable hoisting basically boils down to the fact that a variable declared with `var` can be instantiated *after* it gets used. 
 
@@ -84,13 +81,36 @@ function logC() {
 
 I guess this is maybe convenient sometimes when writing tiny snippets or something...
 
-But for the most part, I think this feature of Javascript hurts more than it helps. `"use strict";` prevents this behavior and should absolutely be included at the top of any ES5 script.
+But for the most part, I think this feature of Javascript is bananas. `"use strict";` prevents this behavior and should absolutely be included at the top of any ES5 script.
 
-### How Times Have Changed
+#### 3 "You can instantiate them without a value"
+
+You may have seen someone do something along these lines before:
+```javascript
+// declare all my variables at the top of the script
+var a, b, c;
+
+// use them down here
+a = 1;
+b = 2;
+c = a + b;
+```
+
+Yuck. What's the point of creating a variable if you're not going to use it?
+
+### Times Have Changed
+
+The three facets of `var` that I just covered come together to create an extremely flexible variable declaration mechanism. While flexibility itself is not a bad thing and having only one variable instantiation keyword means a little more flexibility is necessary, `var` is simply doing too much.  Function scope ain't so bad, I guess, but declaring variables without values is a little so-so and should be used *only when completely unavoidable*. The same goes for reassigning variables. Lastly, declaring a variable *after* you use it is just silly.
+
+So, in order to address these drawbacks of `var` and save us developers from the pitfalls these "helpful" features cause, the ES6 specification introduced two new variable keywords: `const` and `let`.
+
+As I said in the first paragraph, my primary goal of this post is to help you break up with `var`. I know how comfortable familiarity, but times have changed and `var` simply does not cut it any more. There are better options now.
 
 ### Let me explain...
 
-### Const you see the benefits?
+The `let` keyword
+
+### Const you see the difference?
 
 ### When & why?
 
@@ -99,7 +119,7 @@ But for the most part, I think this feature of Javascript hurts more than it hel
 
 <!--
 OUTLINE:
-[] what we had before: var
+[x] what we had before: var
 [] what we have now: const and let
 [] details of let
 [] details of const
