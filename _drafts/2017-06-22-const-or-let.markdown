@@ -68,9 +68,9 @@ function logB() {
 ```
 ...at *compile* time (yes, [Javascript gets compiled](https://github.com/getify/You-Dont-Know-JS/blob/31e1d4ff600d88cc2ce243903ab8a3a9d15cce15/scope%20%26%20closures/ch1.md)).
 
-There's a dark side of hoisting, though. Javascript's compiler can be a bit *too* helpful at times.
+There's a dark side to the way `var` gets hoisted, though. Javascript's compiler can be a bit *too* helpful in some situations.
 
-If you use a variable within a function but don't instantiate that variable in that function, the compiler will look for a `var` in the parent function scope. It will keep looking all the way up the chain until it gets to the root scope of the entire application. If it still doesn't see a `var` declaration up there, it will just go ahead and make one for you, like so
+If you use a variable within a function but don't instantiate the variable in that function, the compiler will look for a `var` in the parent function scope. If it doesn't find it there, t will keep looking all the way up the chain until it gets to the global scope. If it still doesn't see a `var` declaration up there, it will just go ahead and make one for you, like so
 ```javascript
 function logC() {
   c = 2;
@@ -79,9 +79,11 @@ function logC() {
 // c is not instantiated in this program, yet it just works...
 ```
 
-I guess this is maybe convenient sometimes when writing tiny snippets or something...
+I guess this could be convenient sometimes when writing tiny snippets or something...
 
 But for the most part, I think this feature of Javascript is bananas. `"use strict";` prevents this behavior and should absolutely be included at the top of any ES5 script.
+
+<!-- TODO: Discuss this stack overflow post https://stackoverflow.com/questions/31219420/are-variables-declared-with-let-or-const-not-hoisted-in-es6 somewhere in this section-->
 
 #### 3 "You can instantiate them without a value"
 
@@ -100,15 +102,22 @@ Yuck. What's the point of creating a variable if you're not going to use it?
 
 ### Times Have Changed
 
-The three facets of `var` that I just covered come together to create an extremely flexible variable declaration mechanism. While flexibility itself is not a bad thing and having only one variable instantiation keyword means a little more flexibility is necessary, `var` is simply doing too much.  Function scope ain't so bad, I guess, but declaring variables without values is a little so-so and should be used *only when completely unavoidable*. The same goes for reassigning variables. Lastly, declaring a variable *after* you use it is just silly.
+The three facets of `var` that I just covered come together to create an extremely flexible variable declaration mechanism. While flexibility itself is not a bad thing and having only one variable instantiation keyword means a little more flexibility is necessary, `var` is simply doing too much.  Function scope isn't a problem, but reassigning variables is so-so and should be used *only when completely unavoidable*. The same goes for declaring variables without values. Lastly, being allowed to use a variable *before* or even *after* you declare it is just silly.
 
 So, in order to address these drawbacks of `var` and save us developers from the pitfalls these "helpful" features cause, the ES6 specification introduced two new variable keywords: `const` and `let`.
 
-As I said in the first paragraph, my primary goal of this post is to help you break up with `var`. I know how comfortable familiarity, but times have changed and `var` simply does not cut it any more. There are better options now.
+As I said in the first paragraph, my primary goal of this post is to help you ditch `var`. Times have changed and `var` doesn't make the cut.
 
 ### Let me explain...
 
-The `let` keyword
+The `let` keyword mostly addresses the
+<!-- Relevant info:
+https://stackoverflow.com/questions/31219420/are-variables-declared-with-let-or-const-not-hoisted-in-es6
+Blocks As Scopes: https://github.com/getify/You-Dont-Know-JS/blob/master/scope%20%26%20closures/ch3.md#blocks-as-scopes
+Let: https://github.com/getify/You-Dont-Know-JS/blob/master/scope%20%26%20closures/ch3.md#let
+Garbage Collection: https://github.com/getify/You-Dont-Know-JS/blob/master/scope%20%26%20closures/ch3.md#garbage-collection
+Let loops: https://github.com/getify/You-Dont-Know-JS/blob/master/scope%20%26%20closures/ch3.md#let-loops
+-->
 
 ### Const you see the difference?
 
