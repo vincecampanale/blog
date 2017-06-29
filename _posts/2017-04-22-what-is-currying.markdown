@@ -7,11 +7,11 @@ date: 2017-04-22
 
 For the record, this article is more for personal reference than anything. I am still in the midst of learning the basics of functional programming (FP). This is my attempt to pin down my understanding of currying, a fundamental concept in FP. 
 
-Outline in parts:  
+Outline:  
 
 1 What does a *not* curried function look like?  
 2 What does a curried function look like?  
-3 Demonstrate a major benefit of currying: reusability  
+3 Describe one (of many) major benefit(s) of currying: reusability  
 
 Here goes nothin'
 
@@ -50,9 +50,9 @@ And then *re*use it whenever:
 const eight = times4(2); // 8
 ```
 
-We can do this because in Javascript, functions are first class 🥇.
+We can do this because in Javascript, we get first class functions 🥇.
 
-#### 3 One of many major benefits of currying: **Reusability**
+#### 3 A benefit of currying: **Reusability**
 
 We had a multiply function (`mootiplyTwo(a, b)`) already. *Currying* that function allowed us to skip re-inventing the wheel in order to multiply a number by 2. 
 
