@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "Elm DC"
-description: "Information about the Elm DC meetup group -- who we are, what we do at meetups, where we see the future of Web Development going."
+description: "Information about the Elm DC meetup group -- who we are, what we do at meetups, where we think web development is headed."
 date: 2017-06-17
 ---
 
