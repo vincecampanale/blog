@@ -5,60 +5,58 @@ description: "A concise, need-to-know explanation of 'currying' in Javascript."
 date: 2017-04-22
 ---
 
-For the record, this article is more for personal reference than anything. I am still in the midst of learning the basics of functional programming. This is my attempt to pin down my understanding of **currying**. I'm going to break down my explanation into five parts:  
+For the record, this article is more for personal reference than anything. I am still in the midst of learning the basics of functional programming (FP). This is my attempt to pin down my understanding of currying, a fundamental concept in FP. 
 
-    1) I'll start by creating a function that is NOT curried.  
-    2) Then, I'll curry that function and analyze the difference.  
-    3) Show how you can save pieces of a curried function in variables and reuse them later.  
+Outline in parts:  
 
-Okay, here goes.
+1 What does a *not* curried function look like?  
+2 What does a curried function look like?  
+3 Demonstrate a major benefit of currying: reusability  
 
-### A "Function" That Is Not "Curried" 👍
+Here goes nothin'
+
+#### 1 A "Function" That Is Not "Curried" 👍
 
 {% highlight javascript %}
-  const goForthAndMultiply = (a, b) => a * b;
-  goForthAndMultiply(4, 2); // 8
+  const mooltiplyTwo = (a, b) => a * b;
+  mooltiplyTwo(4, 2); // 8
 {% endhighlight %}
 
 Wonderful.
 
-### Curry 🏀
+#### 2 Curried 🏀
 
 {% highlight javascript %}
-  const goForthAndCurry = a => b => a * b;
-  goForthAndCurry(4)(2); // 8
+  const swoosh = a => b => a * b;
+  swoosh(4)(2); // 8
 {% endhighlight %}
 
 Excellent.
 
-A simple way to look at this is we're now giving our arguments one at a time in parentheses rather than commas.
-Parentheses mean we are invoking a function, so `goForthAndCurry(4)` must actually be a function. And looking closely
-at the code, it is! Replacing `a` with `4`, you can see that `goForthAndCurry(4)` is the equivalent of `const goForthAndCurry = b => 4 * b;`.  
+Immediately we can deduce a couple of differences, just from the function invocations:  
+* the curried function has a very clever name  
+* the non-curried function gets all its parameters between the same set of parentheses, separated by commas  
+* the curried function gets its parameters one at a time, each one invoked by itself (wrapped in its own set of parentheses)  
+  * almost like a curried function is a chain of little functions 🤔   
 
-The best part is you can actually save `goForthAndCurry(4)` in a variable because in Javascript, functions are first class.
-Allow me to expand on this point in the next section.
+In Javascript, parentheses mean we are invoking a function, so `mooltiplyTwo(4)` must be a function itself if we can invoke it with another set of parentheses (this is exactly what is happening). Replacing `a` with `4`, we see that `const swoosh = a => b => a * b;` is the equivalent of `const swoosh = b => 4 * b;`.  
 
-### But Why? ¯\\_(ツ)_/¯
+The best part is we can actually save `swoosh(4)` in a variable, like so: 
+```javascript
+const times4 = swoosh(4); // Function (a => 4a)
+```
+And then *re*use it whenever:
+```javascript
+const eight = times4(2); // 8
+```
 
-Because:  
+We can do this because in Javascript, functions are first class 🥇.
 
-    1) Reusable.  
-    2) Functions.  
+#### 3 One of many major benefits of currying: **Reusability**
 
-Check this out.
+We had a multiply function (`mootiplyTwo(a, b)`) already. *Currying* that function allowed us to skip re-inventing the wheel in order to multiply a number by 2. 
 
-{% highlight javascript %}
-  const multiply2 = goForthAndCurry(2);
-{% endhighlight %}
-
-That line of code actually returns a *function* which will multiply a given number by 2. Used like so:  
-
-{% highlight javascript %}
-  multiply2(21); // 42
-{% endhighlight %}
-
-We had a multiply function (called `goForthAndMultiply`) already. Since we were smart and *curried* that function, we didn't have to re-invent the wheel just to multiply a number by 2. That sounds like a *reusable* *function* to me.
+Imagine this on a much larger scale, applied to many more functions, which can then be composed into bigger, more powerful functions. Functions that manage the entire state of the application for example.  <sub>(\*cough\* Redux)</sub>
 
 
-
-There is so much more to learn. I'll be posting more about other cool things like function "arity" and partial application in the future. Stay tuned. ✌️
+There is so much more to learn. [Follow me on twitter](https://twitter.com/_vincecampanale) for updates on my learnings about things like function "arity" and partial application coming up. Stay tuned. ✌️
