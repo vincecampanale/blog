@@ -98,19 +98,22 @@ b = 2;
 c = a + b;
 ```
 
-Yuck. What's the point of creating a variable if you're not going to use it?
+Put a pin in this because it becomes important later. 
 
 ### Times Have Changed
 
-The three facets of `var` that I just covered come together to create an extremely flexible variable declaration mechanism. While flexibility itself is not a bad thing and having only one variable instantiation keyword means a little more flexibility is necessary, `var` is simply doing too much.  Function scope isn't a problem, but reassigning variables is so-so and should be used *only when completely unavoidable*. The same goes for declaring variables without values. Lastly, being allowed to use a variable *before* or even *after* you declare it is just silly.
+The three facets of `var` that I just covered come together to create an extremely flexible variable declaration mechanism. While flexibility itself is not a bad thing and having only one variable instantiation keyword means a little more flexibility is necessary, `var` is simply doing too much.  Function scope isn't a problem, but reassigning variables is so-so and should be used *only when completely unavoidable* (and when it's unavoidable, it means you probably have bigger fish to fry). The same goes for declaring variables without values. Lastly, being allowed to use a variable whether you declared it or not is just silly.
 
-So, in order to address these drawbacks of `var` and save us developers from the pitfalls these "helpful" features cause, the ES6 specification introduced two new variable keywords: `const` and `let`.
+So, in order to address these drawbacks of `var` and save us developers from the pitfalls these "helpful" features can cause, the ES6 specification introduced two new variable keywords: `const` and `let`.
 
 As I said in the first paragraph, my primary goal of this post is to help you ditch `var`. Times have changed and `var` doesn't make the cut.
 
 ### Let me explain...
 
-The `let` keyword mostly addresses the
+In 2015, Javascript's variable declaration family grew to include `let`, which deviates significantly from `var` in that it is *block* scoped. 
+
+#### What is block scope?
+
 <!-- Relevant info:
 https://stackoverflow.com/questions/31219420/are-variables-declared-with-let-or-const-not-hoisted-in-es6
 Blocks As Scopes: https://github.com/getify/You-Dont-Know-JS/blob/master/scope%20%26%20closures/ch3.md#blocks-as-scopes
@@ -129,7 +132,6 @@ Let loops: https://github.com/getify/You-Dont-Know-JS/blob/master/scope%20%26%20
 <!--
 OUTLINE:
 [x] what we had before: var
-[] what we have now: const and let
 [] details of let
 [] details of const
 [] when to use const
