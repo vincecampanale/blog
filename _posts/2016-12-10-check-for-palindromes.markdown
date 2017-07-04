@@ -113,12 +113,12 @@ This solution takes advantage of a ternary function which is basically syntactic
 
 #### Step 7: Refactor. Again.
 
-The informed reader will recognize some code smells in the snippet above. A ternary expression that returns true or false? Bah. Creating three variables to do just one expression? Bah. ES5 in 2017?? Baah!!
+The informed reader will recognize some code smells in the snippet above. A ternary expression that returns true or false? Bah. Creating three variables for a comparison expression? Bah. ES5 in 2017!? Baah!!
 
 Check this out \*cracks knuckles\*...
 
 ```javascript
-const palindrome = str => str.replace(/[^a-zA-Z0-9]/g, '').toLowerCase() === forwards.split('').reverse().join('');
+const palindrome = str => str.replace(/[^a-zA-Z0-9]/g, '').toLowerCase() === str.split('').reverse().join('');
 ```
 
 Boom.
