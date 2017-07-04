@@ -16,11 +16,11 @@ function palindrome(str){
 ```
 {: .language-javascript}
 
-Great. Now let's put some meat on this sandwich.
+Great. Now let's put some meat (or veggies) on this sandwich.
 
 #### Step 2: Stare the problem down. Let it know who's boss. Then psuedocode.
 This challenge is harder than it seems at face value. Let's make sure it doesn't know that, though.
-A handy hint that Free Code Camp gives us is "Note: You'll need to remove all non-alphanumeric characters (punctuation, spaces, and symbols) and turn everything into lower case in order to check for palindromes.
+A handy hint that Free Code Camp gives us is "Note: You'll need to remove all non-alphanumeric characters (punctuation, spaces, and symbols) and turn everything into lower case in order to check for palindromes."
 Let's break this down into some pseudocode:
 ```
 1. Remove all non-alphanumeric characters from the input string
@@ -34,7 +34,7 @@ Let's break this down into some pseudocode:
 #### Step 3: Clean up the input.
 Time to implement the first two steps in the above pseudocode.
 First, step 1: remove the non-alphanumeric characters from the input string.
-JavaScript has a neat method called [String.prototype.replace()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/replace). This method will search the string it is called upon for the given substring or regular expression in the first argument, and replace it with whatever you put in the second argument.
+Good ol' JavaScript has a good method we can use for this called [String.prototype.replace()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/replace). This method will search the string it is called upon for the given substring or regular expression in the first argument, and replace it with whatever you put in the second argument.
 Instead of weeding out all non-alphanumeric characters by referencing them directly in a long, unwieldy regular expression, we are just going to say replace everything that is NOT an alphanumeric character by adding the `^` in front. It would be convenient if we could just say `^\w` or `\W`, but unfortunately we must also get rid of underscores. I've gotta say, Regular Expressions give me headaches.
 
 ```
@@ -75,7 +75,7 @@ if(forwards === backwards){
 
 That's it. Easy peasy.
 You might be thinking "Wait, Vince, dude, what about the 'else return false' part?"
-Astute observation, dear Reader. Bear with me, it will all make sense soon.
+Astute observation, dear Reader. Bear with me.
 
 #### Step 5: Put it all together.
 Our functional function:
@@ -110,6 +110,20 @@ function palindrome(str) {
 
 This solution takes advantage of a ternary function which is basically syntactic sugar for the if statement. The line `result = forwards === backwards ? true : false` does this: evaluates `forwards === backwards`; if it evaluates to true, then true gets stored in the variable `result`; if it evaluates to false, then false gets stored in the variable `result`.
 
-Let me know if you can think of a better way to do this! Email link in the footer.
+
+#### Step 7: Refactor. Again.
+
+The informed reader will recognize some code smells in the snippet above. A ternary expression that returns true or false? Bah. Creating three variables to do just one expression? Bah. ES5 in 2017?? Baah!!
+
+Check this out \*cracks knuckles\*...
+
+```javascript
+const palindrome = str => str.replace(/[^a-zA-Z0-9]/g, '').toLowerCase() === forwards.split('').reverse().join('');
+```
+
+Boom.
+
+
+Let me know if this helped (or not)! [Follow me on Twitter](https://twitter.com/_vincecampanale) or [Github](https://github.com/vincecampanale) for more beginner-friendly Javascript posts like this one.
 
 Fin.
