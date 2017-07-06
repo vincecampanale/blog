@@ -70,7 +70,7 @@ function logB() {
 
 There's a dark side to the way `var` gets hoisted, though. Javascript's compiler can be a bit *too* helpful in some situations.
 
-If you use a variable within a function but don't instantiate the variable in that function, the compiler will look for a `var` in the parent function scope. If it doesn't find it there, t will keep looking all the way up the chain until it gets to the global scope. If it still doesn't see a `var` declaration up there, it will just go ahead and make one for you, like so
+If you use a variable within a function but don't instantiate the variable in that function, the compiler will look for a `var` in the parent function scope. If it doesn't find it there, it will keep looking all the way up the scope chain until it gets to the *global* scope. If it *still* doesn't see a `var` declaration up there, it will just go ahead and *make one for you*, as demonstrated in this snippet:
 ```javascript
 function logC() {
   c = 2;
@@ -78,12 +78,11 @@ function logC() {
 }
 // c is not instantiated in this program, yet it just works...
 ```
+Yikes.  
 
 I guess this could be convenient sometimes when messing around in a REPL or something...
 
-But for the most part, I think this feature of Javascript is bananas. `"use strict";` prevents this behavior and should absolutely be included at the top of any ES5 script.
-
-<!-- TODO: Discuss this stack overflow post https://stackoverflow.com/questions/31219420/are-variables-declared-with-let-or-const-not-hoisted-in-es6 somewhere in this section-->
+But for the most part, I think this is bananas. `"use strict";` prevents this and should absolutely be included at the top of any ES5 script.
 
 #### 3 "You can instantiate them without a value"
 
@@ -110,29 +109,63 @@ As I said in the first paragraph, my primary goal of this post is to help you di
 
 ### Let me explain...
 
-In 2015, Javascript's variable declaration family grew to include `let`, which deviates significantly from `var` in that it is *block* scoped. 
+In 2015, Javascript's variable declaration family grew to include `let`, which deviates significantly from `var` in that it is *block* scoped. This basically means that we now have two units of scope available:  
 
-#### What is block scope?
+#### 1 Functions
+```javascript
+function() {
+  let i = 'aye'; // `i` is scoped to this function
+  console.log(i); // "aye"
+}
+console.log(i); // ReferenceError
+```
+#### 2 Blocks
+```javascript 
+{
+  let i = 'ai'; // `i` is scoped to this block
+  console.log(i); // "ai"
+}
+console.log(i); // ReferenceError
+```
 
-<!-- Relevant info:
-https://stackoverflow.com/questions/31219420/are-variables-declared-with-let-or-const-not-hoisted-in-es6
-Blocks As Scopes: https://github.com/getify/You-Dont-Know-JS/blob/master/scope%20%26%20closures/ch3.md#blocks-as-scopes
-Let: https://github.com/getify/You-Dont-Know-JS/blob/master/scope%20%26%20closures/ch3.md#let
-Garbage Collection: https://github.com/getify/You-Dont-Know-JS/blob/master/scope%20%26%20closures/ch3.md#garbage-collection
-Let loops: https://github.com/getify/You-Dont-Know-JS/blob/master/scope%20%26%20closures/ch3.md#let-loops
--->
+The `let` keyword has another helpful constraint: the variable cannot be accessed *before* its declaration (`let` [does get hoisted](https://stackoverflow.com/questions/31219420/are-variables-declared-with-let-or-const-not-hoisted-in-es6) though). 
 
-### Const you see the difference?
+One thing `let` shares with `var` is that it can be used to declare a variable without an initial value.
+Like in the example above, we could have done
+```javascript
+{
+  let i;
+  i = 'eye';
+}
+```
+
+#### Bookmarks for `let` 👓
+* [Are Let / Const Hoisted?](https://stackoverflow.com/questions/31219420/are-variables-declared-with-let-or-const-not-hoisted-in-es6)
+* [YDKJS Blocks As Scopes](https://github.com/getify/You-Dont-Know-JS/blob/master/scope%20%26%20closures/ch3.md#blocks-as-scopes)
+* [YDKJS Let](https://github.com/getify/You-Dont-Know-JS/blob/master/scope%20%26%20closures/ch3.md#let)
+* [YDKJS Garbage Collection](https://github.com/getify/You-Dont-Know-JS/blob/master/scope%20%26%20closures/ch3.md#garbage-collection)
+* [YDKJS Let loops](https://github.com/getify/You-Dont-Know-JS/blob/master/scope%20%26%20closures/ch3.md#let-loops)
+
+
+### Const stop, won't stop
+
+Okay, `const` is my favorite variable declaration keyword in all of Javascript. I default to `const` over `let` and never use `var`. This is the most important part of this post. If you remember one thing from this post, remember this: Use `const` until you have to use `let`. A [wise man](https://medium.com/javascript-scene/javascript-es6-var-let-or-const-ba58b8dcde75) told me that once, and his advice has saved me much grief. I hope to do the same for you.  
+
+In the sub-section entitled **3 "You can instantiate them without a value"** in the `var` portion of the article, I said to put a pin in the fact that variables can be declared with `var` with empty values. This type of instantiation is allowed with `let`, too.  It is not so with `const`! Oh no, `const` requires that you provide a value up front. Otherwise, it will turn its nose up at you and refuse to create a variable, *"If you don't know what's going *in* the variable, monsieur/madame, then why do you need it at all?"* -- this is good. 
+
+But wait, there's more! `const` goes one step further and ensures that the variable cannot be reassigned.
+
+```javascript
+```
 
 ### When & why?
 
 ### Use const until you have to use let
 
-
 <!--
 OUTLINE:
 [x] what we had before: var
-[] details of let
+[x] details of let
 [] details of const
 [] when to use const
 [] when to use let
