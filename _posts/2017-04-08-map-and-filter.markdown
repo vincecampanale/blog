@@ -160,7 +160,7 @@ Method chaining is a wonderful thing.
 {% highlight javascript %}
 var favoriteIds = newReleases
   .filter(function(movie) {
-    return movie.ration === 5.0;
+    return movie.rating === 5.0;
   })
   .map(function(movie) {
     return movie.id;

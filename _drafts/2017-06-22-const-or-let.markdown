@@ -122,7 +122,7 @@ console.log(i); // ReferenceError
 #### 2 Blocks
 ```javascript 
 {
-  let i = 'ai'; // `i` is scoped to this block
+  let i = 'oi'; // `i` is scoped to this block
   console.log(i); // "ai"
 }
 console.log(i); // ReferenceError
@@ -135,9 +135,10 @@ Like in the example above, we could have done
 ```javascript
 {
   let i;
-  i = 'eye';
+  i = 'oi';
 }
 ```
+and it would've worked.
 
 #### Bookmarks for `let` 👓
 * [Are Let / Const Hoisted?](https://stackoverflow.com/questions/31219420/are-variables-declared-with-let-or-const-not-hoisted-in-es6)
@@ -149,9 +150,9 @@ Like in the example above, we could have done
 
 ### Const stop, won't stop
 
-Okay, `const` is my favorite variable declaration keyword in all of Javascript. I default to `const` over `let` and never use `var`. This is the most important part of this post. If you remember one thing from this post, remember this: Use `const` until you have to use `let`. A [wise man](https://medium.com/javascript-scene/javascript-es6-var-let-or-const-ba58b8dcde75) told me that once, and his advice has saved me much grief. I hope to do the same for you.  
+Okay, `const` is my favorite variable declaration keyword in Javascript. I default to `const` over `let` and never use `var`. If you remember one thing from this post, let it be this: Use `const` until you have to use `let`. A [wise man](https://medium.com/javascript-scene/javascript-es6-var-let-or-const-ba58b8dcde75) told me that.
 
-In the sub-section entitled **3 "You can instantiate them without a value"** in the `var` portion of the article, I said to put a pin in the fact that variables can be declared with `var` with empty values. This type of instantiation is allowed with `let`, too.  It is not so with `const`! Oh no, `const` requires that you provide a value up front. Otherwise, it will turn its nose up at you and refuse to create a variable, *"If you don't know what's going *in* the variable, monsieur/madame, then why do you need it at all?"* -- this is good. 
+In the sub-section entitled **3 "You can instantiate them without a value"** in the `var` portion of the article, I said to put a pin in the fact that variables can be declared using `var` with empty values. This type of instantiation is allowed with `let`, too.  It is not so with `const`! Oh no, `const` requires that you provide a value up front. Otherwise, it will turn its nose up at you and refuse to create a variable, *"If you don't know what's going *in* the variable, monsieur/madame, then why do you need it at all?"* -- this is good. 
 
 But wait, there's more! `const` goes one step further and ensures that the variable cannot be reassigned.
 
