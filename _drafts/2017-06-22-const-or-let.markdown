@@ -12,7 +12,7 @@ Aloha, web surfer. So perhaps you're a `let` fan who came here to see what was u
 
 ...a keyword for variable instantiation was created and called `var`. 
 
-If you remember your first day of learning Javascript, it probably involved `var`. This little keyword, short for `variable`, took us a long way. In fact, every web site and application that used Javascript between it's inception in 1995 and the release of ECMAScript 2015 (ES6) used `var` and only `var` to create variables. 
+If you remember your first day learning Javascript, it probably involved `var`. This little keyword was our only option for declaring variables in Javascript for a long time. In fact, every web site and application that used Javascript between it's inception in 1995 and the release of ECMAScript 2015 (ES6) used `var` and only `var` to create variables. (Someone fact check me on this statement, but I think it's accurate.)
 
 The `var` keyword is no longer relevant, but in order to truly understand our present, we must understand our past.
 
@@ -20,7 +20,7 @@ Some important things to know about variables created with the `var` keyword:
 ```
 1) They are function scoped
 2) Their declarations get hoisted
-3) You can instantiate them without a value
+3) They can be declared without a value
 ```
 
 #### 1 "They are function scoped"
@@ -36,13 +36,12 @@ function logA() {
   console.log(a); // inside of `logA()`, `a` exists with value 2
 }
 
-try { console.log(a); } // doesn't work...error goes to catch block...
-catch (error) { console.log(error); } // ReferenceError! This means that outside of logA(), `a` is not defined.
+console.log(a); // ReferenceError! Outside of logA(), `a` is not defined.
 ```
 
 I think it's worth clarifying that when I say "inside of" `logA()`, I mean "between `logA()`'s curly brackets".
 
-#### 2 "They get hoisted" 🏋
+#### 2 "Their declarations get hoisted" 🏋
 
 Variable hoisting basically boils down to the fact that a variable declared with `var` can be instantiated *after* it gets used. 
 
@@ -60,17 +59,17 @@ function logB() {
 
 ```javascript
 function logB() {
-  var b; // moved to top of function scope
+  var b; // instantiation is hoisted to the top of logB()'s scope
 
   b = 2;
   console.log(b);
 }
 ```
-...at *compile* time (yes, [Javascript gets compiled](https://github.com/getify/You-Dont-Know-JS/blob/31e1d4ff600d88cc2ce243903ab8a3a9d15cce15/scope%20%26%20closures/ch1.md)).
+...at *compile* time (yes, [Javascript gets compiled](https://github.com/getify/You-Dont-Know-JS/blob/31e1d4ff600d88cc2ce243903ab8a3a9d15cce15/scope%20%26%20closures/ch1.md)). That's why it doesn't matter (to the browser) where we instantiate our variables -- the declarations get to skip the line every time.
 
 There's a dark side to the way `var` gets hoisted, though. Javascript's compiler can be a bit *too* helpful in some situations.
 
-If you use a variable within a function but don't instantiate the variable in that function, the compiler will look for a `var` in the parent function scope. If it doesn't find it there, it will keep looking all the way up the scope chain until it gets to the *global* scope. If it *still* doesn't see a `var` declaration up there, it will just go ahead and *make one for you*, as demonstrated in this snippet:
+If we use a variable within a function but don't instantiate the variable in that function, the compiler will look for a `var` in the parent function scope. If it doesn't find it there, it will keep looking all the way up the scope chain until it gets to the *global* scope. If it *still* doesn't see a `var` declaration up there, it will just go ahead and *make one for you*, as demonstrated in this snippet:
 ```javascript
 function logC() {
   c = 2;
@@ -82,9 +81,9 @@ Yikes.
 
 I guess this could be convenient sometimes when messing around in a REPL or something...
 
-But for the most part, I think this is bananas. `"use strict";` prevents this and should absolutely be included at the top of any ES5 script.
+But for the most part, this is bananas. `"use strict";` prevents this and should be included at the top of any ES5 script.
 
-#### 3 "You can instantiate them without a value"
+#### 3 "They can be declared without a value"
 
 You may have seen someone do something along these lines before:
 ```javascript
@@ -101,11 +100,11 @@ Put a pin in this because it becomes important later.
 
 ### Times Have Changed
 
-The three facets of `var` that I just covered come together to create an extremely flexible variable declaration mechanism. While flexibility itself is not a bad thing and having only one variable instantiation keyword means a little more flexibility is necessary, `var` is simply doing too much.  Function scope isn't a problem, but reassigning variables is so-so and should be used *only when completely unavoidable* (and when it's unavoidable, it means you probably have bigger fish to fry). The same goes for declaring variables without values. Lastly, being allowed to use a variable whether you declared it or not is just silly.
+The three facets of `var` that I just covered come together to create an extremely flexible variable declaration mechanism. While flexibility itself is not a bad thing and having only one variable instantiation keyword means a little more flexibility is necessary, `var` is simply doing too much.  Function scope isn't a problem, but reassigning variables is so-so and should only be used for `for` loops and times when it's completely unavoidable (and when it's unavoidable, it probably means we have bigger fish to fry). The same goes for declaring variables without values. Lastly, being allowed to use a variable whether we declared it or not is silly.
 
 So, in order to address these drawbacks of `var` and save us developers from the pitfalls these "helpful" features can cause, the ES6 specification introduced two new variable keywords: `const` and `let`.
 
-As I said in the first paragraph, my primary goal of this post is to help you ditch `var`. Times have changed and `var` doesn't make the cut.
+Remember, the primary goal of this post is to show that it's time to ditch `var`. Times have changed and `var` doesn't make the cut.
 
 ### Let me explain...
 
@@ -123,7 +122,7 @@ console.log(i); // ReferenceError
 ```javascript 
 {
   let i = 'oi'; // `i` is scoped to this block
-  console.log(i); // "ai"
+  console.log(i); // "oi"
 }
 console.log(i); // ReferenceError
 ```
@@ -150,26 +149,50 @@ and it would've worked.
 
 ### Const stop, won't stop
 
-Okay, `const` is my favorite variable declaration keyword in Javascript. I default to `const` over `let` and never use `var`. If you remember one thing from this post, let it be this: Use `const` until you have to use `let`. A [wise man](https://medium.com/javascript-scene/javascript-es6-var-let-or-const-ba58b8dcde75) told me that.
+Okay, `const` is my favorite variable declaration keyword in Javascript. I default to `const` over `let` and never use `var`. As a rule, I always use `const` unless I *have* to use `let`.
 
-In the sub-section entitled **3 "You can instantiate them without a value"** in the `var` portion of the article, I said to put a pin in the fact that variables can be declared using `var` with empty values. This type of instantiation is allowed with `let`, too.  It is not so with `const`! Oh no, `const` requires that you provide a value up front. Otherwise, it will turn its nose up at you and refuse to create a variable, *"If you don't know what's going *in* the variable, monsieur/madame, then why do you need it at all?"* -- this is good. 
+Remember how variables declared with `var` can be instantiated with empty values? This type of instantiation is allowed with `let`, too.  It is not so with `const`. Oh no, `const` requires that you provide a value up front. Otherwise, it will turn its nose up at you and refuse to create a variable, *"If you don't know what's going in the variable, monsieur/madame, then why do you need it at all?"* -- this is good. 
 
-But wait, there's more! `const` goes one step further and ensures that the variable cannot be reassigned.
+But there's more! `const` goes one step further and ensures that the variable cannot be reassigned [**note:** this does not mean the variable is *immutable*]. For example,
 
 ```javascript
+const a = 'ay';
+a = 2; // TypeError: Assignment to constant variable.
 ```
 
-### When & why?
+Comparing `const` to `var`:  
+
+1 `const` is block scoped, `var` is function scoped. 
+2 `const` has to be instantiated *with* a value, `var` does not
+3 `const` cannot be reassigned, `var` can 
+4 `const` cannot be accessed prior to instantiation, `var` can
+
+So basically `const` is the strictest variable instantiation tool we have at our disposal. The constraints it provides protect us from several possible errors, making the development process smoother.  
+
+ <!-- TODO: Better title for this section -->
+### Exceptions: When to use `let`
+
+While I recommend defaulting to `const`, some situations demand the use of `let`.
+
+Here is a quote by Eric Elliot from a [great article](https://medium.com/javascript-scene/javascript-es6-var-let-or-const-ba58b8dcde75) he wrote about the three keywords: 
+```
+`let`, is a signal that the variable may be reassigned, such as a counter in a loop, or a value swap in an algorithm. It also signals that the variable will be used only in the block it’s defined in, which is not always the entire containing function.
+```
+
+In other words, `for` loops and mathematical algorithms are the only times we would need to reach for `let`. Other than that, `const` is the strongest, safest bet.
 
 ### Use const until you have to use let
+
+I hope this article helped you on your quest to understand `let` and `const` and how they differ from `var`. I also hope you can comfortably ditch `var` and use `const` until you have to use `let`.  I'm still learning myself and there are certainly gaps in this article. Feel free to correct me when I'm wrong or bring missing information to light. 
+
+If this was helpful and you'd like to keep up with my learnings on this journey to master Javascript, follow me on Twitter at [@_vincecampanale](https://twitter.com/_vincecampanale). 
 
 <!--
 OUTLINE:
 [x] what we had before: var
 [x] details of let
-[] details of const
-[] when to use const
-[] when to use let
-[] conclusion (use const until you have to use let, never use var)
+[x] details of const
+[x] when to use let
+[x] conclusion (use const until you have to use let, never use var)
 -->
 

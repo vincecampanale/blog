@@ -186,7 +186,7 @@ var favoriteIds = newReleases.
   map( movie => { return movie.id });
 {% endhighlight %}
 
-#### Abbreviated Variables, `const`, & Implicit Return [DANGER: Experts only.]
+#### Abbreviated Variables, `const`, & Implicit Return
 Proceed with caution. Someone call the fire department. 🚒
 
 {% highlight javascript %}
