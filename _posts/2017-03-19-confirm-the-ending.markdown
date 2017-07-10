@@ -35,7 +35,13 @@ function confirmEnding(str, target) {
 }
 {% endhighlight %}
 
-In English, this function says: return a string with the same length as `target` from the end of `str` and compare the new string to `target`. If they are *strictly* equal, return true. Otherwise, return false. This will work with two equal signs as well, but just to be super duper sure, it's typically good practice to use the triple equals.
+In English, this function says: return a string with the same length as `target` from the end of `str` and compare the new string to `target`. If they are *strictly* equal, return true. Otherwise, return false. This will work with two equal signs as well, but it's typically good practice to use the triple equals.
+
+#### And another one.
+
+```javascript
+const confirmEnding = (str, tar) => tar === str.substr(-tar.length);
+```
 
 #### The Difference Between `.susbtr()` and `.substring()`
 
