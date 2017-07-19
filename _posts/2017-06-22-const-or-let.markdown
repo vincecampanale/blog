@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Use const until you have to use let"
+title:  "Use const Until You Have to Use let"
 description: "The differences between Javascript (ES6) variable instantiation keywords -- const and let -- and when to use them."
 date: 2017-06-22
 ---
