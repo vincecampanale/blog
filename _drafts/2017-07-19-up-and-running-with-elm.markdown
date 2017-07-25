@@ -19,6 +19,17 @@ Functions in Elm are *pure*. This means that they just turn inputs to outputs an
 
 ### How do I get started?!
 
-`npm install -g elm`
 
-### More Resources
+**1** `npm install -g elm`
+
+[I kid you not](https://www.npmjs.com/package/elm). It's that easy to get Elm on your computer. If you don't have npm, [get it here](https://www.npmjs.com/get-npm).
+
+**2** Download the Elm plugin for your favorite editor.
+
+You can get it for [Atom](https://atom.io/packages/language-elm), [Brackets](https://github.com/lepinay/elm-brackets), [Emacs](https://github.com/jcollard/elm-mode), [Intellij](https://github.com/durkiewicz/elm-plugin), [Light Table](https://github.com/rundis/elm-light), [Sublime Text](https://packagecontrol.io/packages/Elm%20Language%20Support), [Vim](https://github.com/ElmCast/elm-vim), and [VS Code](https://github.com/Krzysztof-Cieslak/vscode-elm).
+I also recommend [`elm-format`](https://github.com/avh4/elm-format). Since the Elm compiler needs things to be formatted a specific way, `elm-format` saves you a lot of time by automatically indenting and formatting things the way the compiler likes. You can even configure `elm-format` to run every time you save your file. This greatly improves the already-pleasant development experience with Elm.
+
+**3** Open up `elm-repl` and start experimenting!
+
+
+### More Resources 
