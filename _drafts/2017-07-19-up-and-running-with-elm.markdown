@@ -11,7 +11,7 @@ Welcome! I'm excited that you're excited about getting started with Elm. Elm is 
 
 So the folks over at [Pragmatic Studio](https://pragmaticstudio.com/) gave a great one sentence answer to this question: "Elm is a functional programming language that compiles to JavaScript and runs in the browser." 
 
-The basic building block of Elm is the function. Every Elm application is built from a bunch of functions composed together and wired up in such a way that data flows from user interactions, through a store-like architecture, and changes are presented to the view. The program "reacts" to the user's actions. In this way, Elm could be called a functional "reactive" language. It really depends who you ask though, "reactive" is kind of a fuzzy word. 
+The basic building block of Elm is the function. Every Elm application is built from a bunch of functions composed together and wired up in such a way that data flows from user interactions, through a store-like architecture, and changes are presented to the view. The program "reacts" to the user's actions. Elm could even be called a functional "reactive" language. It really depends who you ask though, "reactive" is kind of a fuzzy word. 
 
 ### What's it good for?
 
