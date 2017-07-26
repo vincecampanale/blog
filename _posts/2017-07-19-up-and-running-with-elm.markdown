@@ -15,7 +15,7 @@ The basic building block of Elm is the function. Every Elm application is built 
 
 ### What's it good for?
 
-Functions in Elm are *pure*. This means that they just turn inputs to outputs and do nothing else (no side effects). A program composed of pure functions leads to deterministic state management, time travel debugging, and easy testability. The presence of a strong typing and a static compiler means no run-time errors. Bundle these features into a compile-to-Javascript language and you get a sleek, minimalistic toolbox for building responsive, flexible, and maintainable web applications that don't fail at run-time. Yea. Wow.
+Functions in Elm are *pure*. This means that they just turn inputs to outputs and do nothing else (no side effects). A program composed of pure functions leads to deterministic state management, time travel debugging, and improved testability. The presence of strong typing and a static compiler means no run-time errors. Bundle these features into a compile-to-Javascript language and you get a sleek, minimalistic toolbox for building responsive, testable, and maintainable web applications that don't fail at run-time. Yea. Wow.
 
 ### How do I get started?!
 
@@ -31,5 +31,22 @@ I also recommend [`elm-format`](https://github.com/avh4/elm-format). Since the E
 
 **3** Open up `elm-repl` and start experimenting!
 
+Do this by typing `elm-repl` into the terminal and voila! 
+
+Now, some of you may be getting the following error (or something very similar): 
+```
+libtinfo.so.5: cannot open shared object file: No such file or directory
+```
+
+If you happen to be one of the lucky ones, try entering this command and it should fix the issue: 
+```
+sudo ln -s /usr/lib/libncurses++w.so.6.0 /usr/lib/libtinfo.so.5
+```
 
 ### More Resources 
+
+1 [Installing Elm](https://guide.elm-lang.org/install.html)
+
+2 [Pragmatic Studio Course](https://pragmaticstudio.com/elm)
+
+3 [elm-lang/elm-platform issue #115](https://github.com/elm-lang/elm-platform/issues/115#issuecomment-173436420) - solution for issue mentioned in last section
