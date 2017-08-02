@@ -44,7 +44,7 @@ Don't be too hard on yourself. I just pressed the delete key to delete something
 
 Alrighty - new day, new tips.  Many thanks to those of you who commented with tips and tricks that you've learned from your own experience with Vim. I actually really like how this post is evolving and would love to see some more tips in the comments if you have any, no matter how small or insignicant they may seem. I promise it will help someone (me).
 
-So I ended up writing down some of the key navigation shortcuts for Vim on some post it notes and sticking them to my monitor -- here's a brief rundown of the shortcuts I have found to be essential, then I'll get into tips for the day. I've found it's useful to think of the keys as actions. The actions can be divided into different categories. The two categories I've identified are "edit" and "move". There may be more formal ways to refer to these categories, feel free to comment if you know of a better way to think of them.
+I ended up writing down some of the key navigation shortcuts for Vim on some post-it notes and sticking them to my monitor -- here's a brief rundown of the shortcuts I have found to be essential (for a complete newbie). I've found it's useful to think of the keys as actions, which can be divided into different categories. The two categories I've identified this far are "edit" and "move". There may be more formal ways to refer to these categories -- post a comment if you know of a better way to refer to them.
 
 ```
 Move commands: 
@@ -81,11 +81,11 @@ Let's say I want to delete two words that are next to each other.
 3) Press enter.
 ```
 
-How cool is that?! `d` tells Vim I want to delete something. It then patiently waits for me to tell it what to delete (so polite). I say to Vim, `2w` (read: two words) and poof, they're gone. That move there shows the power of Vim. Each of these keys does something on its own and lets you run with Vim. Combine them, and you can fly.
+So what's happening here? `d` tells Vim I want to delete something. It then patiently waits for me to tell it what to delete (so polite). I say to Vim, `2w` (read: two words) and poof, they're gone. That move there shows the power of Vim. Each of these keys does something on its own and lets you run with Vim. Combine them, and you can fly.
 
 #### Tip 6
 
-Yesterday, I called it VIM. I called it that in the title too. I won't change it for the sake of preserving my growth as a Vim user. TIL, it's supposed to be "Vim", like "Jim".
+Yesterday, I called it VIM. I called it that in the title too. I won't change it for the sake of preserving my growth as a Vimmer. TIL, it's supposed to be "Vim", like "Jim".
 From [`:help pronounce`](http://vimhelp.appspot.com/intro.txt.html#pronounce):
 ```
 Vim is pronounced as one word, like Jim, not vi-ai-em.  It's written with a
@@ -102,9 +102,11 @@ Pro-tip: I use "jj" as a shortcut to the ESC key. That way when you want to swit
 ```
 Love it.
 
-I want to add a "Comfort-o-meter" to this thing. I'd say I've risen from a 1 to a 2. I no longer sweat when I use Vim, so that's progress. Still have a tendency to reach for comfortable shortcuts for selecting text and moving lines, copy-pasting, etc. However, the momentum is building on itself and I'm having fun. 
+I want to add a "Comfort-o-meter" to this post. I'd say I've risen from a 1 to a 2. I no longer sweat when I use Vim, so that's progress. Still have a tendency to reach for comfortable shortcuts for selecting text and moving lines, copy-pasting, etc. However, the momentum is building on itself and I'm having fun. 
 
 Wish me luck and we'll catch up tomorrow!
+
+COMFORT-O-METER: 2
 
 ---
 
