@@ -108,6 +108,19 @@ Wish me luck and we'll catch up tomorrow!
 
 COMFORT-O-METER: 2
 
+### After Week 1
+It's been a week now since I started making an effort to learn Vim. I haven't been using it at work since I find it too distracting to really learn and practice the shortcuts while thinking about writing clean code and building a maintainable application. That being said, I think I'm nearing the point where enough basic movements and commands are automatic enough to warrant making the switch full time. I'm in no hurry. 
+
+#### Tip 8
+The basic shortcuts will take you far. The ones I outlined earlier in the post have been basically the only ones I've used up to this point. You can accomplish most things with the `d (motion)` command when it comes to deleting / cutting text. Similarly `y (motion)` for copying lines or words. I've found it's worthwhile to start thinking of sections of text in these terms rather than thinking about the space around them for selecting.
+
+#### Tip 9
+Get good with `:help`. Vim's help system is very searchable and useful if you know what your doing. 
+
+COMFORT-O-METER: 4
+Treating the comfort-o-meter as similar to the Richter scale for Earthquakes, this is pretty sizable progress. The few basic `(action) (motion)` combos make editing with Vim pretty easy. It's definitely growing on me and I'm glad I pushed through the first day of discomfort. That really is the worst part.
+ 
+
 ---
 
-Post in progress...follow me on [twitter](), [github](), or [dev.to]() for daily updates :)
+Post in progress...follow me on [twitter](), [github](), or [dev.to]() for updates :)
