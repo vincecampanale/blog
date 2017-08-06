@@ -117,8 +117,17 @@ The basic shortcuts will take you far. The ones I outlined earlier in the post h
 #### Tip 9
 Get good with `:help`. Vim's help system is very searchable and useful if you know what your doing. 
 
+#### Tip 10
+This one comes from Alan Campora:
+```
+Edit and move are modes, not actions. Actions are something different. For example, if you want to replace a word, put your cursor on it and press c(change) i(inner) w(word). That's a great level up :D
+```
+
+This turned out to be a rather crucial tip for me. This subtle paradigm shift made me understand that `d` is not so much a verb to delete something, rather just a button to put me in `delete mode`. This is obvious in retrospect, but Alan's tip was what I needed to fully understand -- hopefully it helps someone else, too.
+
+
 COMFORT-O-METER: 4
-Treating the comfort-o-meter as similar to the Richter scale for Earthquakes, this is pretty sizable progress. The few basic `(action) (motion)` combos make editing with Vim pretty easy. It's definitely growing on me and I'm glad I pushed through the first day of discomfort. That really is the worst part.
+Treating the comfort-o-meter as similar to the Richter scale for Earthquakes, this is pretty sizable progress. The few basic `(mode) (motion)` combos make editing with Vim pretty breezy. It's growing on me and I'm glad I pushed through the first day of discomfort. That really is the worst part.
  
 
 ---
