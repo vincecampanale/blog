@@ -202,5 +202,4 @@ const favIds = newReleases.filter( m => m.rating === 5.0 ).map( m => m.id );
 Aren't `.map()` & `.filter()` the best?
 
 To Learn More:  
-&nbsp;&nbsp;&nbsp;&nbsp; 1) Here's the link to the tutorial I got this problem from: [http://reactivex.io/learnrx/](http://reactivex.io/learnrx/).  
-&nbsp;&nbsp;&nbsp;&nbsp; 2) Type 'Eric Elliot functional programming' into The Almighty Google and start reading.
+&nbsp;&nbsp;&nbsp;&nbsp; Here's the link to the tutorial I got this problem from: [http://reactivex.io/learnrx/](http://reactivex.io/learnrx/).  
