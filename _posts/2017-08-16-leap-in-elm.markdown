@@ -7,7 +7,7 @@ date: 2017-08-16
 
 I'm very new to Elm (a couple of weeks) and am working through exercises on [exercism.io](exercism.io). Writing about what I learn usually helps me understand it better. Hence, this article was born.
 
-The exercise is easy: identify leap years with Elm. So, given a year, determine whether that year is a leap year or not. The rules are as follows:  
+The exercise is simple: identify leap years with Elm. So, given a year, determine whether that year is a leap year or not. The rules are as follows:  
 
 ```
 leap years are on: 
