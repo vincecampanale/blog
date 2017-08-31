@@ -17,4 +17,4 @@ Luckily, I was not the only one there lacking Elm experience. Of the five other 
 
 As the months passed, I got used to arranging the meetups and got more comfortable with speaking to the group, giving lightning talks, arranging lightning talks with the members, and generally getting the conversation centered on Elm. 
 
-At the most recent meetup, I had the idea to hook my Macbook up to the big TV in the conference room and work through a coding challenge in Elm. 
+At the most recent meetup, I had the idea to hook my Macbook up to the big TV in the conference room and work through a coding challenge in Elm.
