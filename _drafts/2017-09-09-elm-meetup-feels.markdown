@@ -2,7 +2,7 @@
 layout: post
 title:  "When I Found My People at a Programming Meetup" 
 description: "My recent experience at an Elm DC meetup that unexpectedly resulted in many feels." 
-date: 2017-08-31
+date: 2017-09-09
 ---
 
 Nearly a year ago, I listened to a podcast that mentioned a front-end technology called Elm. I did some digging and thought it was cool, so I joined the Elm DC meetup group. I noticed there were no meetups scheduled for Elm DC and there hadn't been for some time, but I didn't take much note of it. I was busy getting adjusted to a move across the country and a new job. 
