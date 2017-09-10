@@ -17,4 +17,8 @@ Being new to this industry, the feeling of being a "noob" is one I'm quite famil
 
 As programmers, we gravitate towards unsolved problems and stare them in the face until they become solutions, then we go look for new problems to grapple with. That's what we do, it's who we are. 
 
-As unique individuals, we combine this defining trait with other personality characteristics, mental strengths, and domain specific knowledge, but I posit that the spine of every programmer's mentality is the urge to solve problems. It doesn't matter how early or late we are in our career, what technologies and tools we happen to use in the moment, what we studied in college, whether we are trying to get a system to mimic the human brain or tracking down a TypeError -- the ability to identify problems and the drive to solve them powers everything we do and is the only reason we can do what we do (and do it well). It's a beautiful thing and I'm proud to be in the club.
+As individuals, our effectiveness is determined by our unique blend of personality characteristics, mental strengths, and domain specific knowledge, but the spine of every programmer's mentality is the urge to solve problems. It doesn't matter how early or late we are in our career, what technologies and tools we happen to use in the moment, what we studied in college, whether we are trying to get a system to mimic the human brain or tracking down a TypeError -- the ability to identify problems and the drive to solve them powers everything we do and is the only reason we can do what we do (and do it well). It's a beautiful thing and I'm proud to be in the club.
+
+Also if you like Elm, follow me on twitter at [@_vincecampanale](https://twitter.com/_vincecampanale). I post about Elm and Javascript and other programming-related things there.
+
+
