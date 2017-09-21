@@ -147,8 +147,7 @@ function Car(doors, color) {
 function new2(constructor, ...constructorArgs) {
     const newObject = {};
     Object.setPrototypeOf(newObject, constructor.prototype);
-    constructor.apply(newObject, constructorArgs;
-    return this || newObject;
+    return constructor.apply(newObject, constructorArgs) || newObject;
 }
 ```
 
