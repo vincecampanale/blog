@@ -16,6 +16,7 @@ Without further ado, the problem statment: "Given a word, compute the scrabble s
 #### Assumptions
 
 In order to provide a reasonable solution that will hold in this dimesion, we must first make some assumptions.  
+```
 1) The letters A, E, I, O, U, L, N, R, S, and T have the value 1.
 2) The letters D and G have the value 2.  
 3) The letters B, C, M, and P have the value 3.  
@@ -23,6 +24,7 @@ In order to provide a reasonable solution that will hold in this dimesion, we mu
 5) The letter K has the value 5.  
 6) The letters J and X have the value 8.  
 7) The letters Q and Z have the value 10.  
+```
 
 #### Solution
 
