@@ -9,7 +9,7 @@ So I've been learning Elm in my spare time lately. It's a neat language with gre
 
 #### The Problem
 
-For ages, man has been vexxed by a simple-seeming, yet insidious problem. It originated in an ancient mind game presented by Cleobulus of Lindos, one of the Seven Sages of Greece<sup>1</sup> called "Scrabble" (originally pronounced 'scra - blay'<sup>2</sup>). While the game has it's "rules", different cultures and societies have addressed this problem in the best way they see fit, but a universal solution has yet to arise. Today, I aim to provide that solution.
+For ages, man has been vexxed by a simple-seeming, yet insidious problem. It originated in an ancient mind game presented by Cleobulus of Lindos, one of the Seven Sages of Greece<sup>1</sup> called "Scrabble" (originally pronounced 'scra - blay'<sup>2</sup>). While the game has it's "rules", different cultures and societies have addressed this problem in the best way they see fit. The result is always the same, but the method varies. A universal solution has yet to arise. Today, I aim to provide that solution.
 
 Without further ado, the problem statment: "Given a word, compute the scrabble score for that word."
 
@@ -30,9 +30,141 @@ In order to provide a reasonable solution that will hold in this dimesion, we mu
 
 Let us begin.  
 
+Breaking the steps down into pseudocode helpful for solving simple scripting problems like this one, so let's start there.
+
+```
+-- given a word
+-- split the word up into letters
+-- get the points value for each letter
+-- store / record the point values for each word somewhere
+-- add up all the point values
+-- return the sum
+```
+
+I find it helpful to start with the type signature when constructing functions in Elm.  The function we want to build to solve this problem will take a word and return a score. In terms the compiler can understand, it will take in a `String` and return an `Int`.
+```
+scoreWord: String -> Int
+```
+
+Next, we can start building our function.
+```
+scoreWord: String -> Int
+scoreWord word = 
+   word
+```
+
+Okay, so splitting the word up into letters is easy:
+
+```
+scoreWord: String -> Int
+scoreWord word = 
+  String.split "" word
+```
+
+Alrighty, now we need to get the points value for each letter. This introduces a bit complexity into our problem -- where do the point values come from? Elm doesn't know what a letter is worth, so we have to tell it. One way to do this is to make a record, a series of key-value pairs.
 
 
+```
+pointsCategories =
+    { one = [ "A", "E", "I", "O", "U", "L", "N", "R", "S", "T" ]
+    , two = [ "D", "G" ]
+    , three = [ "B", "C", "M", "P" ]
+    , four = [ "F", "H", "V", "W", "Y" ]
+    , five = [ "K" ]
+    , eight = [ "J", "X" ]
+    , ten = [ "Q", "Z" ]
+    }
+```
 
+Each key of our record is the word version of the point value for each letter in the list attached to it. Records in Elm cannot have number literals for keys, so this is the closest we can get.
+
+Now, we need a function that will score a letter by looking up it's point value in the `pointsCategories` record and converting that to a number.
+
+```
+getPointsForLetter : String -> Int
+getPointsForLetter letter =
+    if List.member letter pointsCategories.one then
+        1
+    else if List.member letter pointsCategories.two then
+        2
+    else if List.member letter pointsCategories.three then
+        3
+    else if List.member letter pointsCategories.four then
+        4
+    else if List.member letter pointsCategories.five then
+        5
+    else if List.member letter pointsCategories.eight then
+        8
+    else if List.member letter pointsCategories.ten then
+        10
+    else
+        0
+```
+
+Okay, a little (a lot) redundant. I'm starting to get the feeling that this program is a wee bit smelly and could use tidying up, but let's get this solution working, then we can refactor.
+
+This would be a good time to note that all the letters in our `pointsCategories` record are uppercase, but we do not have that guarentee for a given word, unless you're playing a very loud variation of Scrabble.
+
+So let's make our letters uppercase.
+
+```
+scoreWord : String -> Int
+scoreWord word =
+  List.map String.toUpper (String.split "" word)
+```
+
+Now we have a list of uppercase letters to work with -- lets use our `getPointsValue` function to convert letters to points.
+
+```
+scoreWord : String -> Int
+scoreWord word = 
+  List.map getPointsForLetter (List.map String.toUpper (String.split "" word))
+```
+
+These parentheses are getting out of hand -- time to take advantage of the Elm's brilliant pipe operator to make our solution readable.
+
+The pipe operator is nice because it turns 
+```
+f(g(h(i(x))))
+```
+into
+```
+x 
+  |> i 
+  |> h 
+  |> g 
+  |> f
+```
+where `x` is some value and `i`, `h`, `g`, and `f` are functions.
+
+Applying this nifty tool to our solution, we get:
+
+```
+scoreWord : String -> Int
+scoreWord word =
+  word 
+    |> String.split ""
+    |> List.map String.toUpper
+    |> List.map getPointsForLetter
+```
+
+The astute reader will notice we are not yet returning an `Int`, but rather a list of `Int`'s (or `List Int` using Elm syntax). Let's fix that.
+
+```
+scoreWord : String -> Int
+scoreWord word = 
+  word 
+    |> String.split ""
+    |> List.map String.toUpper
+    |> List.map getPointsForLetter
+    |> List.sum
+```
+
+This solution works, but I detest the repetitive chain of `if else if`'s in the `getPointsForLetter` function. Unfortunately, this is the crux of the solution, so this refactor is going to be a big one!
+
+#### Refactor
+
+The main issue with the above solution is the fact that we can't use a number literal as the key in our `pointsCategories` record. This means we are separating looking up the value and converting it to an `Int`. We will need to reach into our toolbox and find a new data structure to use in order to solve this. I propose we use `Dict` and since I'm the one writing this and you are not here to disagree, we will use `Dict`.
 
 
 
