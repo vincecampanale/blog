@@ -30,7 +30,7 @@ In order to provide a reasonable solution that will hold in this dimesion, we mu
 
 Let us begin.  
 
-Breaking the steps down into pseudocode helpful for solving simple scripting problems like this one, so let's start there.
+Breaking the problem down and writing a solution outline pseudocode tends to help with solving simple scripting problems like this one, so let's start there.
 
 ```
 -- given a word
@@ -41,7 +41,7 @@ Breaking the steps down into pseudocode helpful for solving simple scripting pro
 -- return the sum
 ```
 
-I find it helpful to start with the type signature when constructing functions in Elm.  The function we want to build to solve this problem will take a word and return a score. In terms the compiler can understand, it will take in a `String` and return an `Int`.
+I find it helpful to start with the type signature when constructing functions in Elm.  The function we want to build will take a word and return a score. In terms the compiler can understand, it will take a `String` and return an `Int`.
 ```
 scoreWord: String -> Int
 ```
@@ -164,7 +164,145 @@ This solution works, but I detest the repetitive chain of `if else if`'s in the 
 
 #### Refactor
 
-The main issue with the above solution is the fact that we can't use a number literal as the key in our `pointsCategories` record. This means we are separating looking up the value and converting it to an `Int`. We will need to reach into our toolbox and find a new data structure to use in order to solve this. I propose we use `Dict` and since I'm the one writing this and you are not here to disagree, we will use `Dict`.
+The main issue with the above solution is the fact that we can't use a number literal as the key in our `pointsCategories` record. This means we are separating looking up the value and converting it to an `Int`. We will need to reach into our toolbox and find a new data structure to use in order to solve this. I propose we use a dictionary (`Dict`) to tie a number to a character. We need to import `Dict` to use it.
+
+```
+import Dict exposing (..)
+
+pointValues : Dict Char Int
+pointValues =
+    Dict.fromList
+        [ ( 'A', 1 )
+        , ( 'E', 1 )
+        , ( 'I', 1 )
+        , ( 'O', 1 )
+        , ( 'U', 1 )
+        , ( 'L', 1 )
+        , ( 'N', 1 )
+        , ( 'R', 1 )
+        , ( 'S', 1 )
+        , ( 'T', 1 )
+        , ( 'D', 2 )
+        , ( 'G', 2 )
+        , ( 'B', 3 )
+        , ( 'C', 3 )
+        , ( 'M', 3 )
+        , ( 'P', 3 )
+        , ( 'F', 4 )
+        , ( 'H', 4 )
+        , ( 'V', 4 )
+        , ( 'M', 4 )
+        , ( 'Y', 4 )
+        , ( 'K', 5 )
+        , ( 'J', 8 )
+        , ( 'X', 8 )
+        , ( 'Q', 10 )
+        , ( 'Z', 10 )
+        ]
+```
+Now we can access the point value for a letter using the `Dict.get` method. This change of data structure is crucial because we have moved the redundancy out of our program and into the data itself. Redundancy in data is gravy, redundancy in code is not.
+
+Let's write a function that takes a character and returns it's point value.
+
+```
+getPointValue : Char -> Int
+getPointValue letter = 
+    let
+        letterScore =
+            Dict.get letter pointValues
+    in
+    case letterScore of
+        Just score ->
+            score
+
+        Nothing ->
+            0
+```
+
+`Dict.get` is not guaranteed to return something becuase it can be called with a value that may not correspond to a key in the dictionary, like if we tried to get the point value of a Chinese character. In terms that Elm's compiler can understand, `Dict.get` returns a `Maybe` type, therefore we need to tell the program how to handle both cases of the `Maybe` type -- `Just` and `Nothing`.
+
+If we get a score back, then return that score. If not, default to 0.
+
+Time to rewrite `scoreWord` so it splits our word into a list of `Char`'s (`String.toList`) and uses our new `getPointValue` function to get the value of each character in the list.
+
+```
+scoreWord : String -> Int
+scoreWord word =
+    word
+        |> String.toUpper
+        |> String.toList
+        |> List.map getPointValue
+        |> List.sum
+```
+
+This works, but I still think `getPointValue` is a bit verbose. Let's use a couple tricks to make it easier to grok.
+
+`flip` is a neat tool that lets you flip the order of arguments to a function. `Maybe.withDefault` is a shorthand way to do what we did in our `case` statement. Taking advantage of these two handy mechanisms, we can write `getPointValue` like this:
+
+```
+getPointValue : Char -> Int
+getPointValue letter =
+  letter 
+    |> flip Dict.get pointValues
+    |> Maybe.withDefault 0
+```
+Ah, much better.
+
+To cap off the post, here's the entire script:
+```
+module ScrabbleScore exposing (..)
+
+import Dict exposing (..)
+
+
+pointValues : Dict Char Int
+pointValues =
+    Dict.fromList
+        [ ( 'A', 1 )
+        , ( 'E', 1 )
+        , ( 'I', 1 )
+        , ( 'O', 1 )
+        , ( 'U', 1 )
+        , ( 'L', 1 )
+        , ( 'N', 1 )
+        , ( 'R', 1 )
+        , ( 'S', 1 )
+        , ( 'T', 1 )
+        , ( 'D', 2 )
+        , ( 'G', 2 )
+        , ( 'B', 3 )
+        , ( 'C', 3 )
+        , ( 'M', 3 )
+        , ( 'P', 3 )
+        , ( 'F', 4 )
+        , ( 'H', 4 )
+        , ( 'V', 4 )
+        , ( 'M', 4 )
+        , ( 'Y', 4 )
+        , ( 'K', 5 )
+        , ( 'J', 8 )
+        , ( 'X', 8 )
+        , ( 'Q', 10 )
+        , ( 'Z', 10 )
+        ]
+
+
+getPointValue : Char -> Int
+getPointValue letter =
+    letter
+        |> flip Dict.get pointValues
+        |> Maybe.withDefault 0
+
+
+scoreWord : String -> Int
+scoreWord word =
+    word
+        |> String.toUpper
+        |> String.toList
+        |> List.map getPointValue
+        |> List.sum
+```
+
 
 
 
