@@ -1,17 +1,13 @@
 ---
 layout: post
 title:  "How to Score Scrabble Words with Elm" 
-description: "A total noob solves a very important problem with smelly, yet functional Elm code." 
+description: "For ages, man has been vexxed by this simple problem. Today, I attempt a solution." 
 date: 2017-09-23
 ---
 
-So I've been learning Elm in my spare time lately. It's a neat language with great learning resources and I'm learning a lot about the functional paradigm in the process. In this post, I'm going to walk through my solution to a simple challenge on exercism.io using Elm.
-
 #### The Problem
 
-For ages, man has been vexxed by a simple-seeming, yet insidious problem. It originated in an ancient mind game presented by Cleobulus of Lindos, one of the Seven Sages of Greece<sup>1</sup> called "Scrabble" (originally pronounced 'scra - blay'<sup>2</sup>). While the game has it's "rules", different cultures and societies have addressed this problem in the best way they see fit. The result is always the same, but the method varies. A universal solution has yet to arise. Today, I aim to provide that solution.
-
-Without further ado, the problem statment: "Given a word, compute the scrabble score for that word."
+In approximately 6th century B.C., Cleobulus of Lindos, one of the Seven Sages of Greece, presented to the world a word-based mind game<sup>1</sup>. He called it "Scrabble" (originally pronounced 'scra - blay'<sup>2</sup>). When outlining his game, he omitted an important part, perhaps on purpose -- how to compute the score of a word. A universal solution has yet to arise. 
 
 #### Assumptions
 
@@ -304,6 +300,7 @@ scoreWord word =
 ```
 
 
+While we can never know exactly how Cleobulus intended for a word to be scored, we can give our best guess and this is mine.
 
 
 <sup>1</sup> I made this up.  
