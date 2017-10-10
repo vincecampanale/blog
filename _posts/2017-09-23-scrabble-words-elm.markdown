@@ -2,7 +2,7 @@
 layout: post
 title:  "How to Score Scrabble Words with Elm" 
 description: "For ages, man has been vexxed by this simple problem. Today, I attempt a solution." 
-date: 2017-09-23
+date: 2017-10-10
 ---
 
 #### The Problem
