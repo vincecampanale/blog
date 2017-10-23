@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "Elm Kata: Using Elm Core List and String Functions to Detect Anagrams" 
-description: "Part of the series: 'Learning Elm Through Practice' In this segment, we solve the exercism.io exercise 'Anagram' with Elm first using the community package 'List.Extra', then refactoring to use just core libraries." 
+description: "In this segment of Elm Kata, we solve the exercism.io exercise 'Anagram' with Elm first using the community package 'List.Extra', then refactoring to use just core libraries." 
 date: 2017-10-22
 ---
 
@@ -23,7 +23,7 @@ detect : String -> List String -> List String
 
 We are going to create a function that takes a word and a list of words and returns a new list containing all the anagrams of the original word in the given list (if any).
 
-The first thought upon seeing this problem was "permutations." If I could generate a list of all the combinations of letters in the given word and check that list for each of the words in the given list of possible candidates, I'd end up with a list of anagrams.  
+My first thought upon seeing this problem was "permutations." If I could generate a list of all the combinations of letters in the given word and check that list for each of the words in the given list of possible candidates, I'd end up with a list of anagrams.  
 
 I'll show that solution now, but keep in mind there's a much better way. Kudos if you can see it already, it took me the full process of solving the problem the hard way before I saw the easy way -- I feel like Confucius would nod knowingly if he heard me say that. 
 
@@ -80,18 +80,16 @@ The result is a very slow, very brute force, but totally correct solution.
 
 How did I not see it in the first place? Me-oh-my, this can be done much more cleanly-er.
 
-Instead changing the original word to make the check easy for the list, why don't we change all the words in the list to make the check easy for the word?!
+Instead of changing the original word to make the check easy for the list, why don't we change all the words in the list to make the check easy for the word?!
 
-How can we check that two words are the same, just mixed up? By sorting them both and then comparing!
+How can we check that two words are the same, just with the letters all jumbled up? By sorting them and comparing their sorted forms!
 
 First, we need a sort function that will work for strings:
 ```
 sortStr = String.toList >> List.sort >> String.fromList
 ```
 
-The `>>` was new for me -- it lets you compose functions together to make bigger, badder functions.
-
-It's similar to the pipe (`|>`) operator, except you aren't passing in any arguments, you're just mashing the functions together in anticipation of a higher purpose.
+The `>>` was new for me -- it lets you compose functions together to make bigger, badder functions. It's similar to the pipe (`|>`) operator, except you aren't passing in any arguments, you're just mashing the functions together in anticipation of a higher purpose.
 
 Now we need to put our `sortStr` function to use in a function that will take two words and see if they are anagrams!
 
@@ -124,6 +122,3 @@ Boom, there ya have it.
 Follow [@_vincecampanale](https://twitter.com/_vincecampanale) to get updates on future installments of the **Elm Kata** series. Also, it will make me feel good about myself.
 
 Thanks for your time <3, hope it was worth it.
-
-
-

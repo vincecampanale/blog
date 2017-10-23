@@ -1,11 +1,11 @@
 ---
 layout: post
-title:  "Solving 'Leap' in Elm" 
+title:  "Elm Kata: Solving 'Leap' in Elm" 
 description: "A short article about using basic utilities from Elm's core libraries to solve a simple problem." 
 date: 2017-08-16
 ---
 
-I'm very new to Elm (a couple of weeks) and am working through exercises on [exercism.io](exercism.io). Writing about what I learn usually helps me understand it better. Hence, this article was born.
+Welcome to **Elm Kata**! A series of posts in which we solve Elm exercises of varying difficulty to learn about the language.
 
 The exercise is simple: identify leap years with Elm. So, given a year, determine whether that year is a leap year or not. The rules are as follows:  
 

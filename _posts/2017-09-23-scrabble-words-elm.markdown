@@ -1,9 +1,11 @@
 ---
 layout: post
-title:  "How to Score Scrabble Words with Elm" 
+title:  "Elm Kata: How to Score Scrabble Words with Elm" 
 description: "For ages, man has been vexxed by this simple problem. Today, I attempt a solution." 
 date: 2017-10-10
 ---
+
+You are reading the second installment of **Elm Kata**, a series about learning Elm through short coding exercises.
 
 #### The Problem
 
