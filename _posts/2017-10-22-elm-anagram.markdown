@@ -12,7 +12,7 @@ Welcome to the third installment of **Elm Kata**, a series in which we learn the
 Another day, another problem to solve. Call me Sherlock. Here's the problem statement we're working with, courtesy of exercism.io:  
 
 > Given a word and a list of possible anagrams, select the correct sublist.  
-Given "listen" and a list of candidates like "enlists" "google" "inlets" "banana" the program should return a list containing "inlets". 
+Given "listen" and a list of candidates like "enlists" "google" "inlets" "banana" the program should return a list containing "inlets".
 
 ### Round 1
 
