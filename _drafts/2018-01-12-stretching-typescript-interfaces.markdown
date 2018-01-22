@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Can I build a dynamic interface with Typescript?"
+title:  "Can I dynamically add properties to an interface in Typescript?"
 description: "Exploring options for making Typescript interfaces more flexible."
 date: 2018-01-12
 ---
@@ -12,7 +12,7 @@ I'm going to assume some basic knowledge about Typescript's duck typing and inte
 
 ### Interfaces are like contracts
 
-A good analogy for a Typescript interface is a contract. A contract binds the signer to a specific set of guidelines and if those guidelines are not followed, there are repercussions. When you use an interface, you are telling the Typescript compiler that data you label with that interface will structurally resemble the interface. If you tell the compiler you are going to produce data with a specific shape, but the data you produced does not actually fit that shape, the compiler will throw an error. Another important feature of a contract is that once it is written and signed, it is sealed. The core contract itself cannot be changed. But it can be amended. The purpose of this article is to show some techniques for *amending* existing interfaces, such that they can be reused for data that is related to or closely resembles the interface.
+A good analogy for a Typescript interface is a contract. A contract binds the signer to a specific set of guidelines and if those guidelines are not followed, there are repercussions. When you use an interface, you are telling the Typescript compiler that any data labelled with that interface will structurally resemble the interface. If you tell the compiler you are going to produce data with a specific shape, but the data you produce does not actually fit that shape, the compiler will throw an error. Another important feature of a contract is that once it is written and signed, it is sealed. The core contract itself cannot be changed. But it can be amended. The purpose of this article is to show some techniques for *amending* existing interfaces, such that they can be reused for data that is related to or closely resembles the original interface.
 
 Let's define a basic interface to use as an example throughout this article.
 
@@ -24,7 +24,7 @@ interface Question {
 }
 ```
 
-Now, if I create a variable and give it a type question, it better have all three of those properties, with the correct types or I will get an error.
+Now, if I create a variable and type it as a `Question`, it better have all three of those properties with the correct types. If it doesn't, the compiler will throw an error.
 
 ### Use `extends`
 
@@ -49,39 +49,20 @@ interface MultipleChoiceQuestion extends Question {
 }
 ```
 
-Now, if you add properties to `Question`, they will automatically get added to `MultipleChoiceQuestion`. This can be a bad thing (type 'gorilla banana problem' into Google), but in this particular case, since we *know* that `MultipleChoiceQuestion` will always be a form of `Question`, it's okay.
+Now, if you add properties to `Question`, they will automatically get added to `MultipleChoiceQuestion` because `MultipleChoiceQuestion` *inherits* everything from `Question`. This can be a bad thing ([gorilla banana problem](https://www.google.com/search?q=gorilla+banana+problem&oq=gorilla+banana+problem)). Essentially, the use of `extends` results in tight-coupling between the inherited interface, `Question` in this case, and all the interfaces extending it. Imagine you wanted to add a property to `Question` that you didn't want on `MultipleChoiceQuestion` ... if you find yourself in this situation, just don't use `extends` for that case. It's no longer the appropriate tool.
 
-A major drawback to `extends` is that it results in tight-coupling between the inherited interface, `Question` in this case, and all the interfaces extending it. Imagine you wanted to add a property to `Question` that you didn't want on `MultipleChoiceQuestion` ... if you find yourself in this situation, just don't use `extends` for that case. It's no longer the appropriate tool.
+In this particular case, since we *know* that `MultipleChoiceQuestion` will always be a form of `Question` and *must* have all the properties `Question` has, it's okay.
 
 Let's look at some other options.
 
-### Intersection & Union types
+### Intersection types
 
+You can think of Intersection types as sort of "a la carte" extensions. It's like ordering a meal and then ordering another side as an afterthought. Or keeping up with the contract metaphor, while `extends` is sort of like making a copy of the contract with more terms included, an intersection type is more like an on-the-fly exception or extra term added to the contract for a very specific reason (not sure what the legal term for this would be).
 
+Using the quiz example, let's say there is only one question in the entire application that requires a hint. Since it's only a one time thing and it's not worth creating yet another interface to represent `QuestionWithHint`, you can do this:
 
-Use extends
+```
+let questionWithHint: Question & { hint: string };
+```
 
-Create a generic type on your component that would look something like this:
-
-@Component({
-  selector: 'example'
-  template: `<h1>example</h1>`
-})
-export class ExampleComponent<T extends UserData> {}
-Now you can have data of type T which must have all of the UserData properties, then add whatever other properties you'd like.
-
-You can also use extends to create a new interface for this specific case.
-
-interface ExtendedUserData extends UserData {
- someOtherProperty: string
-}
-Use Intersection types
-
-This may be close to the sort of "dynamic" behavior you're looking for. Say you have a property that needs to be an object with all the properties of UserData and an additional extraProperty.
-
-You can type it like this.
-
-fancyUserData: UserData & { extraProperty: string }
-With intersection types you can add properties ad hoc.
-
-So in short, no you can't really build dynamic types, and definitely not in the component's constructor. However, you can use the methods I mentioned above to extend and mold your interfaces on an as needed basis.
+Now, `questionWithHint` must have all the properties of `Question` with an extra property `hint`. If you needed to use this pattern more that two times, you should make a new interface for it.
