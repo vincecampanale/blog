@@ -1,11 +1,11 @@
 ---
 layout: post
 title:  "Can I dynamically add properties to an interface in Typescript?"
-description: "Exploring options for making Typescript interfaces more flexible."
+description: "Exploring options for adding properties to Typescript interfaces."
 date: 2018-01-12
 ---
 
-No, you cannot dynamically change / create an interface as it is a *static* value, used for static, structural type checking by the Typescript compiler.
+No, you cannot dynamically change an interface as it is a *static* value, used for static, structural type checking by the Typescript compiler.
 However, you can get pretty creative with an interface and chances are you can mold it on the fly to fit your use-case.
 
 I'm going to assume some basic knowledge about Typescript's duck typing and interfaces. If that's not you, no worries -- [check out these docs](https://www.typescriptlang.org/docs/handbook/interfaces.html) and circle back to this article when you're ready.
@@ -57,7 +57,7 @@ Let's look at some other options.
 
 ### Intersection types
 
-You can think of Intersection types as sort of "a la carte" extensions. It's like ordering a meal and then ordering another side as an afterthought. Or keeping up with the contract metaphor, while `extends` is sort of like making a copy of the contract with more terms included, an intersection type is more like an on-the-fly exception or extra term added to the contract for a very specific reason (not sure what the legal term for this would be).
+You can think of Intersection types as sort of "a la carte" extensions. It's like ordering a meal and then ordering another side after the food shows up. Or keeping up with the contract metaphor, while `extends` is sort of like making a copy of the contract with more terms included, an intersection type is more like an on-the-fly exception or extra term added to the contract for a very specific reason (not sure what the legal term for this would be).
 
 Using the quiz example, let's say there is only one question in the entire application that requires a hint. Since it's only a one time thing and it's not worth creating yet another interface to represent `QuestionWithHint`, you can do this:
 
@@ -66,3 +66,19 @@ let questionWithHint: Question & { hint: string };
 ```
 
 Now, `questionWithHint` must have all the properties of `Question` with an extra property `hint`. If you needed to use this pattern more that two times, you should make a new interface for it.
+
+### Dynamic keys
+
+A final option I'll mention here isn't so much to do with *adding* properties to an interface, but it does allow you to add different properties as you will. Be warned though, you lose in safety what you gain in flexibility (typos, etc).
+
+```
+interface Anything {
+  [key: string]: any;
+}
+```
+
+This interface will accept any property name with any value attached.
+
+### Conclusion
+
+In conclusion, you can't actually add properties to an interface dynamically. But, you can get a similar effect using `extends`, on-the-fly Intersection types, or interfaces with variable keys.
