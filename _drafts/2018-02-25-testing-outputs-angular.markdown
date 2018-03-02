@@ -1,19 +1,21 @@
 ---
 layout: post
-title:  "Testing Outputs (EventEmitters) in Angular with the fakeAsync Utility"
+title:  "How to unit test Angular @Outputs (EventEmitters)"
 description: "A brief guide on testing EventEmitters in Angular components."
 date: 2018-02-25
 ---
 
-Angular was built for testability. An emphasis on separation of concerns, modularity, and dependency injection, combined with powerful API's like the `TestBed` and easy-to-use libraries like Jasmine make testing in Angular not only possible, but truly powerful. You can test *everything* in your Angular application. The catch is that learning these API's can take some time. Throw in a mix of Angular, Jasmine, and rxjs jargon and it can be quite an uphill battle to feel comfortable testing the hairier parts of your application (which are the most important parts to test, of course). 
+Angular was built for testability. An emphasis on separation of concerns, dependency injection, powerful tools like the `TestBed`, and out-of-the-box integration with Jasmine (if you're using the CLI) make testing in Angular not only possible, but truly powerful. You can test *everything* in your Angular application. The catch is that learning these API's can take some time. Throw in a mix of Angular, Jasmine, and rxjs jargon and it can be quite an uphill battle to feel comfortable testing the hairier parts of your application (which are the most important parts to test, of course). 
 
 In this article, I give a brief overview of what custom outputs / `EventEmitters` are then I go into way too much detail about how to test them.  Hopefully, some of it is immediately applicable to your app, while even more of it gives you something to chew on.
 
 # What is an @Output property? (3 sentences)
--- It's an Angular for making custom events
--- Under the hood: EventEmitter 
- * has a couple of methods
- * implementation looks roughly like this: ...
+
+An `@Output` property is just an Angular utility used for creating custom events. The property is an [`EventEmitter`](https://angular.io/api/core/EventEmitter), meaning it exposes two methods: `emit` and `subscribe`. You probably won't `subscribe` to it directly in a simple application, since Angular handles that with it's event binding syntax (e.g. `<div (click)="onClick($event)"></div>).
+
+
+ // -- It's an Angular utility for making custom events
+ // * has a couple of methods
 -- Similar to how you can listen to a (click) event on a component
  * the @Output property allows you to emit custom events from child components and listen to them with the event binding syntax (click) in the parent 
 
