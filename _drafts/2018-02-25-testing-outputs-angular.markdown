@@ -5,31 +5,170 @@ description: "A brief guide on testing EventEmitters / @Output properties in Ang
 date: 2018-02-25
 ---
 
-Angular was built for testability. Powerful tools like dependency injection, the `TestBed` API, and out-of-the-box integration with Jasmine make testing Angular apps a joy. The catch is that learning these API's can take some time. Throw in a mix of Angular, Jasmine, and RxJS jargon and it can be a real uphill battle to feel comfortable testing the hairier parts of your application (which are the most important parts to test). 
+Angular was built for testability. Powerful tools like dependency injection, the `TestBed` API, and out-of-the-box integration with Jasmine give us the power to test our Angular apps thoroughly and reliably. The catch is that learning these API's can take some time. Throw in a mix of Angular, Jasmine, and RxJS jargon and it can be a real uphill battle to feel comfortable testing the hairier parts of your application (which are the most important parts to test). In this short guide, I'll discuss different ways we can test `EventEmitter` properties (`@Output`'s) in our components.
 
 ## What is an `@Output` property? 
 
-An `@Output` property is an Angular utility used to create custom events. An `@Output` is an [`EventEmitter`](https://angular.io/api/core/EventEmitter), meaning it has two methods: `emit` and `subscribe`. You probably won't `subscribe` to it directly in a simple application, since Angular handles that with it's event binding syntax (e.g. `<div (click)="onClick($event)"></div>`). The `emit` method allows you to notify the parent of an event and pass data up.
+An `@Output` property is an Angular utility used to create custom events. An `@Output` is an [`EventEmitter`](https://angular.io/api/core/EventEmitter), meaning it has two methods: `emit` and `subscribe`. You probably won't need to `subscribe` to it directly, since Angular handles that with it's event binding syntax (e.g. `<div (someEvent)="onSomeEvent()"></div>`). The `emit` method allows you to notify the parent of an event and pass data up.
 
 ## What should a unit test for an @Output do? 
 
-When testing the component with the `@Output` (the child component), the unit test should target two things: 1) the `emit` method is being called at the right time and 2) the `emit` method is emitting the expected data.
+When testing the component with the `@Output` property (the child component), the unit test should target two things: 1) the `emit` method is being called when it should be and 2) the `emit` method is emitting the expected data.
 
 When testing the component listening to the `@Output` (the parent / container component), the unit test should aim to check that the data emitted from the event goes to the right place (e.g. passed to the correct method).
 
-## Testing the Child
+## The component
 
-Every custom `@Output` must get triggered by another event. Whether that event be a click in the DOM, a response from the server, a custom event on yet another nested child component, there must be a cause for the `emit` method to be called. That triggering event must be mocked.
+The child component we'll be working with looks like this:
 
-# If it's a click...
+```
+@Component({
+  selector: 'counter',
+  template: `
+    <div>
+      <button (click)="onClick()">1</button>
+    </div>
+  `
+})
+export class CounterComponent {
+  @Output() change = new EventEmitter<number>();
 
-# If it's another custom event...
+  onClick() {
+    this.change.emit(1);
+  }
+}
+```
 
-# If it's a response from the server...
+The `change` property is the `EventEmitter` we will be testing. 
 
--- Technique 1: Spy on the `emit` method (~10 sentences)
--- Technique 2: Create a mock host component and listen for the event from the child
+We will use it in our `AppComponent` to increment a counter by the amount emitted:
+```
+@Component({
+  selector: 'my-app',
+  template: `
+  <counter (change)="onChange($event)"></counter>
+  `
+})
+export class AppComponent  {
+  count = 0;
 
-# Testing the Parent
--- Just call the function directly (trust that Angular will work)
--- Or, you can mock the child component and directly emit the event from it (since the output is a public property)
+  onChange(event: number): void {
+    this.count += event;
+  }
+}
+```
+
+
+## Testing the child
+
+First, we'll do some set up:
+```
+describe('CounterComponent', () => {
+  let fixture: ComponentFixture<CounterComponent>;
+  let component: CounterComponent;
+  let de: DebugElement;
+  let button: ElementRef;
+
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      declarations: [CounterComponent]
+    });
+  });
+
+  beforeEach(() => {
+    fixture = TestBed.createComponent(CounterComponent);
+    component = fixture.componentInstance;
+    de = fixture.debugElement;
+    button = de.query(By.css('button'));
+  });
+});
+
+```
+
+I won't go into the details of how this set up works, as it's outside the scope of this post. [Angular's testing tutorial](https://angular.io/guide/testing) is a great resource to learn more about it. What matters is that we can test everything we need to test using the `component` and `button`.
+
+Every custom `@Output` must get triggered by another event. Whether that event be a click in the DOM, a response from the server, a custom event on yet another nested child component, there must be a cause for the `emit` method to be called. The first step is to mock that cause and ensure the `EventEmitter` actually emits.
+
+We know from the component code that a click event on the button should make the `onClick()` method run. The `change` property's `emit` method should be called when `onClick()` executes. We can get `onClick()` to execute in two ways: mock a `click` on the button, or just call `component.onClick()` directly.
+
+One of many ways to mock a `click` on the button is this:
+
+```
+button.nativeElement.click();
+```
+
+In order to detect when the `@Output` will emit, we can create a spy:
+```
+spyOn(component.change, 'emit');
+```
+
+Now you have everything you need to effectively test the `@Output`.
+
+A unit test might look like this:
+```
+describe('change', () => {
+  it('should emit when the button is clicked', () => {
+    spyOn(component.change, 'emit');
+    button.nativeElement.click();
+    expect(component.change.emit).toHaveBeenCalled();
+  });
+});
+```
+
+And that's it. Now, let's target goal #2: ensure the `@Output` is emitting the expected data to the parent. 
+
+Using `toHaveBeenCalledWith()`, we can kill two birds with one stone:
+
+```
+describe('change', () => {
+  it('should emit when the button is clicked', () => {
+    spyOn(component.change, 'emit');
+    button.nativeElement.click();
+    expect(component.change.emit).toHaveBeenCalledWith(1);
+  });
+});
+```
+
+Now, in one unit test, you are ensuring that the `emit` method is being called when it should be and that it is emitting the correct data. There are a couple of other ways to accomplish this, which are worth mentioning.
+
+I think it's safe to say that Angular has `click` events down, so we don't need to worry about that not working as expected. Because of this, it is safe to call the `onClick()` method directly, instead of mocking a click on the button.
+
+```
+describe('change', () => {
+  it('should emit when the button is clicked', () => {
+    spyOn(component.change, 'emit');
+    component.onClick();
+    expect(component.change.emit).toHaveBeenCalledWith(1);
+  });
+});
+```
+
+This is a bit easier because we don't have to worry about querying the `DebugElement` or mocking click events, we just call the method  we care about and trust Angular to handle the rest.
+
+A final approach to testing the `EventEmitter` is to actually subscribe to it and trigger the event, making your assertion in the subscribe block.
+
+```
+describe('change', () => {
+  it('should emit when the button is clicked', () => {
+    component.change.subscribe(next => {
+      expect(next).toEqual(1);
+    });
+    
+    component.onClick(); // or button.nativeElement.click()
+  });
+});
+```
+
+I don't recommend this approach for a couple of reasons:  
+   1. It's weird. Typically, a unit test makes its assertion(s) at the *end*. This approach breaks that pattern and will cause future developers to have to look sideways and squint to understand how the test works. Unit tests should be easy to read and understand.   
+   2. Order of statements matters. If you call `component.onClick()` before subscribing to the `change` emitter, you will not actually get into the subscribe block and make the assertion. This is made even worse by the fact that your test will pass! A faulty, passing test is worse than no test at all.
+  
+
+# Testing the parent
+
+We can take two approaches to testing the behavior of the `EventEmitter` from the perspective of the parent (the component listening for the event):  
+  1. Mock the child component and invoke the property's `emit` method (since the `EventEmitter` is a public property)  
+  2. Dig in to the `DebugElement` and simulate a click on the button again
+  3. Call the function directly (trust that Angular will work)
+
+
