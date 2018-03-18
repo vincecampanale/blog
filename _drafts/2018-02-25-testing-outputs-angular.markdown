@@ -166,9 +166,82 @@ I don't recommend this approach for a couple of reasons:
 
 # Testing the parent
 
-We can take two approaches to testing the behavior of the `EventEmitter` from the perspective of the parent (the component listening for the event):  
-  1. Mock the child component and invoke the property's `emit` method (since the `EventEmitter` is a public property)  
-  2. Dig in to the `DebugElement` and simulate a click on the button again
+We can take three approaches to testing the behavior of the `EventEmitter` from the perspective of the parent (the component listening for the event):  
+  1. Invoke the `@Output` property's `emit` method (since the `EventEmitter` is a public property)  
+  2. Dig in to the counter's `DebugElement` and simulate a click on the button
   3. Call the function directly (trust that Angular will work)
+  
+Here's what the set up looks like:
+
+```
+describe('AppComponent', () => {
+  let fixture: ComponentFixture<AppComponent>;
+  let component: AppComponent;
+  let de: DebugElement;
+
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      declarations: [AppComponent, CounterComponent]
+    });
+  });
+
+  beforeEach(() => {
+    fixture = TestBed.createComponent(AppComponent);
+    component = fixture.componentInstance;
+    de = fixture.debugElement;
+  });
+});
+```
+
+In order to invoke the `@Output` property's `emit` method, we had to declare the component with the `@Output` in the testing module.
+
+Now, we can use the `DebugElement` for the `AppComponent` to get the counter component:
+
+```
+describe('onChange', () => { 
+  it('should be called with whatever the counter change event emits', () => {
+    spyOn(component, 'onChange');
+    const counter = de.query(By.directive(CounterComponent));
+    const cmp = counter.componentInstance;
+    cmp.change.emit(1);
+    expect(component.onChange).toHaveBeenCalledWith(1);
+  });
+});
+```
+
+In the above unit test, we spy on the `onChange` method (the method that should be called when `change` emits). Then, we query for the counter component fixture based on it's directive class and get the component itself through the `componentInstance` property. *Now*, we have access to the `change` property and can tell it to `emit` a value of `1`. In order to test that we are handling the event correctly, we'll just check that the `onChange` spy gets called with the value that the `change` event emitted. This is overkill, but not nearly as overkill as the next test.
+
+```
+describe('onChange', () => {
+  it('should be called with whatever the counter change event emits', () => {
+    spyOn(component, 'onChange');
+    const counter = de.query(By.directive(CounterComponent));
+    const button = counter.query(By.css('button'));
+    button.nativeElement.click();
+    expect(component.onChange).toHaveBeenCalledWith(1); 
+  });
+});
+```
+
+Now we are querying the fixture of the child element for the actual, physical button and dispatching a `click` event to the button. This `click` event will fire off the chain reaction which should eventually lead to our `AppComponent`'s `onChange` method being called with the value emitted from the `change` event. But wait, let's check in with what we're actually testing here. A unit test should be responsible for one *unit* of functionality. The test we just wrote is testing 1) that the button's click works, 2) that Angular's handling of the click event works, 3) that our `onClick` method in the `CounterComponent` gets called with the correct data and makes the appropriate call the `change` property's `emit` method, 4) that Angular's handling of the `change` event works, 5) that our `onChange` method works. That's not a unit test. 
+
+Now that you've seen all the crazy stuff you *can* do with this powerful set of testing tools, you will be relieved to see what you actually *need* to do.
+
+```
+describe('onChange', () => {
+  it('should increment the count by the amount provided', () => {
+    component.count = 2;
+    component.onChange(2);
+    expect(component.count).toEqual(4);
+  });
+});
+```
+
+The only thing that *actually* needs to be tested on this end is the `onChange` method itself. That's the only logic we wrote. Everything else is handled by Angular. Feel free to double check [the `EventEmitter` tests](https://github.com/angular/angular/blob/master/packages/core/test/event_emitter_spec.ts) if you're skeptical.
+
+# Takeaways
+
+Tests are good. We have a lot of powerful tools at our disposal for testing in Angular so it's easy to make sure our components work as they should, but it's important to keep in mind what *actually* needs to be tested.
+
 
 
