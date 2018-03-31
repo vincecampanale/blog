@@ -1,11 +1,11 @@
 ---
 layout: post
-title:  "How do I unit test Angular custom events?"
+title:  "Think Before You Test: How to Write Effective Unit Tests Custom Events in Angular"
 description: "A brief guide on unit testing custom events in Angular components."
 date: 2018-03-22
 ---
 
-Angular was built for testability. Powerful tools like dependency injection, the `TestBed` API, and out-of-the-box integration with Jasmine give us the power to test our Angular apps thoroughly and reliably. The catch is that learning these API's can take some time. Throw in a mix of Angular, Jasmine, and RxJS jargon and it can be a real uphill battle to feel comfortable testing the hairier parts of your application (which are the most important parts to test). In this short guide, I'll discuss different ways we can test `EventEmitter` properties (`@Output`'s) in our components.
+Angular was built for testability. Powerful tools like dependency injection, the `TestBed` API, and out-of-the-box integration with Jasmine give us the power to test our Angular apps thoroughly and reliably. The catch is that learning these API's can take some time. Throw in a mix of Angular, Jasmine, and RxJS jargon and it can be a real uphill battle to feel comfortable testing the hairier parts of your application, which are the most important parts to test of course. In this post, I'll cover a couple different approaches you can take to testing custom events in Angular. If this is helpful or interesting to you, you can check out my [twitter page](https://twitter.com/_vincecampanale), where I share similar content.
 
 ## What is an `@Output` property? 
 
@@ -241,7 +241,7 @@ The only thing that *actually* needs to be tested on this end is the `onChange` 
 
 # Takeaways
 
-Tests are good. We have a lot of powerful tools at our disposal for testing in Angular so it's easy to make sure our components work as they should, but it's important to keep in mind what *actually* needs to be tested.
+Tests are good. We have a lot of powerful tools at our disposal for testing in Angular so it's easy to make sure our components work as they should. Finally, it's important to understand the difference between what we *can* test and what actually needs to be tested.
 
 
 
