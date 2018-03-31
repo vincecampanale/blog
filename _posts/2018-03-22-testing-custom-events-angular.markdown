@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Think Before You Test: How to Write Effective Unit Tests Custom Events in Angular"
+title:  "Think Before You Test: How to Write Effective Unit Tests for Custom Events in Angular"
 description: "A brief guide on unit testing custom events in Angular components."
 date: 2018-03-22
 ---
